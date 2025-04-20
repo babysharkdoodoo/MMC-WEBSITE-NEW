@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Instagram, Mail, MapPin, Pi, Twitter } from "lucide-react";
+import { Instagram, Mail, MapPin, Pi } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -17,23 +17,27 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm leading-6 text-blue-100/80">
-              A monthly, student-led math workshop series in Melbourne, Florida,
-              run by high school students.
+              A free, student-led math outreach program in Melbourne, Florida,
+              organized by high school students to foster curiosity and
+              excitement about mathematics.
             </p>
             {/* Social Icons */}
             <div className="flex space-x-6">
-              <Link href="#" className="text-blue-100/70 hover:text-cyan-300">
+              <Link
+                href="https://www.instagram.com/melbournemathcircle_omc/"
+                className="text-blue-100/70 hover:text-cyan-300"
+              >
                 <span className="sr-only">Instagram</span>
                 <Instagram className="h-6 w-6" />
               </Link>
-              <Link href="#" className="text-blue-100/70 hover:text-cyan-300">
+              {/* <Link href="#" className="text-blue-100/70 hover:text-cyan-300">
                 <span className="sr-only">Twitter</span>
                 <Twitter className="h-6 w-6" />
               </Link>
               <Link href="#" className="text-blue-100/70 hover:text-cyan-300">
                 <span className="sr-only">GitHub</span>
                 <Github className="h-6 w-6" />
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -48,8 +52,8 @@ export default function Footer() {
                   {[
                     { name: "Home", href: "/" },
                     { name: "About", href: "/about" },
-                    { name: "Topics", href: "/topics" },
-                    { name: "Math Bites", href: "/math-bites" },
+                    // { name: "Topics", href: "/topics" },
+                    // { name: "Math Bites", href: "/math-bites" },
                   ].map((item) => (
                     <li key={item.name}>
                       <Link
@@ -108,7 +112,7 @@ export default function Footer() {
                       aria-hidden="true"
                     />
                     <span className="text-sm leading-6 text-blue-100/80">
-                      info@melbournemathcircle.org
+                      eshan@melbournemathcircle.org
                     </span>
                   </li>
                 </ul>
@@ -120,7 +124,7 @@ export default function Footer() {
         <div className="mt-16 border-t border-blue-700 pt-8 sm:mt-20 lg:mt-24">
           <p className="text-xs leading-5 text-blue-100/70">
             &copy; {new Date().getFullYear()} Melbourne Math Circle. All rights
-            reserved. Talk nerdy to us.
+            reserved.
           </p>
         </div>
       </div>

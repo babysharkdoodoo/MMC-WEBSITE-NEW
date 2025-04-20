@@ -90,32 +90,102 @@ export default function RegistrationForm() {
     setFormData((prev) => ({ ...prev, [name]: date }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required agreements:
+    // --- 1) Client‑side rate limiting: max 1 submit per 60s ---
+    const last = localStorage.getItem("lastRegisterTime");
+    if (last && Date.now() - parseInt(last, 10) < 60_000) {
+      toast({
+        title: "Slow down",
+        description: "Please wait a minute before submitting again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // --- 2) Validate required fields ---
+    const missing: string[] = [];
+    // Student
+    if (!formData.studentName.trim()) missing.push("Student Name");
+    if (!formData.studentAge) missing.push("Student Age");
+    if (!formData.studentBirthday) missing.push("Student Birthday");
+    if (!formData.studentSchool.trim()) missing.push("Student School");
+    if (!formData.studentGrade) missing.push("Student Grade");
+    if (!formData.ethnicity) missing.push("Ethnicity");
+    if (formData.ethnicity === "Other" && !formData.otherEthnicity.trim())
+      missing.push("Other Ethnicity");
+    if (!formData.priorExperience) missing.push("Prior Experience");
+
+    // Parent
+    if (!formData.parentName.trim()) missing.push("Parent Name");
+    if (!formData.email.trim()) missing.push("Email");
+    if (!formData.phone.trim()) missing.push("Primary Phone");
+    if (!formData.address.trim()) missing.push("Street Address");
+    if (!formData.city.trim()) missing.push("City");
+    if (!formData.state.trim()) missing.push("State");
+    if (!formData.zipCode.trim()) missing.push("ZIP Code");
+
+    // Emergency
+    if (!formData.emergencyName.trim()) missing.push("Emergency Contact Name");
+    if (!formData.emergencyRelationship.trim())
+      missing.push("Emergency Relationship");
+    if (!formData.emergencyPhone.trim())
+      missing.push("Emergency Contact Phone");
+
+    // Agreements
     if (
       !formData.liabilityWaiver ||
       !formData.eventPolicies ||
       !formData.photoRelease ||
       !formData.finalAgreement
     ) {
+      missing.push("All agreements and waivers");
+    }
+
+    if (missing.length > 0) {
       toast({
-        title: "Error",
-        description: "You must agree to all terms to register",
+        title: "Missing Information",
+        description: `Please fill out or accept: ${missing.join(", ")}`,
         variant: "destructive",
       });
       return;
     }
 
-    // Submit form logic:
-    console.log("Form submitted:", formData);
+    // --- 3) Mark this submit time ---
+    localStorage.setItem("lastRegisterTime", Date.now().toString());
 
-    toast({
-      title: "Registration Submitted",
-      description:
-        "Thank you for registering! You’ll receive RSVP links via email for each upcoming event.",
-    });
+    // --- 4) Send to proxy endpoint ---
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await res.json();
+
+      if (result.result === "Success") {
+        toast({
+          title: "Registration Submitted",
+          description:
+            "Thank you! You’ll receive RSVP links via email for upcoming events.",
+        });
+        // Optionally reset form here...
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: result.error || "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      toast({
+        title: "Network Error",
+        description: "Unable to submit right now. Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -593,8 +663,8 @@ export default function RegistrationForm() {
                           <p className="mb-2">
                             As parent or legal guardian of the minor, I hereby
                             grant the permission necessary to allow Child to
-                            participate in Melbourne Math Circle online or at
-                            any physical location where events are held (the
+                            participate in Orlando Math Circle online or at any
+                            physical location where events are held (the
                             "Program").
                           </p>
                           <p className="mb-2">
@@ -626,9 +696,9 @@ export default function RegistrationForm() {
                             being allowed to attend and participate in the
                             program, do hereby release, relieve, covenant not to
                             sue and forever discharge, defend, indemnify and
-                            hold harmless, Melbourne Math Circle, its officers,
+                            hold harmless, Orlando Math Circle, its officers,
                             agents, employees, students, and volunteers
-                            (hereinafter collectively "MMC") of any and from all
+                            (hereinafter collectively "OMC") of any and from all
                             claims, demands, rights, liabilities, losses,
                             expenses and causes of action (with the exception of
                             gross negligence or willful misconduct) of whatever
@@ -672,12 +742,12 @@ export default function RegistrationForm() {
                             Participants in online events or programs are
                             expected to exhibit good behavior to ensure a
                             positive experience for everyone. At its sole
-                            discretion, Melbourne Math Circle may remove a
+                            discretion, Orlando Math Circle may remove a
                             participant from an online event or program for
                             behavioral reasons. If a participant is removed for
                             behavioral reasons, no refund will be issued and the
                             participant may be blocked from future online
-                            sessions. Melbourne Math Circle cannot provide
+                            sessions. Orlando Math Circle cannot provide
                             refunds, credits, or transfers for any reason.
                           </p>
                         </div>
@@ -709,17 +779,17 @@ export default function RegistrationForm() {
                             Registrant(s)/Participant(s). In consideration of my
                             wish to participate in an online event or program
                             and related activities (collectively the "Event") of
-                            the Melbourne Math Circle, I agree:
+                            the Orlando Math Circle, I agree:
                           </p>
                           <ol className="list-decimal pl-5 space-y-2">
                             <li>
-                              That the Melbourne Math Circle (or its
+                              That the Orlando Math Circle (or its
                               representatives) may take photographs or video of
                               me during my participation in the Event
                               ("Photographs" or "Video");
                             </li>
                             <li>
-                              That I irrevocably grant the Melbourne Math Circle
+                              That I irrevocably grant the Orlando Math Circle
                               (and its licensees and assigns) the worldwide
                               right in perpetuity to use my name, and my
                               likeness as depicted in the Photographs and/or
@@ -729,7 +799,7 @@ export default function RegistrationForm() {
                               modify, and publicly display the Photographs
                               and/or Video in any medium now known or later
                               developed, including, promotion and fundraising
-                              for the Melbourne Math Circle;
+                              for the Orlando Math Circle;
                             </li>
                             <li>
                               On behalf of myself, my heirs, family members, and
@@ -744,8 +814,8 @@ export default function RegistrationForm() {
                             </li>
                           </ol>
                           <p className="mt-2">
-                            I understand that the Melbourne Math Circle will
-                            rely on this release and that I may not revoke my
+                            I understand that the Orlando Math Circle will rely
+                            on this release and that I may not revoke my
                             permission or release. These terms are governed by
                             the laws of the State of Florida applicable to
                             releases.

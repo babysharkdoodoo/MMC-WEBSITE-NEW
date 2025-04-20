@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Calendar, MapPin, Sparkles, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar, MapPin, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,9 +9,8 @@ import { useEffect, useState } from "react";
 import MathParticleSystem from "@/components/math-particle-system";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
-// Interactive Clock icon
+// Interactive Clock icon remains the same
 function Clock(props: any) {
   return (
     <motion.svg
@@ -60,12 +59,12 @@ const impactStats = [
   { value: "95%", label: "Student Satisfaction" },
 ];
 
-// Upcoming events (2 events => 2-column layout)
+// Upcoming events
 const upcomingEvents = [
   {
     id: 1,
     title: "STEM Discovery Day",
-    date: "June 1, 2023",
+    date: "June 1, 2025",
     time: "2:00 PM - 3:30 PM",
     location: "Nana's House Foster Care, Melbourne, FL",
     description:
@@ -75,7 +74,7 @@ const upcomingEvents = [
   {
     id: 2,
     title: "Interactive STEM & Math Workshop",
-    date: "June 13, 2023",
+    date: "June 13, 2025",
     time: "2:00 PM - 3:30 PM",
     location: "Nana's House Foster Care, Melbourne, FL",
     description:
@@ -84,7 +83,7 @@ const upcomingEvents = [
   },
 ];
 
-// Testimonials
+// Testimonials (unchanged; currently commented out)
 const testimonials = [
   {
     quote:
@@ -113,6 +112,7 @@ export default function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [isInView, setIsInView] = useState(false);
 
+  // Rotate through testimonials every 8 seconds (if you enable the section)
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -120,6 +120,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // Scroll listener for in-view animations
   useEffect(() => {
     function handleScroll() {
       if (window.scrollY > 100) {
@@ -134,7 +135,7 @@ export default function Home() {
     <div className="flex flex-col">
       {/* ===== HERO SECTION ===== */}
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-        {/* Dark-blue-themed background image + gradient */}
+        {/* Background image with responsive sizes for mobile */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/home-screen-photo.jpg"
@@ -142,17 +143,20 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            sizes="(max-width: 768px) 100vw, 1920px"
           />
-          {/* Keep a dark blue overlay */}
+          {/* Dark blue overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-800 mix-blend-multiply" />
         </div>
 
-        {/* Animated Math Particles */}
-        <MathParticleSystem count={50} opacity={0.15} />
+        {/* Optional: conditionally render animated particles only on larger screens for performance */}
+        {typeof window !== "undefined" && window.innerWidth > 768 && (
+          <MathParticleSystem count={50} opacity={0.15} />
+        )}
 
-        {/* Floating shape (blue tones, removing pink/purple/yellow) */}
+        {/* Floating animated shape */}
         <motion.div
-          className="absolute -bottom-28 -left-20 w-[400px] h-[400px] bg-gradient-to-r from-blue-700 via-cyan-600 to-blue-500 rounded-full blur-3xl opacity-50"
+          className="absolute -bottom-28 -left-20 w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-gradient-to-r from-blue-700 via-cyan-600 to-blue-500 rounded-full blur-3xl opacity-50"
           animate={{ x: [0, 50, -50, 0], y: [0, 20, -20, 0] }}
           transition={{ repeat: Infinity, duration: 10 }}
         />
@@ -170,13 +174,21 @@ export default function Home() {
               animate={{ scale: 1 }}
               transition={{ duration: 1, delay: 0.3 }}
             >
+              {/* Logo and animated halo */}
               <motion.div
                 className="mb-8 relative"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 1, type: "spring", bounce: 0.4 }}
               >
-                <div className="h-24 w-24 rounded-full bg-card flex items-center justify-center shadow-xl">
-                  <span className="text-5xl font-serif text-primary">π</span>
+                <div className="h-24 w-24 md:h-28 md:w-28 rounded-full bg-card flex items-center justify-center shadow-xl overflow-hidden">
+                  <Image
+                    src="/mmc_logo.jpg"
+                    alt="Melbourne Math Circle Logo"
+                    width={80}
+                    height={80}
+                    className="object-contain"
+                    priority
+                  />
                 </div>
                 <motion.div
                   className="absolute -z-10 inset-0 rounded-full bg-gradient-to-r from-blue-700 to-cyan-500 blur-lg opacity-70"
@@ -251,9 +263,9 @@ export default function Home() {
 
       {/* ===== MISSION STATEMENT ===== */}
       <section className="py-24 bg-background relative overflow-hidden">
-        {/* Another shape (blue) */}
+        {/* Floating animated shape */}
         <motion.div
-          className="absolute -top-32 -right-24 w-[300px] h-[300px] rounded-full bg-gradient-to-tl from-blue-700 to-cyan-500 opacity-40 blur-2xl"
+          className="absolute -top-32 -right-24 w-[300px] md:w-[400px] h-[300px] md:h-[400px] rounded-full bg-gradient-to-tl from-blue-700 to-cyan-500 opacity-40 blur-2xl"
           animate={{ rotate: [0, 60, -60, 0], scale: [1, 1.1, 1, 1] }}
           transition={{ repeat: Infinity, duration: 15 }}
         />
@@ -325,7 +337,7 @@ export default function Home() {
               discover the beauty of mathematical thinking beyond the classroom.
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
               {impactStats.map((stat, index) => (
                 <motion.div
                   key={index}
@@ -359,7 +371,7 @@ export default function Home() {
 
       {/* ===== UPCOMING EVENTS ===== */}
       <section className="py-24 bg-muted/30 relative overflow-hidden">
-        {/* Blue floating gradient behind container */}
+        {/* Floating blue gradient */}
         <motion.div
           className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-gradient-to-bl from-blue-600 via-cyan-600 to-blue-400 blur-3xl opacity-30"
           animate={{ rotate: [0, 45, -45, 0] }}
@@ -402,16 +414,8 @@ export default function Home() {
             </motion.p>
           </div>
 
-          {/* Dynamically choose number of columns: 1 for single event, 2 for exactly two, 3 otherwise */}
-          <div
-            className={
-              upcomingEvents.length === 1
-                ? "grid gap-8 md:grid-cols-1 lg:grid-cols-1"
-                : upcomingEvents.length === 2
-                ? "grid gap-8 md:grid-cols-2 lg:grid-cols-2"
-                : "grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-            }
-          >
+          {/* Simplified responsive grid: 1 col on mobile, 2 on md, 3 on lg */}
+          <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event, index) => (
               <motion.div
                 key={event.id}
@@ -472,14 +476,6 @@ export default function Home() {
                           >
                             <Link href="/join-us">Register Now</Link>
                           </Button>
-
-                          {/* If you want a details link, uncomment:
-                          <Link
-                            href={`/events/${event.id}`}
-                            className="text-primary hover:text-primary/80 font-mono text-sm flex items-center"
-                          >
-                            Details <ChevronRight className="ml-1 h-4 w-4" />
-                          </Link> */}
                         </div>
                       </div>
                     </div>
@@ -487,25 +483,6 @@ export default function Home() {
                 </Card>
               </motion.div>
             ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            {/* Optional "View All Events" button */}
-            {/* <Button
-              asChild
-              className="bg-primary hover:bg-primary/90 text-primary-foreground group"
-            >
-              <Link href="/events" className="flex items-center">
-                View All Events
-                <motion.div
-                  className="ml-2"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.div>
-              </Link>
-            </Button> */}
           </div>
         </div>
       </section>
@@ -541,10 +518,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ===== TESTIMONIALS ===== */}
+      {/* ===== TESTIMONIALS (currently commented out) ===== */}
+      {/*
       <section className="py-24 bg-blue-800 text-blue-100 relative overflow-hidden">
-        {/* Subtle floating shapes in blue tones */}
         <motion.div
           className="absolute -bottom-32 right-0 w-[400px] h-[400px] bg-gradient-to-l from-cyan-400 to-blue-600 rounded-full blur-3xl opacity-40"
           animate={{ rotate: [0, 90, -90, 0] }}
@@ -621,9 +597,7 @@ export default function Home() {
                               <div className="relative">
                                 <div className="w-20 h-20 rounded-full overflow-hidden">
                                   <Image
-                                    src={
-                                      testimonial.image || "/placeholder.svg"
-                                    }
+                                    src={testimonial.image || "/placeholder.svg"}
                                     alt={testimonial.name}
                                     width={80}
                                     height={80}
@@ -683,6 +657,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      */}
 
       {/* ===== CALL TO ACTION ===== */}
       <section className="py-24 bg-background relative overflow-hidden">
@@ -707,7 +682,7 @@ export default function Home() {
               </motion.div>
             </div>
 
-            <h2 className="font-mono text-4xl md:text-5xl font-bold tracking-tight mb-8">
+            <h2 className="font-mono text-4xl md:text-5xl font-bold tracking-tight mb-8 text-blue-900">
               Ready to <span className="text-blue-600">Explore</span> the World
               of Mathematics?
             </h2>
