@@ -29,8 +29,12 @@ import type React from "react";
 import { useState } from "react";
 
 export default function RegistrationForm() {
+  const steps = ["student", "parent", "emergency", "agreements"] as const;
+  const [stepIdx, setStepIdx] = useState(0);
+  const currentStep = steps[stepIdx];
+
   const [formData, setFormData] = useState({
-    // Student Information
+    // Student
     studentName: "",
     studentSchool: "",
     studentGrade: "",
@@ -41,8 +45,7 @@ export default function RegistrationForm() {
     priorExperience: "",
     mathInterests: "",
     specialNeeds: "",
-
-    // Parent Information
+    // Parent
     parentName: "",
     email: "",
     phone: "",
@@ -52,12 +55,10 @@ export default function RegistrationForm() {
     state: "",
     zipCode: "",
     heardFrom: "",
-
-    // Emergency Contact
+    // Emergency
     emergencyName: "",
     emergencyRelationship: "",
     emergencyPhone: "",
-
     // Agreements
     liabilityWaiver: false,
     eventPolicies: false,
@@ -71,42 +72,30 @@ export default function RegistrationForm() {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((p) => ({ ...p, [name]: value }));
   };
-
-  const handleCheckboxChange = (name: string, checked: boolean) => {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
-
-  const handleRadioChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleDateChange = (name: string, date: Date | null) => {
-    setFormData((prev) => ({ ...prev, [name]: date }));
-  };
+  const handleCheckbox = (name: string, v: boolean) =>
+    setFormData((p) => ({ ...p, [name]: v }));
+  const handleRadio = (name: string, v: string) =>
+    setFormData((p) => ({ ...p, [name]: v }));
+  const handleSelect = (name: string, v: string) =>
+    setFormData((p) => ({ ...p, [name]: v }));
+  const handleDateChange = (name: string, d: Date | null) =>
+    setFormData((p) => ({ ...p, [name]: d }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // --- 1) Client‑side rate limiting: max 1 submit per 60s ---
+    // rate‑limit, validations, fetch… (unchanged)
     const last = localStorage.getItem("lastRegisterTime");
-    if (last && Date.now() - parseInt(last, 10) < 60_000) {
-      toast({
+    if (last && Date.now() - +last < 60_000) {
+      return toast({
         title: "Slow down",
         description: "Please wait a minute before submitting again.",
         variant: "destructive",
       });
-      return;
     }
 
-    // --- 2) Validate required fields ---
     const missing: string[] = [];
-    // Student
     if (!formData.studentName.trim()) missing.push("Student Name");
     if (!formData.studentAge) missing.push("Student Age");
     if (!formData.studentBirthday) missing.push("Student Birthday");
@@ -117,7 +106,6 @@ export default function RegistrationForm() {
       missing.push("Other Ethnicity");
     if (!formData.priorExperience) missing.push("Prior Experience");
 
-    // Parent
     if (!formData.parentName.trim()) missing.push("Parent Name");
     if (!formData.email.trim()) missing.push("Email");
     if (!formData.phone.trim()) missing.push("Primary Phone");
@@ -126,36 +114,30 @@ export default function RegistrationForm() {
     if (!formData.state.trim()) missing.push("State");
     if (!formData.zipCode.trim()) missing.push("ZIP Code");
 
-    // Emergency
     if (!formData.emergencyName.trim()) missing.push("Emergency Contact Name");
     if (!formData.emergencyRelationship.trim())
       missing.push("Emergency Relationship");
     if (!formData.emergencyPhone.trim())
       missing.push("Emergency Contact Phone");
 
-    // Agreements
     if (
       !formData.liabilityWaiver ||
       !formData.eventPolicies ||
       !formData.photoRelease ||
       !formData.finalAgreement
-    ) {
+    )
       missing.push("All agreements and waivers");
-    }
 
-    if (missing.length > 0) {
-      toast({
+    if (missing.length) {
+      return toast({
         title: "Missing Information",
         description: `Please fill out or accept: ${missing.join(", ")}`,
         variant: "destructive",
       });
-      return;
     }
 
-    // --- 3) Mark this submit time ---
     localStorage.setItem("lastRegisterTime", Date.now().toString());
 
-    // --- 4) Send to proxy endpoint ---
     try {
       const res = await fetch("/api/register", {
         method: "POST",
@@ -163,14 +145,12 @@ export default function RegistrationForm() {
         body: JSON.stringify(formData),
       });
       const result = await res.json();
-
       if (result.result === "Success") {
         toast({
           title: "Registration Submitted",
           description:
             "Thank you! You’ll receive RSVP links via email for upcoming events.",
         });
-        // Optionally reset form here...
       } else {
         toast({
           title: "Submission Failed",
@@ -178,8 +158,7 @@ export default function RegistrationForm() {
           variant: "destructive",
         });
       }
-    } catch (err) {
-      console.error("Registration error:", err);
+    } catch {
       toast({
         title: "Network Error",
         description: "Unable to submit right now. Please try again later.",
@@ -190,15 +169,32 @@ export default function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      <Tabs defaultValue="student" className="w-full">
-        <TabsList className="grid grid-cols-4 mb-8">
-          <TabsTrigger value="student">Student Info</TabsTrigger>
-          <TabsTrigger value="parent">Parent Info</TabsTrigger>
-          <TabsTrigger value="emergency">Emergency Contact</TabsTrigger>
-          <TabsTrigger value="agreements">Agreements</TabsTrigger>
+      {/* desktop tabs */}
+      <Tabs
+        value={currentStep}
+        onValueChange={(v) => setStepIdx(steps.findIndex((s) => s === v))}
+        className="w-full"
+      >
+        <TabsList className="hidden sm:flex flex-nowrap space-x-4 overflow-x-auto mb-8">
+          {steps.map((s) => (
+            <TabsTrigger
+              key={s}
+              value={s}
+              className="min-w-[120px] whitespace-nowrap"
+            >
+              {
+                {
+                  student: "Student Info",
+                  parent: "Parent Info",
+                  emergency: "Emergency Contact",
+                  agreements: "Agreements",
+                }[s]
+              }
+            </TabsTrigger>
+          ))}
         </TabsList>
 
-        {/* ========== STUDENT TAB ========== */}
+        {/* STUDENT */}
         <TabsContent value="student" className="space-y-6">
           <Card>
             <CardContent className="pt-6">
@@ -219,7 +215,6 @@ export default function RegistrationForm() {
                       required
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="studentAge">
                       Student Age <span className="text-destructive">*</span>
@@ -237,14 +232,40 @@ export default function RegistrationForm() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* mobile native date */}
+                <div className="space-y-2 sm:hidden">
+                  <Label htmlFor="studentBirthdayMobile">
+                    Student Date of Birth{" "}
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="studentBirthdayMobile"
+                    name="studentBirthday"
+                    type="date"
+                    value={
+                      formData.studentBirthday
+                        ? format(formData.studentBirthday, "yyyy-MM-dd")
+                        : ""
+                    }
+                    onChange={(e) =>
+                      handleDateChange(
+                        "studentBirthday",
+                        e.target.value ? new Date(e.target.value) : null
+                      )
+                    }
+                    required
+                  />
+                </div>
+
+                {/* desktop popover calendar */}
+                <div className="space-y-2 hidden sm:block">
                   <Label htmlFor="studentBirthday">
                     Student Birthday <span className="text-destructive">*</span>
                   </Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !formData.studentBirthday && "text-muted-foreground"
@@ -269,6 +290,7 @@ export default function RegistrationForm() {
                   </Popover>
                 </div>
 
+                {/* rest of student fields… */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="studentSchool">
@@ -282,7 +304,6 @@ export default function RegistrationForm() {
                       required
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="studentGrade">
                       Student Grade <span className="text-destructive">*</span>
@@ -290,19 +311,17 @@ export default function RegistrationForm() {
                     <Select
                       name="studentGrade"
                       value={formData.studentGrade}
-                      onValueChange={(value) =>
-                        handleSelectChange("studentGrade", value)
-                      }
+                      onValueChange={(v) => handleSelect("studentGrade", v)}
                       required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select grade" />
                       </SelectTrigger>
                       <SelectContent>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-                          (grade) => (
-                            <SelectItem key={grade} value={grade.toString()}>
-                              Grade {grade}
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                          (g) => (
+                            <SelectItem key={g} value={g.toString()}>
+                              Grade {g}
                             </SelectItem>
                           )
                         )}
@@ -311,6 +330,7 @@ export default function RegistrationForm() {
                   </div>
                 </div>
 
+                {/* ethnicity */}
                 <div className="space-y-2">
                   <Label>
                     Ethnicity <span className="text-destructive">*</span>
@@ -319,12 +339,9 @@ export default function RegistrationForm() {
                     We use this information to track our reach in
                     underrepresented groups.
                   </p>
-
                   <RadioGroup
                     value={formData.ethnicity}
-                    onValueChange={(value) =>
-                      handleRadioChange("ethnicity", value)
-                    }
+                    onValueChange={(v) => handleRadio("ethnicity", v)}
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-2"
                   >
                     {[
@@ -340,22 +357,13 @@ export default function RegistrationForm() {
                       "Native Hawaiian",
                       "Unspecified",
                       "Other",
-                    ].map((ethnicity) => (
-                      <div
-                        key={ethnicity}
-                        className="flex items-center space-x-2"
-                      >
-                        <RadioGroupItem
-                          id={`ethnicity-${ethnicity}`}
-                          value={ethnicity}
-                        />
-                        <Label htmlFor={`ethnicity-${ethnicity}`}>
-                          {ethnicity}
-                        </Label>
+                    ].map((e) => (
+                      <div key={e} className="flex items-center space-x-2">
+                        <RadioGroupItem id={`eth-${e}`} value={e} />
+                        <Label htmlFor={`eth-${e}`}>{e}</Label>
                       </div>
                     ))}
                   </RadioGroup>
-
                   {formData.ethnicity === "Other" && (
                     <Input
                       id="otherEthnicity"
@@ -367,6 +375,7 @@ export default function RegistrationForm() {
                   )}
                 </div>
 
+                {/* prior experience */}
                 <div className="space-y-2">
                   <Label>
                     Prior Experience with Competition Math{" "}
@@ -374,22 +383,19 @@ export default function RegistrationForm() {
                   </Label>
                   <RadioGroup
                     value={formData.priorExperience}
-                    onValueChange={(value) =>
-                      handleRadioChange("priorExperience", value)
-                    }
+                    onValueChange={(v) => handleRadio("priorExperience", v)}
                     className="flex space-x-4"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem id="experience-yes" value="Yes" />
-                      <Label htmlFor="experience-yes">Yes</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem id="experience-no" value="No" />
-                      <Label htmlFor="experience-no">No</Label>
-                    </div>
+                    {["Yes", "No"].map((opt) => (
+                      <div key={opt} className="flex items-center space-x-2">
+                        <RadioGroupItem id={`exp-${opt}`} value={opt} />
+                        <Label htmlFor={`exp-${opt}`}>{opt}</Label>
+                      </div>
+                    ))}
                   </RadioGroup>
                 </div>
 
+                {/* math interests */}
                 <div className="space-y-2">
                   <Label htmlFor="mathInterests">Mathematical Interests</Label>
                   <Textarea
@@ -401,6 +407,7 @@ export default function RegistrationForm() {
                   />
                 </div>
 
+                {/* special needs */}
                 <div className="space-y-2">
                   <Label htmlFor="specialNeeds">
                     Special Needs or Accommodations
@@ -408,7 +415,7 @@ export default function RegistrationForm() {
                   <Textarea
                     id="specialNeeds"
                     name="specialNeeds"
-                    placeholder="Please list any special needs, accommodations, or allergies we should be aware of."
+                    placeholder="List any special needs, accommodations, or allergies."
                     value={formData.specialNeeds}
                     onChange={handleChange}
                   />
@@ -418,451 +425,301 @@ export default function RegistrationForm() {
           </Card>
         </TabsContent>
 
-        {/* ========== PARENT TAB ========== */}
+        {/* PARENT */}
         <TabsContent value="parent" className="space-y-6">
           <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold">
-                  Parent/Guardian Information
-                </h3>
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="text-xl font-bold">Parent/Guardian Info</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    id: "parentName",
+                    label: "Parent/Guardian Name",
+                    name: "parentName",
+                    required: true,
+                    type: "text",
+                  },
+                  {
+                    id: "email",
+                    label: "Email Address",
+                    name: "email",
+                    required: true,
+                    type: "email",
+                  },
+                  {
+                    id: "phone",
+                    label: "Primary Phone Number",
+                    name: "phone",
+                    required: true,
+                    type: "tel",
+                  },
+                  {
+                    id: "alternatePhone",
+                    label: "Alternate Phone Number",
+                    name: "alternatePhone",
+                    required: false,
+                    type: "tel",
+                  },
+                ].map(({ id, label, name, required, type }) => (
+                  <div key={id} className="space-y-2">
+                    <Label htmlFor={id}>
+                      {label}{" "}
+                      {required && <span className="text-destructive">*</span>}
+                    </Label>
+                    <Input
+                      id={id}
+                      name={name}
+                      type={type}
+                      value={(formData as any)[name]}
+                      onChange={handleChange}
+                      required={required}
+                    />
+                  </div>
+                ))}
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="parentName">
-                      Parent/Guardian Name{" "}
+              <div className="space-y-2">
+                <Label htmlFor="address">
+                  Street Address <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {["city", "state", "zipCode"].map((fld) => (
+                  <div key={fld} className="space-y-2">
+                    <Label htmlFor={fld}>
+                      {fld.charAt(0).toUpperCase() + fld.slice(1)}{" "}
                       <span className="text-destructive">*</span>
                     </Label>
                     <Input
-                      id="parentName"
-                      name="parentName"
-                      value={formData.parentName}
+                      id={fld}
+                      name={fld}
+                      value={(formData as any)[fld]}
                       onChange={handleChange}
                       required
                     />
                   </div>
+                ))}
+              </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email">
-                      Email Address <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">
-                      Primary Phone Number{" "}
-                      <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="alternatePhone">
-                      Alternate Phone Number
-                    </Label>
-                    <Input
-                      id="alternatePhone"
-                      name="alternatePhone"
-                      type="tel"
-                      value={formData.alternatePhone}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="address">
-                    Street Address <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">
-                      City <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="state">
-                      State <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="state"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="zipCode">
-                      ZIP Code <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="zipCode"
-                      name="zipCode"
-                      value={formData.zipCode}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="heardFrom">How did you hear about us?</Label>
-                  <Select
-                    name="heardFrom"
-                    value={formData.heardFrom}
-                    onValueChange={(value) =>
-                      handleSelectChange("heardFrom", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an option" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="school">School</SelectItem>
-                      <SelectItem value="friend">Friend or Family</SelectItem>
-                      <SelectItem value="social">Social Media</SelectItem>
-                      <SelectItem value="search">Search Engine</SelectItem>
-                      <SelectItem value="event">Community Event</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Payment references removed. All events are free. */}
+              <div className="space-y-2">
+                <Label htmlFor="heardFrom">How did you hear about us?</Label>
+                <Select
+                  name="heardFrom"
+                  value={formData.heardFrom}
+                  onValueChange={(v) => handleSelect("heardFrom", v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[
+                      ["school", "School"],
+                      ["friend", "Friend or Family"],
+                      ["social", "Social Media"],
+                      ["search", "Search Engine"],
+                      ["event", "Community Event"],
+                      ["other", "Other"],
+                    ].map(([val, txt]) => (
+                      <SelectItem key={val} value={val}>
+                        {txt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* ========== EMERGENCY TAB ========== */}
+        {/* EMERGENCY */}
         <TabsContent value="emergency" className="space-y-6">
           <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold">
-                  Emergency Contact Information
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Please provide an emergency contact different from the
-                  parent/guardian listed above.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="emergencyName">
-                      Emergency Contact Name{" "}
-                      <span className="text-destructive">*</span>
+            <CardContent className="pt-6 space-y-4">
+              <h3 className="text-xl font-bold">
+                Emergency Contact Information
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Please provide someone other than the parent/guardian above.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    id: "emergencyName",
+                    label: "Name",
+                    name: "emergencyName",
+                    required: true,
+                  },
+                  {
+                    id: "emergencyRelationship",
+                    label: "Relationship",
+                    name: "emergencyRelationship",
+                    required: true,
+                  },
+                  {
+                    id: "emergencyPhone",
+                    label: "Phone",
+                    name: "emergencyPhone",
+                    required: true,
+                    type: "tel",
+                  },
+                ].map(({ id, label, name, required, type = "text" }) => (
+                  <div key={id} className="space-y-2">
+                    <Label htmlFor={id}>
+                      {label}{" "}
+                      {required && <span className="text-destructive">*</span>}
                     </Label>
                     <Input
-                      id="emergencyName"
-                      name="emergencyName"
-                      value={formData.emergencyName}
+                      id={id}
+                      name={name}
+                      type={type}
+                      value={(formData as any)[name]}
                       onChange={handleChange}
-                      required
+                      required={required}
                     />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="emergencyRelationship">
-                      Relationship to Student{" "}
-                      <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="emergencyRelationship"
-                      name="emergencyRelationship"
-                      value={formData.emergencyRelationship}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="emergencyPhone">
-                      Emergency Contact Phone{" "}
-                      <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="emergencyPhone"
-                      name="emergencyPhone"
-                      type="tel"
-                      value={formData.emergencyPhone}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
-
         {/* ========== AGREEMENTS TAB ========== */}
         <TabsContent value="agreements" className="space-y-6">
           <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                <h3 className="text-xl font-bold">Agreements and Waivers</h3>
+            <CardContent className="pt-6 space-y-6">
+              <h3 className="text-xl font-bold">Agreements and Waivers</h3>
 
-                {/* Liability Waiver - Original Full Text */}
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="liabilityWaiver"
-                        checked={formData.liabilityWaiver}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(
-                            "liabilityWaiver",
-                            checked as boolean
-                          )
-                        }
-                      />
-                      <div>
-                        <Label
-                          htmlFor="liabilityWaiver"
-                          className="font-medium"
-                        >
-                          Liability Waiver{" "}
-                          <span className="text-destructive">*</span>
-                        </Label>
-                        <div className="text-sm text-muted-foreground mt-1 p-4 border rounded-md max-h-40 overflow-y-auto">
-                          <p className="mb-2">
-                            As parent or legal guardian of the minor, I hereby
-                            grant the permission necessary to allow Child to
-                            participate in Orlando Math Circle online or at any
-                            physical location where events are held (the
-                            "Program").
-                          </p>
-                          <p className="mb-2">
-                            I understand the Program does not guarantee the
-                            suitability of the Program for Child's
-                            participation. I understand that there are inherent
-                            risks involved in participating in the Program, and
-                            I realize that participation in the Program is my
-                            and the Child's choice.
-                          </p>
-                          <p className="mb-2">
-                            I am aware that, during the program, certain risks
-                            and dangers may occur, including, but not limited to
-                            accident or illness; the forces of nature; all
-                            manner of foreseen and unforeseen bodily and
-                            personal injuries, including death; damage to
-                            property; and the consequences resulting therefrom.
-                          </p>
-                          <p className="mb-2">
-                            IN CONSIDERATION OF CHILD BEING PERMITTED TO ATTEND
-                            AND PARTICIPATE IN THE PROGRAM, I ACKNOWLEDGE AND
-                            VOLUNTARILY ASSUME ALL RISKS ASSOCIATED WITH THE
-                            PROGRAM.
-                          </p>
-                          <p>
-                            I, on my own behalf, and on behalf of the Child, our
-                            heirs, representatives, executors, administrators
-                            and assigns, for the sole consideration of Child
-                            being allowed to attend and participate in the
-                            program, do hereby release, relieve, covenant not to
-                            sue and forever discharge, defend, indemnify and
-                            hold harmless, Orlando Math Circle, its officers,
-                            agents, employees, students, and volunteers
-                            (hereinafter collectively "OMC") of any and from all
-                            claims, demands, rights, liabilities, losses,
-                            expenses and causes of action (with the exception of
-                            gross negligence or willful misconduct) of whatever
-                            kind or nature including, but not limited to,
-                            negligence, arising from and by reason of any and
-                            all known and unknown, foreseen and unforeseen
-                            bodily and personal injuries, damage to property,
-                            and the consequences thereof, including death,
-                            resulting from any participation in or in any way
-                            connected with or arising out of the Program.
-                          </p>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">
-                          I HAVE READ THIS RELEASE OF LIABILITY IN ITS ENTIRETY
-                          AND FULLY UNDERSTAND ITS CONTENTS.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Event Policies - Original Full Text */}
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="eventPolicies"
-                        checked={formData.eventPolicies}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(
-                            "eventPolicies",
-                            checked as boolean
-                          )
-                        }
-                      />
-                      <div>
-                        <Label htmlFor="eventPolicies" className="font-medium">
-                          Online Event Policies{" "}
-                          <span className="text-destructive">*</span>
-                        </Label>
-                        <div className="text-sm text-muted-foreground mt-1 p-4 border rounded-md">
-                          <p>
-                            Participants in online events or programs are
-                            expected to exhibit good behavior to ensure a
-                            positive experience for everyone. At its sole
-                            discretion, Orlando Math Circle may remove a
-                            participant from an online event or program for
-                            behavioral reasons. If a participant is removed for
-                            behavioral reasons, no refund will be issued and the
-                            participant may be blocked from future online
-                            sessions. Orlando Math Circle cannot provide
-                            refunds, credits, or transfers for any reason.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Photo Release - Original Full Text */}
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="photoRelease"
-                        checked={formData.photoRelease}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(
-                            "photoRelease",
-                            checked as boolean
-                          )
-                        }
-                      />
-                      <div>
-                        <Label htmlFor="photoRelease" className="font-medium">
-                          Photograph Permission and Release{" "}
-                          <span className="text-destructive">*</span>
-                        </Label>
-                        <div className="text-sm text-muted-foreground mt-1 p-4 border rounded-md">
-                          <p className="mb-2">
-                            This agreement applies to the
-                            Registrant(s)/Participant(s). In consideration of my
-                            wish to participate in an online event or program
-                            and related activities (collectively the "Event") of
-                            the Orlando Math Circle, I agree:
-                          </p>
-                          <ol className="list-decimal pl-5 space-y-2">
-                            <li>
-                              That the Orlando Math Circle (or its
-                              representatives) may take photographs or video of
-                              me during my participation in the Event
-                              ("Photographs" or "Video");
-                            </li>
-                            <li>
-                              That I irrevocably grant the Orlando Math Circle
-                              (and its licensees and assigns) the worldwide
-                              right in perpetuity to use my name, and my
-                              likeness as depicted in the Photographs and/or
-                              Video in materials related to the Melbourne Math
-                              Circle's educational and charitable mission,
-                              including the right to reproduce, distribute,
-                              modify, and publicly display the Photographs
-                              and/or Video in any medium now known or later
-                              developed, including, promotion and fundraising
-                              for the Orlando Math Circle;
-                            </li>
-                            <li>
-                              On behalf of myself, my heirs, family members, and
-                              executors, I irrevocably release the Melbourne
-                              Math Circle from any claim of any nature, known or
-                              unknown, that I have or ever may have (including
-                              for invasion of privacy, libel, slander,
-                              portraying me in a false light, or breach of my
-                              right of publicity) based on use of the
-                              Photographs and/or Video or my name or likeness as
-                              described.
-                            </li>
-                          </ol>
-                          <p className="mt-2">
-                            I understand that the Orlando Math Circle will rely
-                            on this release and that I may not revoke my
-                            permission or release. These terms are governed by
-                            the laws of the State of Florida applicable to
-                            releases.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Final Agreement */}
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="finalAgreement"
-                        checked={formData.finalAgreement}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(
-                            "finalAgreement",
-                            checked as boolean
-                          )
-                        }
-                      />
-                      <div>
-                        <Label htmlFor="finalAgreement" className="font-medium">
-                          Final Agreement{" "}
-                          <span className="text-destructive">*</span>
-                        </Label>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          By checking this box, you acknowledge that you have
-                          read and agree to the above for yourself and your
-                          child(ren) listed in this form.
-                        </p>
-                      </div>
+              {[
+                {
+                  id: "liabilityWaiver",
+                  label: "Liability Waiver",
+                  body: `
+  <p class="mb-2">
+    As parent or legal guardian of the minor, I hereby grant the permission necessary to allow Child to participate in Orlando Math Circle online or at any physical location where events are held (the "Program").
+  </p>
+  <p class="mb-2">
+    I understand the Program does not guarantee the suitability of the Program for Child's participation. I understand that there are inherent risks involved in participating in the Program, and I realize that participation in the Program is my and the Child's choice.
+  </p>
+  <p class="mb-2">
+    I am aware that, during the program, certain risks and dangers may occur, including, but not limited to, accident or illness; the forces of nature; all manner of foreseen and unforeseen bodily and personal injuries, including death; damage to property; and the consequences resulting therefrom.
+  </p>
+  <p class="mb-2">
+    IN CONSIDERATION OF CHILD BEING PERMITTED TO ATTEND AND PARTICIPATE IN THE PROGRAM, I ACKNOWLEDGE AND VOLUNTARILY ASSUME ALL RISKS ASSOCIATED WITH THE PROGRAM.
+  </p>
+  <p>
+    I, on my own behalf, and on behalf of the Child, our heirs, representatives, executors, administrators and assigns, for the sole consideration of Child being allowed to attend and participate in the Program, do hereby release, relieve, covenant not to sue and forever discharge, defend, indemnify and hold harmless Orlando Math Circle, its officers, agents, employees, students, and volunteers (hereinafter collectively "OMC") of any and from all claims, demands, rights, liabilities, losses, expenses and causes of action (with the exception of gross negligence or willful misconduct) of whatever kind or nature including, but not limited to, negligence, arising from and by reason of any and all known and unknown, foreseen and unforeseen bodily and personal injuries, damage to property, and the consequences thereof, including death, resulting from any participation in or in any way connected with or arising out of the Program.
+  </p>
+          `.trim(),
+                },
+                {
+                  id: "eventPolicies",
+                  label: "Online Event Policies",
+                  body: `
+  <p>
+    Participants in online events or programs are expected to exhibit good behavior to ensure a positive experience for everyone. At its sole discretion, Orlando Math Circle may remove a participant from an online event or program for behavioral reasons. If a participant is removed for behavioral reasons, no refund will be issued and the participant may be blocked from future online sessions. Orlando Math Circle cannot provide refunds, credits, or transfers for any reason.
+  </p>
+          `.trim(),
+                },
+                {
+                  id: "photoRelease",
+                  label: "Photograph Permission and Release",
+                  body: `
+  <p class="mb-2">
+    This agreement applies to the Registrant(s)/Participant(s). In consideration of my wish to participate in an online event or program and related activities (collectively the "Event") of the Orlando Math Circle, I agree:
+  </p>
+  <ol class="list-decimal pl-5 space-y-2">
+    <li>
+      That the Orlando Math Circle (or its representatives) may take photographs or video of me during my participation in the Event ("Photographs" or "Video");
+    </li>
+    <li>
+      That I irrevocably grant the Orlando Math Circle (and its licensees and assigns) the worldwide right in perpetuity to use my name, and my likeness as depicted in the Photographs and/or Video in materials related to the Orlando Math Circle's educational and charitable mission, including the right to reproduce, distribute, modify, and publicly display the Photographs and/or Video in any medium now known or later developed, including, promotion and fundraising for the Orlando Math Circle;
+    </li>
+    <li>
+      On behalf of myself, my heirs, family members, and executors, I irrevocably release the Orlando Math Circle from any claim of any nature, known or unknown, that I have or ever may have (including for invasion of privacy, libel, slander, portraying me in a false light, or breach of my right of publicity) based on use of the Photographs and/or Video or my name or likeness as described.
+    </li>
+  </ol>
+  <p class="mt-2">
+    I understand that the Orlando Math Circle will rely on this release and that I may not revoke my permission or release. These terms are governed by the laws of the State of Florida applicable to releases.
+  </p>
+          `.trim(),
+                },
+              ].map(({ id, label, body }) => (
+                <div key={id} className="flex items-start space-x-2">
+                  <Checkbox
+                    id={id}
+                    checked={(formData as any)[id]}
+                    onCheckedChange={(v) => handleCheckbox(id, v as boolean)}
+                  />
+                  <div>
+                    <Label htmlFor={id} className="font-medium">
+                      {label} <span className="text-destructive">*</span>
+                    </Label>
+                    <div className="text-sm text-muted-foreground mt-1 p-4 border rounded-md max-h-40 overflow-y-auto">
+                      <div dangerouslySetInnerHTML={{ __html: body }} />
                     </div>
                   </div>
                 </div>
+              ))}
+
+              {/* Final Agreement */}
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="finalAgreement"
+                  checked={formData.finalAgreement}
+                  onCheckedChange={(v) =>
+                    handleCheckbox("finalAgreement", v as boolean)
+                  }
+                />
+                <div>
+                  <Label htmlFor="finalAgreement" className="font-medium">
+                    Final Agreement <span className="text-destructive">*</span>
+                  </Label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    By checking this, I confirm I’ve read & agree to the above.
+                  </p>
+                </div>
               </div>
             </CardContent>
-          </Card>
 
-          <div className="flex justify-end">
-            <Button type="submit" size="lg" className="w-full md:w-auto">
-              Submit Registration
-            </Button>
-          </div>
+            {/* desktop submit */}
+            <div className="hidden sm:flex justify-end p-6 pt-0">
+              <Button type="submit" size="lg" className="w-full md:w-auto">
+                Submit Registration
+              </Button>
+            </div>
+          </Card>
         </TabsContent>
       </Tabs>
+
+      {/* MOBILE step indicator + nav */}
+      <div className="sm:hidden">
+        <div className="text-center mb-4">
+          <span className="font-medium">
+            Step {stepIdx + 1} of {steps.length}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          {stepIdx > 0 ? (
+            <Button variant="outline" onClick={() => setStepIdx((i) => i - 1)}>
+              Back
+            </Button>
+          ) : (
+            <div />
+          )}
+          {stepIdx < steps.length - 1 ? (
+            <Button onClick={() => setStepIdx((i) => i + 1)}>Next</Button>
+          ) : (
+            <Button type="submit">Submit</Button>
+          )}
+        </div>
+      </div>
     </form>
   );
 }
