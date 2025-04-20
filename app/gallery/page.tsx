@@ -8,10 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-// Motion-enabled Card
 const MotionCard = motion(Card);
 
-// Animation variants
 const containerVariants = {
   hidden: {},
   visible: {
@@ -34,29 +32,141 @@ const galleryImages: Array<{
   caption: string;
   category: Category;
 }> = [
-  // Monthly Meetings (1–15)
-  ...Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    src: `/photos/Monthly meetings/${i + 1}.png`,
-    alt: `Monthly Meeting ${i + 1}`,
-    caption: `Monthly Meeting #${i + 1}`,
-    category: "monthly-meetings" as const,
-  })),
-  // IndiaFest (1–3)
-  ...Array.from({ length: 3 }, (_, i) => ({
-    id: 16 + i,
-    src: `/photos/IndiaFest/${i + 1}.png`,
-    alt: `IndiaFest ${i + 1}`,
-    caption: `IndiaFest #${i + 1}`,
-    category: "indiafest" as const,
-  })),
+  // Monthly Meetings
+  {
+    id: 1,
+    src: "/photos/monthly_meetings/1.png",
+    alt: "Monthly Meeting 1",
+    caption: "Monthly Meeting #1",
+    category: "monthly-meetings",
+  },
+  {
+    id: 2,
+    src: "/photos/monthly_meetings/2.png",
+    alt: "Monthly Meeting 2",
+    caption: "Monthly Meeting #2",
+    category: "monthly-meetings",
+  },
+  {
+    id: 3,
+    src: "/photos/monthly_meetings/3.png",
+    alt: "Monthly Meeting 3",
+    caption: "Monthly Meeting #3",
+    category: "monthly-meetings",
+  },
+  {
+    id: 4,
+    src: "/photos/monthly_meetings/4.png",
+    alt: "Monthly Meeting 4",
+    caption: "Monthly Meeting #4",
+    category: "monthly-meetings",
+  },
+  {
+    id: 5,
+    src: "/photos/monthly_meetings/5.png",
+    alt: "Monthly Meeting 5",
+    caption: "Monthly Meeting #5",
+    category: "monthly-meetings",
+  },
+  {
+    id: 6,
+    src: "/photos/monthly_meetings/6.png",
+    alt: "Monthly Meeting 6",
+    caption: "Monthly Meeting #6",
+    category: "monthly-meetings",
+  },
+  {
+    id: 7,
+    src: "/photos/monthly_meetings/7.png",
+    alt: "Monthly Meeting 7",
+    caption: "Monthly Meeting #7",
+    category: "monthly-meetings",
+  },
+  {
+    id: 8,
+    src: "/photos/monthly_meetings/8.png",
+    alt: "Monthly Meeting 8",
+    caption: "Monthly Meeting #8",
+    category: "monthly-meetings",
+  },
+  {
+    id: 9,
+    src: "/photos/monthly_meetings/9.png",
+    alt: "Monthly Meeting 9",
+    caption: "Monthly Meeting #9",
+    category: "monthly-meetings",
+  },
+  {
+    id: 10,
+    src: "/photos/monthly_meetings/10.png",
+    alt: "Monthly Meeting 10",
+    caption: "Monthly Meeting #10",
+    category: "monthly-meetings",
+  },
+  {
+    id: 11,
+    src: "/photos/monthly_meetings/11.png",
+    alt: "Monthly Meeting 11",
+    caption: "Monthly Meeting #11",
+    category: "monthly-meetings",
+  },
+  {
+    id: 12,
+    src: "/photos/monthly_meetings/12.png",
+    alt: "Monthly Meeting 12",
+    caption: "Monthly Meeting #12",
+    category: "monthly-meetings",
+  },
+  {
+    id: 13,
+    src: "/photos/monthly_meetings/13.png",
+    alt: "Monthly Meeting 13",
+    caption: "Monthly Meeting #13",
+    category: "monthly-meetings",
+  },
+  {
+    id: 14,
+    src: "/photos/monthly_meetings/14.png",
+    alt: "Monthly Meeting 14",
+    caption: "Monthly Meeting #14",
+    category: "monthly-meetings",
+  },
+  {
+    id: 15,
+    src: "/photos/monthly_meetings/15.png",
+    alt: "Monthly Meeting 15",
+    caption: "Monthly Meeting #15",
+    category: "monthly-meetings",
+  },
+
+  // IndiaFest
+  {
+    id: 16,
+    src: "/photos/indiafest/1.png",
+    alt: "IndiaFest 1",
+    caption: "IndiaFest #1",
+    category: "indiafest",
+  },
+  {
+    id: 17,
+    src: "/photos/indiafest/2.png",
+    alt: "IndiaFest 2",
+    caption: "IndiaFest #2",
+    category: "indiafest",
+  },
+  {
+    id: 18,
+    src: "/photos/indiafest/3.png",
+    alt: "IndiaFest 3",
+    caption: "IndiaFest #3",
+    category: "indiafest",
+  },
 ];
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile viewport (<640px)
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 640);
     handleResize();
@@ -136,7 +246,7 @@ export default function GalleryPage() {
 
   return (
     <div className="flex flex-col" onKeyDown={handleKeyDown} tabIndex={0}>
-      {/* HERO SECTION */}
+      {/* Hero */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-cyan-400 opacity-80" />
         <motion.div
@@ -165,7 +275,7 @@ export default function GalleryPage() {
         </motion.div>
       </section>
 
-      {/* GALLERY SECTIONS */}
+      {/* Gallery */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           {renderSection("Monthly Meetings", "🗓️", "monthly-meetings")}
@@ -173,41 +283,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {/* INSTAGRAM SECTION
-      <section className="py-12 bg-blue-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center mb-8">
-          <h2 className="font-mono text-2xl md:text-3xl font-bold text-blue-800">
-            Follow Us on <span className="text-cyan-700">Instagram</span>
-          </h2>
-          <p className="mt-2 text-blue-900/80">
-            Behind-the-scenes math moments and community highlights.
-          </p>
-          <Link
-            href="https://instagram.com/melbournemathcircle"
-            className="inline-flex items-center mt-4 text-cyan-700 hover:text-cyan-500"
-          >
-            <Instagram className="h-5 w-5 mr-2" />
-            <span className="font-mono">@melbournemathcircle</span>
-          </Link>
-        </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="relative aspect-square overflow-hidden rounded-md bg-white"
-            >
-              <Image
-                src={`/placeholder.svg?height=300&width=300&text=Insta+${i}`}
-                alt={`Instagram post ${i}`}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
-        </div>
-      </section> */}
-
-      {/* SUBMIT PHOTOS SECTION */}
+      {/* Submit Photos */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
           <div>
@@ -224,19 +300,10 @@ export default function GalleryPage() {
               <Link href="/contact#submit-photos">Submit Photos</Link>
             </Button>
           </div>
-          {/* <div className="relative aspect-video overflow-hidden rounded-lg">
-            <Image
-              src="/placeholder.svg?height=400&width=600&text=Share+Your+Photos"
-              alt="Collage of images"
-              width={600}
-              height={400}
-              className="object-cover"
-            />
-          </div> */}
         </div>
       </section>
 
-      {/* LIGHTBOX OVERLAY */}
+      {/* Lightbox */}
       <AnimatePresence>
         {selectedImage !== null && (
           <motion.div
