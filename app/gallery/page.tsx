@@ -142,21 +142,21 @@ const galleryImages: Array<{
   // IndiaFest
   {
     id: 16,
-    src: "/photos/indiafest/1.png",
+    src: "/Photos/IndiaFest/1.png",
     alt: "IndiaFest 1",
     caption: "IndiaFest #1",
     category: "indiafest",
   },
   {
     id: 17,
-    src: "/photos/indiafest/2.png",
+    src: "/Photos/IndiaFest/2.png",
     alt: "IndiaFest 2",
     caption: "IndiaFest #2",
     category: "indiafest",
   },
   {
     id: 18,
-    src: "/photos/indiafest/3.png",
+    src: "/Photos/IndiaFest/3.png",
     alt: "IndiaFest 3",
     caption: "IndiaFest #3",
     category: "indiafest",
