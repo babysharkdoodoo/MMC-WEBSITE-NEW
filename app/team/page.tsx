@@ -91,19 +91,19 @@ const teamMembers = [
       linkedin: "saaketh-kesireddy",
     },
   },
-  {
-    name: "Margarita Azbel",
-    role: "Advisor",
-    grade: "",
-    school: "",
-    bio: "Margarita brings a wealth of knowledge and guidance as an experienced advisor, helping our students navigate complex math topics and community outreach. She is passionate about inspiring the next generation of problem-solvers.",
-    image: "/placeholder.svg?height=400&width=400&text=MA",
-    social: {
-      // email: "margarita@melbournemathcircle.org",
-      // github: "",
-      // linkedin: "",
-    },
-  },
+  // {
+  // name: "Margarita Azbel",
+  // role: "Advisor",
+  // grade: "",
+  // school: "",
+  // bio: "Margarita brings a wealth of knowledge and guidance as an experienced advisor, helping our students navigate complex math topics and community outreach. She is passionate about inspiring the next generation of problem-solvers.",
+  // image: "/placeholder.svg?height=400&width=400&text=MA",
+  // social: {
+  // email: "margarita@melbournemathcircle.org",
+  // github: "",
+  // linkedin: "",
+  // },
+  // },
 ];
 
 export default function TeamPage() {
@@ -233,7 +233,7 @@ export default function TeamPage() {
                       <Mail className="h-5 w-5" />
                     </Link>
                   )}
-                  {member.social.github && (
+                  {/* {member.social.github && (
                     <Link
                       href={`https://github.com/${member.social.github}`}
                       className="hover:text-blue-500"
@@ -242,7 +242,7 @@ export default function TeamPage() {
                     >
                       <Github className="h-5 w-5" />
                     </Link>
-                  )}
+                  )} */}
                   {member.social.linkedin && (
                     <Link
                       href={`https://linkedin.com/in/${member.social.linkedin}`}
