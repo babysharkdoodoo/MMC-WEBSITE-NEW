@@ -117,7 +117,13 @@
   background-color: var(--background);
 }
 
-/* Ensure proper font rendering */
+/* Ensure proper font rendering and prevent white flash */
 html {
   font-feature-settings: "rlig" 1, "calt" 1;
+  background-color: #1e3a8a; /* blue-900 */
+}
+
+body {
+  background-color: #1e3a8a; /* blue-900 */
+  min-height: 100vh;
 }

@@ -5,9 +5,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Mail, Send } from "lucide-react";
 import { useState } from "react";
+
+// Mathematical symbols for subtle background
+const mathSymbols = [
+  "π", "∑", "∫", "∞", "≈", "θ", "λ", "Δ", "√", "∂", "Ω", "±", "×", "÷",
+  "σ", "μ", "φ", "Γ", "α", "β", "γ", "ε", "ζ", "η", "ι", "κ",
+];
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -22,6 +28,7 @@ export default function ContactPage() {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -66,42 +73,122 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* ===== HERO SECTION ===== */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        {/* Background gradients and subtle pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-cyan-400 opacity-80 pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,...')] opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIi8+')] opacity-20 pointer-events-none" />
+
+        {/* Floating animated shapes */}
         <motion.div
           className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-300 rounded-full blur-3xl opacity-30"
-          animate={{ rotate: [0, 60, -60, 0], x: [0, -40, 40, 0] }}
-          transition={{ repeat: Infinity, duration: 15 }}
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, 90, -90, 0], x: [0, -50, 50, 0] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 10 }
+          }
         />
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="absolute -top-52 right-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
+          }
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-mono text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white drop-shadow-lg">
+            <motion.h1
+              className="font-mono text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg"
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
+            >
               Contact <span className="text-blue-200">Us</span>
-            </h1>
-            <p className="mt-6 text-xl text-white/90">
+            </motion.h1>
+            <motion.p
+              className="mt-6 text-xl md:text-2xl text-white/90"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                delay: shouldReduceMotion ? 0 : 0.2,
+                duration: shouldReduceMotion ? 0 : 0.8,
+              }}
+            >
               Have questions or want to learn more about Melbourne Math Circle?
               We’d love to hear from you.
-            </p>
+            </motion.p>
           </div>
         </div>
       </section>
 
       {/* ===== CONTACT FORM + INFO ===== */}
-      <section className="py-16 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05),transparent_70%)] pointer-events-none" />
+      <section className="py-32 bg-gradient-to-b from-white to-blue-50/50 relative overflow-hidden">
+        {/* Subtle background with math symbols */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          {mathSymbols.slice(0, 8).map((symbol, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-blue-900 font-serif text-[200px] select-none"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                rotate: [0, 10, -10, 0],
+              }}
+              transition={{
+                duration: 15 + i * 2,
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+            >
+              {symbol}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Floating gradient shapes */}
         <motion.div
-          className="absolute -top-32 right-0 w-[400px] h-[400px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 blur-3xl opacity-20"
-          animate={{ scale: [1, 1.1, 1], rotate: [0, 60, -60, 0] }}
-          transition={{ repeat: Infinity, duration: 20 }}
+          className="absolute -top-48 right-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/20 via-cyan-300/25 to-teal-300/20 rounded-full blur-3xl"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0], opacity: [0.2, 0.3, 0.2] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20 }
+          }
+        />
+        <motion.div
+          className="absolute -bottom-48 left-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
+          }
         />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 gap-16">
               {/* ===== CONTACT FORM ===== */}
-              <div>
-                <h2 className="font-mono text-3xl font-bold mb-8 text-blue-800">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h2 className="font-mono text-3xl md:text-4xl font-bold mb-8 text-blue-800">
                   Get in <span className="text-cyan-600">Touch</span>
                 </h2>
 
@@ -115,7 +202,7 @@ export default function ContactPage() {
                     ✅ Message sent successfully!
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <input
                       type="text"
                       name="hidden"
@@ -192,7 +279,7 @@ export default function ContactPage() {
                     <Button
                       type="submit"
                       disabled={status === "submitting"}
-                      className="w-full bg-blue-700 hover:bg-blue-600 text-white"
+                      className="w-full bg-blue-700 hover:bg-blue-600 text-white text-lg py-6"
                     >
                       {status === "submitting" ? (
                         <motion.span
@@ -204,17 +291,21 @@ export default function ContactPage() {
                         </motion.span>
                       ) : (
                         <>
-                          <Send className="mr-2 h-4 w-4" /> Send Message
+                          <Send className="mr-2 h-5 w-5" /> Send Message
                         </>
                       )}
                     </Button>
                   </form>
                 )}
-              </div>
+              </motion.div>
 
               {/* ===== CONTACT INFO ===== */}
-              <div>
-                <h2 className="font-mono text-3xl font-bold mb-8 text-blue-800">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h2 className="font-mono text-3xl md:text-4xl font-bold mb-8 text-blue-800">
                   Contact <span className="text-cyan-600">Information</span>
                 </h2>
                 <Card className="bg-white border-blue-100 shadow-sm hover:shadow-md transition-all">
@@ -238,25 +329,48 @@ export default function ContactPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ===== FAQ SECTION ===== */}
-      <section className="py-16 bg-blue-50 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none" />
+      <section className="py-32 bg-gradient-to-tr from-blue-50 via-cyan-50 to-sky-50 relative overflow-hidden">
+        {/* Floating animated shapes */}
         <motion.div
-          className="absolute -bottom-40 left-0 w-[400px] h-[400px] bg-gradient-to-bl from-blue-400 to-cyan-500 blur-3xl opacity-30"
-          animate={{ rotate: [0, -30, 30, 0], y: [0, 30, -30, 0] }}
-          transition={{ repeat: Infinity, duration: 25 }}
+          className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-tl from-blue-400 to-cyan-400 blur-3xl opacity-30"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, 90, -90, 0], x: [0, -50, 50, 0] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 10 }
+          }
         />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="font-mono text-3xl font-bold text-center mb-8 text-blue-800">
+        <motion.div
+          className="absolute -top-52 right-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
+          }
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <motion.h2
+              className="font-mono text-3xl md:text-4xl font-bold text-center mb-12 text-blue-800"
+              initial={{ y: 30, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
+            >
               Frequently Asked <span className="text-cyan-600">Questions</span>
-            </h2>
+            </motion.h2>
             <div className="space-y-6">
               {[
                 {
@@ -300,17 +414,21 @@ export default function ContactPage() {
                     "Simply sign up once on our 'Join Us' page, and we’ll email RSVP links whenever a new event is scheduled.",
                 },
               ].map((item, index) => (
-                <Card
+                <motion.div
                   key={index}
-                  className="bg-white border-blue-100 shadow-sm hover:shadow-md transition-all"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <CardContent className="p-6">
-                    <h3 className="font-mono text-lg font-bold mb-2 text-blue-900">
-                      {item.question}
-                    </h3>
-                    <p className="text-blue-900/80">{item.answer}</p>
-                  </CardContent>
-                </Card>
+                  <Card className="bg-white border-blue-100 shadow-sm hover:shadow-md transition-all">
+                    <CardContent className="p-6">
+                      <h3 className="font-mono text-lg font-bold mb-2 text-blue-900">
+                        {item.question}
+                      </h3>
+                      <p className="text-blue-900/80">{item.answer}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>

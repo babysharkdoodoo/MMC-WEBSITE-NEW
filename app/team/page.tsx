@@ -26,17 +26,23 @@ function AnimatedArrow(props: any) {
   );
 }
 
+// Mathematical symbols for subtle background
+const mathSymbols = [
+  "π", "∑", "∫", "∞", "≈", "θ", "λ", "Δ", "√", "∂", "Ω", "±", "×", "÷",
+  "σ", "μ", "φ", "Γ", "α", "β", "γ", "ε", "ζ", "η", "ι", "κ",
+];
+
 // 6 team members, with last two replaced
 const teamMembers = [
   {
     name: "Eshan Vipuil",
     role: "Founder & President",
-    grade: "10th Grade",
+    grade: "11th Grade",
     school: "West Shore Jr./Sr. High",
-    bio: "Eshan is a sophomore at West Shore Junior Senior High School with a strong interest in mathematics and computer science. He has won numerous awards in competitive math, including MathCounts, Math Kangaroo, and AMC, and serves as the President and Lead Instructor of the West Shore MathCounts Club. Outside of academics, Eshan is an avid tennis player on the West Shore Varsity Team.",
+    bio: "Eshan is a junior at West Shore Junior Senior High School with a strong interest in mathematics and computer science. He has won numerous awards in competitive math, including MathCounts, Math Kangaroo, and AMC, and serves as the President and Lead Instructor of the West Shore MathCounts Club. Outside of academics, Eshan is an avid tennis player on the West Shore Varsity Team.",
     image: "/pfps/eshan.png",
     social: {
-      email: "eshan@orlandomathcircle.org",
+      email: "eshan.mmc@orlandomathcircle.org",
       // github: "alexchen",
       linkedin: "eshan-vipuil-8042952a3",
     },
@@ -44,18 +50,18 @@ const teamMembers = [
   {
     name: "Shoaib Ahmed",
     role: "Vice President",
-    grade: "10th Grade",
+    grade: "11th Grade",
     school: "West Shore Jr/Sr High",
     bio: "Shoaib Ahmed is a West Shore student driven by a passion for igniting curiosity and inspiring others. As an internationally award-winning Future Problem Solver and officially recognized in Math Kangaroo, he excels at tackling challenges with creative thinking. Beyond academics, he enjoys playing basketball and giving back to the community.",
     image: "/pfps/shoaib.png",
     social: {
-      email: "shoaib@orlandomathcircle.org",
+      email: "shoaib.mmc@orlandomathcircle.org",
     },
   },
   {
     name: "Sidharth Patsamatla",
     role: "Volunteer",
-    grade: "10th Grade",
+    grade: "11th Grade",
     school: "West Shore Jr./Sr. High",
     bio: "Sidharth Patsamatla is a dedicated high school student focused on facilitating higher-order student learning. As an ISEF finalist and FPS international qualifier, Sidharth is highly experienced in mathematics, critical thinking, and problem-solving. Outside of academics, Sidharth enjoys playing basketball and board games.",
     image: "/pfps/sid.jpg",
@@ -65,24 +71,24 @@ const teamMembers = [
       // linkedin: "taylor-kim",
     },
   },
-  {
-    name: "Faizan Ahmed",
-    role: "Website Developer",
-    grade: "8th Grade",
-    school: "West Shore Jr./Sr. High",
-    bio: "Faizan Ahmed is an 8th-grade student at West Shore with a passion for mathematics and its role in solving real-world problems. He conducts independent research at the intersection of mathematics, data science, and technology, focusing on healthcare challenges. Faizan is actively involved in math clubs like STEM Club, where he collaborates with peers to explore and solve complex mathematical problems.",
-    image: "/pfps/faizan.png",
-    social: {
-      email: "hello.faizan@proton.me",
-      // github: "jordanpatel",
-      linkedin: "thefaizanak",
-    },
-  },
+  // {
+  //   name: "Faizan Ahmed",
+  //   role: "Website Developer",
+  //   grade: "9th Grade",
+  //   school: "West Shore Jr./Sr. High",
+  //   bio: "Faizan Ahmed is a 9th-grade student at West Shore with a passion for mathematics and its role in solving real-world problems. He conducts independent research at the intersection of mathematics, data science, and technology, focusing on healthcare challenges. Faizan is actively involved in math clubs like STEM Club, where he collaborates with peers to explore and solve complex mathematical problems.",
+  //   image: "/pfps/faizan.png",
+  //   social: {
+  //     email: "hello.faizan@proton.me",
+  //     // github: "jordanpatel",
+  //     linkedin: "thefaizanak",
+  //   },
+  // },
   {
     name: "Saaketh Kesireddy",
     role: "Alumni Advisor",
-    grade: "12th Grade",
-    school: "West Shore Jr./Sr. High (Heading to UF for CS)",
+    grade: "Freshman",
+    school: "University of Florida",
     bio: "Saaketh is a freshman at the University of Florida, Class of 2029, with a keen interest in computer science and finance. As a dedicated volunteer at Health First Palm Bay Hospital, he combines his academic pursuits with a passion for community service. Outside of school, Saaketh enjoys tennis and challenges himself with new ways to merge technology and business.",
     image: "/pfps/saaketh.png",
     social: {
@@ -158,102 +164,183 @@ export default function TeamPage() {
       </section>
 
       {/* ===== TEAM SECTION ===== */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_70%)] pointer-events-none"></div>
+      <section className="py-32 bg-gradient-to-b from-white to-blue-50/50 relative overflow-hidden">
+        {/* Subtle background with math symbols */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          {mathSymbols.slice(0, 8).map((symbol, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-blue-900 font-serif text-[200px] select-none"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                rotate: [0, 10, -10, 0],
+              }}
+              transition={{
+                duration: 15 + i * 2,
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+            >
+              {symbol}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Floating gradient shapes */}
         <motion.div
-          className="absolute -top-32 right-0 w-[400px] h-[400px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 blur-3xl opacity-20"
+          className="absolute -top-48 right-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/20 via-cyan-300/25 to-teal-300/20 rounded-full blur-3xl pointer-events-none"
           animate={
             shouldReduceMotion
               ? {}
-              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0] }
+              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0], opacity: [0.2, 0.3, 0.2] }
           }
           transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 15 }
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20 }
+          }
+        />
+        <motion.div
+          className="absolute -bottom-48 left-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 rounded-full blur-3xl pointer-events-none"
+          animate={
+            shouldReduceMotion
+              ? {}
+              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
+          }
+          transition={
+            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
           }
         />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
           <motion.h2
-            className="font-mono text-4xl font-bold tracking-tight mb-16 text-blue-900 text-center"
+            className="font-mono text-5xl md:text-6xl font-bold tracking-tight mb-20 text-gray-900 text-center drop-shadow-md"
             initial={{ y: 30, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
           >
-            Meet Our <span className="text-blue-600">Leaders</span>
+            Meet Our <span className="text-cyan-600">Leaders</span>
           </motion.h2>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
-                className="bg-white p-6 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-transform duration-200 flex flex-col"
-                whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: shouldReduceMotion ? 0 : index * 0.05 }}
+                className="bg-gradient-to-b from-white to-blue-50/50 p-8 rounded-3xl shadow-xl border border-blue-100/50 hover:shadow-cyan-500/30 transition-all duration-500 flex flex-col group relative overflow-hidden"
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03, y: -5 }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1, type: "spring" }}
               >
-                {/* Member Image */}
-                <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
+                {/* Subtle hover gradient overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                />
+
+                {/* Member Image with enhanced animations */}
+                <div className="relative aspect-square mb-8 overflow-hidden rounded-2xl shadow-lg group-hover:shadow-cyan-500/40 transition-shadow duration-500">
                   <Image
                     src={member.image || "/placeholder.svg"}
                     alt={member.name}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
 
-                {/* Details */}
-                <h3 className="font-mono text-xl font-bold text-blue-900">
-                  {member.name}
-                </h3>
-                <p className="text-blue-900/70 text-sm">{member.role}</p>
-                <div className="mt-4 flex flex-col gap-1 text-sm text-blue-900/80 leading-relaxed">
+                {/* Name and Role with fade in */}
+                <motion.h3
+                  className="font-mono text-2xl font-bold text-gray-900 mb-2 group-hover:text-cyan-600 transition-colors duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                  {member.social.linkedin ? (
+                    <a
+                      href={`https://linkedin.com/in/${member.social.linkedin}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline cursor-pointer"
+                    >
+                      {member.name}
+                    </a>
+                  ) : (
+                    member.name
+                  )}
+                </motion.h3>
+                <motion.p
+                  className="text-cyan-600 text-lg font-medium mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  {member.role}
+                </motion.p>
+
+                {/* Grade and School */}
+                <motion.div
+                  className="flex flex-col gap-3 text-gray-700 text-base leading-relaxed font-light mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
                   {member.grade && (
                     <span>
-                      <strong className="text-blue-900">Grade:</strong>{" "}
+                      <strong className="text-gray-900 font-medium">Grade:</strong>{" "}
                       {member.grade}
                     </span>
                   )}
                   {member.school && (
                     <span>
-                      <strong className="text-blue-900">School:</strong>{" "}
+                      <strong className="text-gray-900 font-medium">School:</strong>{" "}
                       {member.school}
                     </span>
                   )}
-                  <p className="text-blue-900/90 mt-2">{member.bio}</p>
-                </div>
+                </motion.div>
 
-                {/* Social Icons */}
-                <div className="mt-auto pt-4 flex items-center gap-3 text-blue-700">
+                {/* Bio without word animation */}
+                <motion.p
+                  className="text-gray-800 text-base leading-relaxed flex-grow"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
+                  {member.bio}
+                </motion.p>
+
+                {/* Social Icons with bounce in */}
+                <motion.div
+                  className="mt-8 pt-6 flex items-center gap-6 text-blue-700 border-t border-blue-100/50"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                >
                   {member.social.email && (
-                    <Link
+                    <motion.a
                       href={`mailto:${member.social.email}`}
-                      className="hover:text-blue-500"
+                      className="hover:text-cyan-600 transition-colors duration-300 cursor-pointer"
+                      whileHover={{ scale: 1.2, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <Mail className="h-5 w-5" />
-                    </Link>
+                      <Mail className="h-6 w-6" />
+                    </motion.a>
                   )}
-                  {/* {member.social.github && (
-                    <Link
-                      href={`https://github.com/${member.social.github}`}
-                      className="hover:text-blue-500"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github className="h-5 w-5" />
-                    </Link>
-                  )} */}
                   {member.social.linkedin && (
-                    <Link
+                    <motion.a
                       href={`https://linkedin.com/in/${member.social.linkedin}`}
-                      className="hover:text-blue-500"
+                      className="hover:text-cyan-600 transition-colors duration-300 cursor-pointer"
                       target="_blank"
                       rel="noopener noreferrer"
+                      whileHover={{ scale: 1.2, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <Linkedin className="h-5 w-5" />
-                    </Link>
+                      <Linkedin className="h-6 w-6" />
+                    </motion.a>
                   )}
-                </div>
+                </motion.div>
               </motion.div>
             ))}
           </div>
