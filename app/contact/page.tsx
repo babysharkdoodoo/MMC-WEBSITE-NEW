@@ -323,7 +323,7 @@ export default function ContactPage() {
                           href="mailto:info@melbournemathcircle.org"
                           className="text-blue-700 hover:text-blue-500"
                         >
-                          eshan@orlandomathcircle.org
+                          eshan.mmc@orlandomathcircle.org
                         </a>
                       </div>
                     </div>

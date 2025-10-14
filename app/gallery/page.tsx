@@ -250,9 +250,9 @@ export default function GalleryPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
-                <div className="p-4 bg-blue-50">
+                {/* <div className="p-4 bg-blue-50">
                   <p className="text-sm text-blue-900/80 text-center">{image.caption}</p>
-                </div>
+                </div> */}
               </CardContent>
             </MotionCard>
           ))}
@@ -478,7 +478,7 @@ export default function GalleryPage() {
                     />
                   ))}
               </div>
-              <div className="mt-4 text-white text-center">
+              {/* <div className="mt-4 text-white text-center">
                 {galleryImages
                   .filter((img) => img.id === selectedImage)
                   .map((image) => (
@@ -488,7 +488,7 @@ export default function GalleryPage() {
               <p className="text-white text-center text-sm mt-2">
                 Use arrows or ESC to exit.
               </p>
-            </div>
+            </div> */}
           </motion.div>
         )}
       </AnimatePresence>
