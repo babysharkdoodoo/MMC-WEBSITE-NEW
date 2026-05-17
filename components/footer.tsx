@@ -1,155 +1,218 @@
 "use client";
 
-import { Instagram, Mail, MapPin, Pi } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  Instagram,
+  Mail,
+  MapPin,
+  ArrowRight,
+} from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-blue-900 border-t border-blue-700 text-blue-100 relative overflow-hidden">
-      {/* Subtle background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-blue-950 to-transparent opacity-50 pointer-events-none" />
-      
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 relative">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          {/* Logo + Blurb */}
-          <motion.div 
-            className="space-y-8 xl:col-span-1"
-            initial={{ opacity: 0, y: 20 }}
+    <footer
+      className="relative overflow-hidden border-t border-[#dcebf5] bg-[#f8fcff]"
+      style={{
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 right-[-120px] h-[320px] w-[320px] rounded-full bg-[#d9edf8] blur-3xl opacity-70" />
+        <div className="absolute bottom-[-160px] left-[-120px] h-[340px] w-[340px] rounded-full bg-[#edf7fc] blur-3xl opacity-90" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
+        {/* Top */}
+        <div className="grid gap-14 lg:grid-cols-[1.2fr_.8fr_.8fr_.9fr]">
+          {/* Brand */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.45 }}
+            viewport={{ once: true }}
           >
-            <div className="flex items-center gap-2">
-              <motion.div 
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Pi className="h-8 w-8 text-cyan-300" />
-              </motion.div>
-              <span className="font-mono text-lg font-bold tracking-tight text-white">
-                Melbourne Math Circle
-              </span>
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#d9eaf5] bg-white shadow-[0_10px_30px_rgba(10,45,68,.06)]">
+                <span
+                  className="text-[1.6rem] text-[#17689e]"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  ∑
+                </span>
+              </div>
+
+              <div>
+                <div
+                  className="text-[1.15rem] leading-none text-[#0a2d44]"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontWeight: 600,
+                  }}
+                >
+                  Melbourne Math Circle
+                </div>
+
+                <div className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#17689e]">
+                  Chapter of Orlando Math Circle
+                </div>
+              </div>
             </div>
-            <p className="text-sm leading-6 text-blue-100/80">
-              A free, student-led math outreach program in Melbourne, Florida,
-              organized by high school students to foster curiosity and
-              excitement about mathematics, as a chapter of Orlando Math Circle (OMC).
+
+            <p className="mt-6 max-w-md text-[0.98rem] leading-8 text-[#537086]">
+              A student-led mathematics community in Melbourne, Florida focused
+              on problem solving, mathematical exploration, and collaborative
+              learning through free events and workshops.
             </p>
-            {/* Social Icons */}
-            <div className="flex space-x-6">
+
+            <div className="mt-7 flex items-center gap-4">
               <motion.a
                 href="https://www.instagram.com/melbournemathcircle_omc/"
-                className="text-blue-100/70 hover:text-cyan-300"
-                whileHover={{ scale: 1.2 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -2 }}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#d7e7f1] bg-white text-[#17689e] transition-all duration-200 hover:border-[#17689e] hover:bg-[#17689e] hover:text-white"
               >
-                <span className="sr-only">Instagram</span>
-                <Instagram className="h-6 w-6" />
+                <Instagram className="h-5 w-5" />
               </motion.a>
-              {/* Add more social links if needed */}
             </div>
           </motion.div>
 
-          {/* Navigation Links */}
-          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <h3 className="font-mono text-sm font-semibold leading-6 text-cyan-300">
-                  Pages
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {[
-                    { name: "Home", href: "/" },
-                    { name: "About", href: "/about" },
-                  ].map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-blue-100/80 hover:text-cyan-300 transition-colors duration-200"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-              <motion.div 
-                className="mt-10 md:mt-0"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <h3 className="font-mono text-sm font-semibold leading-6 text-cyan-300">
-                  More
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {[
-                    { name: "Team", href: "/team" },
-                    { name: "Join Us", href: "/join-us" },
-                    { name: "Gallery", href: "/gallery" },
-                    { name: "Contact", href: "/contact" },
-                  ].map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-blue-100/80 hover:text-cyan-300 transition-colors duration-200"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
+          {/* Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.05 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#17689e]">
+              Navigation
             </div>
 
-            {/* Contact Info */}
-            <motion.div 
-              className="md:grid md:grid-cols-1 md:gap-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <div>
-                <h3 className="font-mono text-sm font-semibold leading-6 text-cyan-300">
-                  Contact Us
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  <li className="flex gap-x-3 items-center">
-                    <MapPin
-                      className="h-5 w-5 flex-none text-cyan-300"
-                      aria-hidden="true"
-                    />
-                    <span className="text-sm leading-6 text-blue-100/80">
-                      Melbourne, Florida
-                    </span>
-                  </li>
-                  <li className="flex gap-x-3 items-center">
-                    <Mail
-                      className="h-5 w-5 flex-none text-cyan-300"
-                      aria-hidden="true"
-                    />
-                    <a
-                      href="mailto:eshan.mmc@orlandomathcircle.org"
-                      className="text-sm leading-6 text-blue-100/80 hover:text-cyan-300 transition-colors duration-200"
-                    >
-                      eshan.mmc@orlandomathcircle.org (General Inquiries)
-                    </a>
-                  </li>
-                </ul>
+            <ul className="mt-6 space-y-4">
+              {[
+                { name: "Home", href: "/" },
+                { name: "About", href: "/about" },
+                { name: "Team", href: "/team" },
+                { name: "Join Us", href: "/join-us" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className="group inline-flex items-center gap-2 text-[0.96rem] text-[#4c6b7f] transition-colors duration-200 hover:text-[#17689e]"
+                  >
+                    <span>{item.name}</span>
+
+                    <ArrowRight className="h-4 w-4 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* More */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#17689e]">
+              Explore
+            </div>
+
+            <ul className="mt-6 space-y-4">
+              {[
+                { name: "Gallery", href: "/gallery" },
+                { name: "Contact", href: "/contact" },
+                { name: "Events", href: "/join-us" },
+                { name: "Mission", href: "/about" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className="group inline-flex items-center gap-2 text-[0.96rem] text-[#4c6b7f] transition-colors duration-200 hover:text-[#17689e]"
+                  >
+                    <span>{item.name}</span>
+
+                    <ArrowRight className="h-4 w-4 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Contact */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#17689e]">
+              Contact
+            </div>
+
+            <div className="mt-6 space-y-5">
+              <div className="flex items-start gap-3">
+                <div className="mt-[2px] rounded-full bg-[#e7f4fb] p-2 text-[#17689e]">
+                  <MapPin className="h-4 w-4" />
+                </div>
+
+                <div>
+                  <div className="text-[0.95rem] text-[#0a2d44]">
+                    Melbourne, Florida
+                  </div>
+
+                  <div className="mt-1 text-sm text-[#6d8798]">
+                    Student-led math outreach
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          </div>
+
+              <div className="flex items-start gap-3">
+  <div className="mt-[2px] rounded-full bg-[#e7f4fb] p-2 text-[#17689e]">
+    <Mail className="h-4 w-4" />
+  </div>
+
+  <div>
+    <a
+      href="mailto:eshan.mmc@orlandomathcircle.org"
+      className="text-[0.95rem] text-[#0a2d44] transition-colors duration-200 hover:text-[#17689e]"
+      style={{
+        wordBreak: "normal",
+        overflowWrap: "normal",
+        whiteSpace: "nowrap",
+      }}
+    >
+      eshan.mmc@orlandomathcircle.org
+    </a>
+
+    <div className="mt-1 text-sm text-[#6d8798]">
+      General inquiries
+    </div>
+  </div>
+</div>
+            </div>
+          </motion.div>
         </div>
-        {/* Copyright */}
-        <div className="mt-16 border-t border-blue-700 pt-8 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-blue-100/70 text-center">
-            &copy; {new Date().getFullYear()} Melbourne Math Circle. All rights
-            reserved.
+
+        {/* Bottom */}
+        <div className="mt-14 flex flex-col items-center justify-between gap-5 border-t border-[#dcebf5] pt-7 md:flex-row">
+          <p className="text-sm text-[#6d8798]">
+            © {new Date().getFullYear()} Melbourne Math Circle
           </p>
+
+          <div className="flex items-center gap-3 text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-[#8ba5b7]">
+            <span>Problem Solving</span>
+            <span>•</span>
+            <span>Community</span>
+            <span>•</span>
+            <span>Mathematical Curiosity</span>
+          </div>
         </div>
       </div>
     </footer>

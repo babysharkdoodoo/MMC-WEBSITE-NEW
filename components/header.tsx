@@ -1,294 +1,239 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Team", href: "/team" },
-  { name: "Join Us", href: "/join-us" },
-  { name: "Photo Gallery", href: "/gallery" },
+  // { name: "Join Us", href: "/join-us" },
+  { name: "Gallery", href: "/gallery" },
   { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
-      setScrolled(scrollPosition > 20);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 14);
     };
 
-    // Initial check
-    handleScroll();
+    onScroll();
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <motion.header
-      className={`sticky top-0 z-50 w-full transition-all duration-500 ${scrolled
-        ? "bg-blue-900 backdrop-blur-md border-b border-blue-700/50 shadow-lg shadow-blue-900/20"
-        : "bg-blue-900 backdrop-blur-sm border-b border-blue-700/30"
+    <>
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "border-b border-[#dbe9f3] bg-white/88 shadow-[0_10px_30px_rgba(10,45,68,.05)] backdrop-blur-xl"
+            : "bg-white/72 backdrop-blur-lg"
         }`}
-      initial={{ y: 0, opacity: 1 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0 }}
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        willChange: "transform",
-        backgroundColor: "#1e3a8a" // Solid blue-900 background
-      }}
-    >
+        style={{
+          fontFamily: "'Outfit', sans-serif",
+        }}
+      >
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
-          aria-label="Global"
+          className="mx-auto flex h-[74px] max-w-7xl items-center justify-between px-6 lg:px-10"
+          aria-label="Main navigation"
         >
-          {/* Enhanced Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400 }}
+          {/* Logo */}
+          <Link
+            href="/"
+            className="group flex items-center gap-3"
           >
-            <Link href="/" className="flex items-center gap-3 group">
-              <span className="sr-only">Melbourne Math Circle</span>
-              <div className="relative">
-                <motion.div
-                  className="absolute -inset-1 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                />
-                <div className="relative w-12 h-12 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/50 group-hover:border-cyan-300/60 transition-all duration-300">
-                  <Image
-                    src="/mmc_logo.jpg"
-                    alt="Melbourne Math Circle Logo"
-                    width={36}
-                    height={36}
-                    className="object-contain"
-                    priority
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-mono text-lg font-bold tracking-tight text-white group-hover:text-cyan-200 transition-colors duration-300">
-                  Melbourne Math Circle
-                </span>
-                <span className="font-mono text-xs text-cyan-200/80 group-hover:text-cyan-200 transition-colors duration-300">
-                  A Chapter of OMC
-                </span>
-              </div>
-            </Link>
-          </motion.div>
+            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#d9eaf5] bg-white shadow-[0_6px_18px_rgba(10,45,68,.05)] transition-all duration-200 group-hover:border-[#bfd9ea]">
+              <Image
+                src="/mmc_logo.jpg"
+                alt="Melbourne Math Circle"
+                width={34}
+                height={34}
+                className="object-contain"
+                priority
+              />
+            </div>
 
-          {/* Enhanced Desktop Navigation */}
-          <div className="hidden lg:flex lg:gap-x-2">
-            {navigation.map((item, index) => {
-              const isActive = pathname === item.href;
+            <div className="leading-tight">
+              <div
+                className="text-[1.2rem] leading-none text-[#0a2d44]"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontWeight: 600,
+                }}
+              >
+                Melbourne Math Circle
+              </div>
+
+              <div className="mt-[3px] text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#17689e]">
+                Chapter of Orlando Math Circle
+              </div>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {navigation.map((item) => {
+              const active = pathname === item.href;
+
               return (
-                <motion.div
+                <Link
                   key={item.name}
-                  initial={{ opacity: 1, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0 }}
+                  href={item.href}
+                  className={`relative rounded-lg px-4 py-2 text-[0.95rem] font-medium transition-all duration-200 ${
+                    active
+                      ? "bg-[#edf6fb] text-[#17689e]"
+                      : "text-[#557284] hover:bg-[#f4f9fc] hover:text-[#17689e]"
+                  }`}
                 >
-                  <Link
-                    href={item.href}
-                    className={`relative px-4 py-2 rounded-lg font-mono text-sm font-medium transition-all duration-300 group ${isActive
-                      ? "text-cyan-200 bg-white/10"
-                      : "text-white hover:text-cyan-200 hover:bg-white/5"
-                      }`}
-                  >
-                    <span className="relative z-10">{item.name}</span>
-                    {isActive && (
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg"
-                        layoutId="activeTab"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
+                  {item.name}
+
+                  {active && (
                     <motion.div
-                      className="absolute inset-0 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      layoutId="header-active"
+                      className="absolute inset-0 -z-10 rounded-lg border border-[#d6e8f3]"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
                     />
-                  </Link>
-                </motion.div>
+                  )}
+                </Link>
               );
             })}
           </div>
 
-          {/* Enhanced Mobile Hamburger */}
-          <motion.button
-            type="button"
-            className="flex lg:hidden items-center p-3 text-white hover:text-cyan-300 hover:bg-white/10 rounded-lg transition-all duration-300"
-            onClick={() => setMobileMenuOpen(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="sr-only">Open main menu</span>
-            <Menu className="h-6 w-6" aria-hidden="true" />
-          </motion.button>
-        </nav>
-
-        {/* Enhanced Mobile Menu */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              className="fixed inset-0 z-50 flex lg:hidden"
-              initial="hidden"
-              animate="visible"
-              exit="exit"
+          {/* CTA + Mobile */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/join-us"
+              className="hidden rounded-full bg-[#17689e] px-5 py-[11px] text-[0.78rem] font-semibold uppercase tracking-[0.08em] text-white transition-all duration-200 hover:bg-[#0f557f] lg:inline-flex"
             >
-              {/* Enhanced Backdrop */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-900/80 to-blue-800/80 backdrop-blur-md"
-                onClick={() => setMobileMenuOpen(false)}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-              />
+              Join Us
+            </Link>
 
-              {/* Enhanced Mobile Panel */}
-              <motion.div
-                className="relative ml-auto w-full max-w-sm h-[100dvh] overflow-y-auto bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 px-6 py-6 border-l border-blue-700/50 shadow-2xl"
-                initial={{ x: "100%", opacity: 0, scale: 0.95 }}
-                animate={{ x: 0, opacity: 1, scale: 1 }}
-                exit={{ x: "100%", opacity: 0, scale: 0.95 }}
-                transition={{
-                  type: "spring",
-                  bounce: 0.25,
-                  duration: 0.6,
-                  delay: 0.05,
-                }}
-              >
-                {/* Mobile Header */}
-                <div className="flex items-center justify-between mb-8">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      href="/"
-                      className="flex items-center gap-3 group"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <span className="sr-only">Melbourne Math Circle</span>
-                      <div className="relative">
-                        <div className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg overflow-hidden border-2 border-white/50">
-                          <Image
-                            src="/mmc_logo.jpg"
-                            alt="Melbourne Math Circle Logo"
-                            width={30}
-                            height={30}
-                            className="object-contain"
-                            priority
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-mono text-base font-bold text-white">
-                          MMC
-                        </span>
-                        <span className="font-mono text-xs text-cyan-200/80">
-                          Chapter of OMC
-                        </span>
-                      </div>
-                    </Link>
-                  </motion.div>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="inline-flex items-center justify-center rounded-lg border border-[#dcebf5] bg-white p-2 text-[#0a2d44] transition-all duration-200 hover:bg-[#f4f9fc] lg:hidden"
+            >
+              <span className="sr-only">Open menu</span>
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
+        </nav>
+      </header>
 
-                  <motion.button
-                    type="button"
-                    className="p-3 text-white hover:text-cyan-300 hover:bg-white/10 rounded-lg transition-all duration-300"
-                    onClick={() => setMobileMenuOpen(false)}
-                    whileHover={{ scale: 1.05, rotate: 90 }}
-                    whileTap={{ scale: 0.95 }}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-[60] lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-[#0a2d44]/30 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{
+                type: "spring",
+                stiffness: 320,
+                damping: 32,
+              }}
+              className="absolute right-0 top-0 flex h-full w-[88%] max-w-sm flex-col border-l border-[#dcebf5] bg-white"
+            >
+              {/* Top */}
+              <div className="flex items-center justify-between border-b border-[#eef5f9] px-6 py-5">
+                <div>
+                  <div
+                    className="text-[1.15rem] text-[#0a2d44]"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 600,
+                    }}
                   >
-                    <span className="sr-only">Close menu</span>
-                    <X className="h-6 w-6" aria-hidden="true" />
-                  </motion.button>
+                    Melbourne Math Circle
+                  </div>
+
+                  <div className="mt-[2px] text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#17689e]">
+                    Student-led math community
+                  </div>
                 </div>
 
-                {/* Welcome Message */}
-                <motion.div
-                  className="mb-8 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10"
-                  initial={{ opacity: 1, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0 }}
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg border border-[#dcebf5] p-2 text-[#0a2d44]"
                 >
-                  <p className="text-white font-mono text-base leading-relaxed">
-                    <span className="text-2xl mr-2">👋</span>
-                    Hey there! Where would you like to explore?
-                  </p>
-                </motion.div>
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-                {/* Enhanced Navigation Links */}
-                <div className="space-y-3">
-                  {navigation.map((item, index) => {
-                    const isActive = pathname === item.href;
+              {/* Links */}
+              <div className="flex flex-1 flex-col px-4 py-5">
+                <div className="space-y-1">
+                  {navigation.map((item) => {
+                    const active = pathname === item.href;
+
                     return (
-                      <motion.div
+                      <Link
                         key={item.name}
-                        initial={{ opacity: 1, x: 0 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0 }}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`block rounded-xl px-4 py-3 text-[1rem] transition-all duration-200 ${
+                          active
+                            ? "bg-[#edf6fb] font-medium text-[#17689e]"
+                            : "text-[#4c6b7f] hover:bg-[#f7fbfe] hover:text-[#17689e]"
+                        }`}
                       >
-                        <Link
-                          href={item.href}
-                          className={`group relative block p-4 rounded-xl font-mono text-base font-medium transition-all duration-300 ${isActive
-                            ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-200 border border-cyan-400/30"
-                            : "text-white hover:bg-white/10 hover:text-cyan-200 border border-transparent hover:border-white/20"
-                            }`}
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{item.name}</span>
-                            <motion.div
-                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                              whileHover={{ x: 5 }}
-                            >
-                              →
-                            </motion.div>
-                          </div>
-                          {isActive && (
-                            <motion.div
-                              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-blue-400 rounded-r-full"
-                              layoutId="activeMobileTab"
-                            />
-                          )}
-                        </Link>
-                      </motion.div>
+                        {item.name}
+                      </Link>
                     );
                   })}
                 </div>
 
-                {/* Footer */}
-                <motion.div
-                  className="mt-8 pt-6 border-t border-white/10"
-                  initial={{ opacity: 1 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0 }}
-                >
-                  <p className="text-center text-cyan-200/60 font-mono text-sm">
-                    Igniting mathematical curiosity
+                {/* Bottom CTA */}
+                <div className="mt-auto border-t border-[#eef5f9] pt-5">
+                  <Link
+                    href="/join-us"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center rounded-full bg-[#17689e] px-5 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-white transition-all duration-200 hover:bg-[#0f557f]"
+                  >
+                    Join Our Next Event
+                  </Link>
+
+                  <p className="mt-4 text-center text-sm leading-7 text-[#6d8798]">
+                    Free workshops, discussions, and problem solving events in
+                    Melbourne, Florida.
                   </p>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

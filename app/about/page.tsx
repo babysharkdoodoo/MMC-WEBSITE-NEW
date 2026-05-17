@@ -1,734 +1,519 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { ArrowRight, Star, Users, Brain, Heart } from "lucide-react";
 
+const FONTS = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap');
+`;
 
+const CSS = `
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body, #root {
+    font-family: 'Outfit', sans-serif;
+    color: #0a2d44;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+  /* ── Layout ── */
+  .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity .75s cubic-bezier(0.16,1,0.3,1), transform .75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-d1 { transition-delay: .08s; }
+  .reveal-d2 { transition-delay: .16s; }
+  .reveal-d3 { transition-delay: .24s; }
+  .reveal-d4 { transition-delay: .32s; }
+
+  /* ── Tokens ── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px;
+    background: #e7f4fb; color: #17689e;
+    font-size: .76rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .pill-dark {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px;
+    background: rgba(255,255,255,.12); color: rgba(255,255,255,.9);
+    font-size: .76rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,.18);
+  }
+  .btn-primary, .btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+  }
+  .btn-primary { background: #17689e; color: #fff; box-shadow: 0 12px 30px rgba(23,104,158,.18); }
+  .btn-primary:hover { transform: translateY(-2px); background: #0f557f; box-shadow: 0 16px 40px rgba(23,104,158,.25); }
+  .btn-primary-light { background: #fff; color: #0a2d44; box-shadow: 0 12px 30px rgba(0,0,0,.12); }
+  .btn-primary-light:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,.18); }
+  .btn-secondary { background: transparent; color: #17689e; border: 1.5px solid rgba(23,104,158,.28); }
+  .btn-secondary:hover { transform: translateY(-2px); border-color: #17689e; background: rgba(23,104,158,.05); }
+  .btn-ghost-light {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+    color: rgba(255,255,255,.9); border: 1.5px solid rgba(255,255,255,.25);
+  }
+  .btn-ghost-light:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.65); background: rgba(255,255,255,.06); }
+
+  /* ── Typography helpers ── */
+  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #17689e; margin-bottom: 14px; }
+  .section-kicker-light { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8bc4e2; margin-bottom: 14px; }
+  .section-title { font-size: clamp(2rem,4vw,3.2rem); line-height: 1.12; font-weight: 400; color: #0a2d44; }
+  .section-text  { color: #4c6b7f; line-height: 1.85; font-size: 1rem; font-weight: 300; }
+  .divider { width: 44px; height: 2px; background: #17689e; border-radius: 999px; margin: 18px 0; }
+
+  /* ── Cards ── */
+  .mission-item {
+    display: flex; gap: 16px; padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(8px);
+    transition: background .2s ease, transform .2s ease;
+  }
+  .mission-item:hover { background: rgba(255,255,255,.10); transform: translateX(4px); }
+  .mission-icon {
+    width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.12); color: #fff;
+  }
+
+  .value-card {
+    border: 1px solid rgba(23,104,158,.10);
+    background: rgba(255,255,255,.82);
+    border-radius: 22px; padding: 24px;
+    box-shadow: 0 12px 30px rgba(10,45,68,.05);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .value-card:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(10,45,68,.10); }
+  .value-icon {
+    width: 48px; height: 48px; border-radius: 16px;
+    display: grid; place-items: center;
+    background: #e7f4fb; color: #17689e; margin-bottom: 16px;
+  }
+
+  .stat-card {
+    border-top: 1px solid rgba(23,104,158,.18);
+    padding-top: 24px;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .stat-card:hover { border-color: rgba(23,104,158,.7); transform: translateY(-2px); }
+
+  /* ── Soft grid ── */
+  .soft-grid {
+    background-image:
+      linear-gradient(rgba(23,104,158,.05) 1px, transparent 1px),
+      linear-gradient(90deg,rgba(23,104,158,.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  /* ── Marquee ── */
+  .marquee-wrap { overflow: hidden; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Image ── */
+  .img-rounded { border-radius: 22px; overflow: hidden; box-shadow: 0 20px 60px rgba(10,45,68,.12); }
+  .img-rounded img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  .img-rounded:hover img { transform: scale(1.04); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .hide-mobile   { display: none !important; }
+    .split-grid    { grid-template-columns: 1fr !important; }
+    .values-grid   { grid-template-columns: 1fr 1fr !important; }
+    .stats-grid    { grid-template-columns: 1fr 1fr !important; }
+  }
+  @media (max-width: 560px) {
+    .container   { width: min(100% - 32px, 1120px); }
+    .values-grid { grid-template-columns: 1fr !important; }
+    .stats-grid  { grid-template-columns: 1fr !important; }
+  }
+`;
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); }),
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
+const MARQUEE_ITEMS = [
+  "Founded 2023", "Orlando Math Circle Chapter", "Student-Led", "Problem Solving",
+  "Brevard County", "Free Events", "Community Impact", "Melbourne, FL",
+  "Founded 2023", "Orlando Math Circle Chapter", "Student-Led", "Problem Solving",
+  "Brevard County", "Free Events", "Community Impact", "Melbourne, FL",
+];
+
+const STATS = [
+  { val: "2023",  label: "Year founded" },
+  { val: "100+",  label: "Students reached" },
+  { val: "20+",   label: "Events hosted" },
+  { val: "100+",  label: "Volunteer hours" },
+];
+
+const MISSION_ITEMS = [
+  { icon: Star,   text: "Create a welcoming space for students to explore mathematics beyond the classroom curriculum." },
+  { icon: Users,  text: "Foster a community of young mathematicians who support and inspire each other." },
+  { icon: Brain,  text: "Develop problem-solving skills through engaging meetings and collaborative activities." },
+  { icon: Heart,  text: "Share the beauty and relevance of mathematics with our broader community." },
+];
+
+const VALUES = [
+  { title: "Student-Led Meetings",       description: "Our meetings are designed and led by students passionate about mathematics, creating an engaging collaborative atmosphere." },
+  { title: "Peer Collaboration",         description: "We foster an open environment where students work together, sharing ideas and tackling challenges collectively." },
+  { title: "Collaborative Problem Solving", description: "We explore challenging problems together, learning from one another's approaches and insights." },
+  { title: "Community Outreach",         description: "We organize events to share our love for math with the broader community, inspiring curiosity and creativity." },
+];
 
 export default function AboutPage() {
-  const [hovered, setHovered] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  useReveal();
 
   return (
-    <div className="flex flex-col">
-      {/* ====== ENHANCED HERO SECTION ====== */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Cinematic background with multiple layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-800" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 via-transparent to-cyan-900/20" />
+    <div>
+      <style>{FONTS}</style>
+      <style>{CSS}</style>
 
-        {/* Enhanced floating geometric shapes */}
-        <motion.div
-          className="absolute -bottom-48 -left-48 w-[600px] h-[600px] bg-gradient-to-r from-cyan-400/20 via-blue-500/25 to-blue-600/20 rounded-full blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, 120, -60, 0],
-                x: [0, -80, 60, 0],
-                scale: [1, 1.2, 0.9, 1]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute -top-48 right-0 w-[500px] h-[500px] bg-gradient-to-l from-blue-400/25 via-cyan-500/20 to-indigo-500/25 rounded-[25%] blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, -90, 45, 0],
-                scale: [1, 1.3, 0.8, 1],
-                y: [0, 40, -30, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 25, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-gradient-to-br from-blue-300/15 via-cyan-400/20 to-blue-500/15 rounded-[40%] blur-2xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, 180, 360],
-                scale: [1, 1.4, 0.7, 1],
-                x: [0, 30, -20, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 30, ease: "easeInOut" }
-          }
-        />
+      {/* ── HERO ── */}
+      <section
+        className="soft-grid"
+        style={{
+          minHeight: "72vh",
+          position: "relative", overflow: "hidden",
+          background: "linear-gradient(180deg,#ffffff 0%,#f7fbfe 60%,#ffffff 100%)",
+          padding: "clamp(64px,10vw,120px) 0 clamp(48px,7vw,88px)",
+          display: "flex", alignItems: "center",
+        }}
+      >
+        {/* Decorative large A */}
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "clamp(-10px,1vw,18px)", top: "50%",
+            transform: "translateY(-50%)",
+            fontSize: "clamp(220px,28vw,440px)", lineHeight: 1, fontWeight: 700,
+            color: "#e8f4fb", userSelect: "none", pointerEvents: "none",
+            letterSpacing: "-0.03em",
+          }}
+        >
+          A
+        </div>
 
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl text-center">
-            <motion.div
-              className="mb-12"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1.2, type: "spring", stiffness: 100 }}
+        <div className="container" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="pill reveal">
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#17689e" }} />
+            A chapter of Orlando Math Circle
+          </div>
+
+          <h1
+            className="serif reveal reveal-d1"
+            style={{
+              marginTop: 20, maxWidth: 700,
+              fontSize: "clamp(3.4rem,7vw,6.5rem)",
+              lineHeight: 0.95, letterSpacing: "-0.03em",
+              fontWeight: 300, color: "#0a2d44",
+            }}
+          >
+            About{" "}
+            <em style={{ color: "#17689e", fontStyle: "italic" }}>Us</em>
+          </h1>
+
+          <div className="divider reveal reveal-d2" />
+
+          <p
+            className="reveal reveal-d3"
+            style={{ maxWidth: 540, fontSize: "clamp(1rem,1.65vw,1.12rem)", lineHeight: 1.85, color: "#4c6b7f", fontWeight: 300 }}
+          >
+            Discover the story of Melbourne Math Circle — how we started, what we believe, and why we build community around mathematical thinking.
+          </p>
+
+          <div className="reveal reveal-d4" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>
+            <Link href="/join-us" className="btn-primary">Join us <ArrowRight size={16} /></Link>
+            <Link href="/team" className="btn-secondary">Meet the team</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MARQUEE ── */}
+      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+        <div className="marquee-track">
+          {MARQUEE_ITEMS.map((item, i) => (
+            <span
+              key={i}
+              style={{
+                color: "rgba(255,255,255,.92)", fontSize: ".78rem", fontWeight: 600,
+                letterSpacing: ".11em", textTransform: "uppercase",
+                padding: "0 30px", display: "inline-flex", alignItems: "center", gap: 28, whiteSpace: "nowrap",
+              }}
             >
-              <div className="inline-block p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-2xl">
-                <div className="w-20 h-20 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl overflow-hidden border-2 border-white/50">
-                  <Image
-                    src="/mmc_logo.jpg"
-                    alt="Melbourne Math Circle Logo"
-                    width={60}
-                    height={60}
-                    className="object-contain"
-                    priority
-                  />
+              {item}
+              <span style={{ opacity: 0.4 }}>•</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── STATS ── */}
+      <section style={{ background: "#f4f9fc", padding: "clamp(54px,8vw,88px) 0" }}>
+        <div className="container">
+          <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 32 }}>
+            {STATS.map((s, i) => (
+              <div key={i} className={`stat-card reveal reveal-d${(i % 4) + 1}`}>
+                <div className="serif" style={{ fontSize: "clamp(2.7rem,4vw,4rem)", lineHeight: 1, color: "#17689e", fontWeight: 600, marginBottom: 10 }}>
+                  {s.val}
                 </div>
+                <div style={{ color: "#4c6b7f", fontSize: ".92rem", lineHeight: 1.6 }}>{s.label}</div>
               </div>
-            </motion.div>
-
-            <motion.h1
-              className="font-mono text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl leading-tight mb-8"
-              initial={{ y: shouldReduceMotion ? 0 : 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1.5, delay: 0.3, type: "spring", stiffness: 80 }}
-            >
-              About{" "}
-              <span className="relative inline-block">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-blue-200 to-cyan-100">
-                  Us
-                </span>
-                <motion.div
-                  className="absolute -bottom-2 left-0 right-0 h-2 bg-gradient-to-r from-cyan-300 via-blue-300 to-cyan-200 rounded-full"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: shouldReduceMotion ? 0 : 1.5, delay: 1.5 }}
-                />
-              </span>
-            </motion.h1>
-
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1, delay: 1 }}
-            >
-              <div className="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-xl">
-                <p className="text-lg md:text-xl text-cyan-100 font-medium">
-                  A Chapter of Orlando Math Circle (OMC)
-                </p>
-              </div>
-
-              <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
-                Discover the story of Melbourne Math Circle and our mission to make
-                mathematics <span className="text-cyan-200 font-semibold">exciting</span>,
-                <span className="text-blue-200 font-semibold"> accessible</span>, and
-                <span className="text-white font-bold"> inspiring</span>.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ====== ORIGIN STORY ====== */}
-      <section className="py-16 md:py-24 lg:py-32 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent_70%)] pointer-events-none" />
-        <motion.div
-          className="absolute -top-32 right-0 w-[400px] h-[400px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 blur-3xl opacity-20"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20 }
-          }
-        />
-        <motion.div
-          className="absolute -bottom-40 left-0 w-[350px] h-[350px] bg-gradient-to-bl from-cyan-500 to-blue-600 rounded-full blur-3xl opacity-25"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 16 }
-          }
-        />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-            <motion.div
-              className="relative aspect-video overflow-hidden rounded-lg"
-              whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
-            >
-              <Image
-                src="/about_1.jpg"
-                alt="Melbourne Math Circle Origin Story"
-                width={600}
-                height={400}
-                sizes="(max-width: 768px) 100vw, 600px"
-                className="object-cover rounded-lg shadow-lg brightness-90 contrast-125 saturate-200"
-              />
-            </motion.div>
-
-            <div>
-              <motion.h2
-                className="font-mono text-3xl md:text-4xl font-bold tracking-tight mb-4 text-blue-900"
-                initial={{ x: shouldReduceMotion ? 0 : -40, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
-              >
-                Our <span className="text-blue-700">Origin Story</span>
-              </motion.h2>
-              <motion.p
-                className="text-blue-900/80 mb-3 text-base md:text-lg leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: shouldReduceMotion ? 0 : 0.2 }}
-              >
-                Melbourne Math Circle, a chapter of the Orlando Math Circle (OMC), was founded in 2023 by a group of high school students inspired by their experiences at OMC.
-              </motion.p>
-              <motion.p
-                className="text-blue-900/80 mb-3 text-base md:text-lg leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: shouldReduceMotion ? 0 : 0.3 }}
-              >
-                It all started years ago as a student at OMC, witnessing the incredible work and dedication of older students. This inspired the creation of a similar community in Melbourne to bring those opportunities closer to home.
-              </motion.p>
-              <motion.p
-                className="text-blue-900/80 mb-3 text-base md:text-lg leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: shouldReduceMotion ? 0 : 0.4 }}
-              >
-                Through close collaboration with our parent organization, OMC, we've built a vibrant community of young thinkers who believe math isn’t just about numbers—it’s about curiosity, creativity, and seeing the world through a sharper lens.
-              </motion.p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ====== ENHANCED MISSION SECTION ====== */}
-      <section className="py-24 md:py-32 bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-800 relative overflow-hidden">
-        <motion.div
-          className="absolute -bottom-48 -left-48 w-[600px] h-[600px] bg-gradient-to-tl from-blue-400/20 to-cyan-400/25 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, 90, -45, 0],
-                x: [0, -60, 40, 0],
-                scale: [1, 1.3, 0.8, 1]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 22, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute top-0 right-20 w-[400px] h-[400px] bg-gradient-to-br from-cyan-300/25 to-blue-500/20 rounded-full blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                scale: [1, 1.2, 0.9, 1],
-                rotate: [0, -60, 30, 0],
-                y: [0, 30, -20, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 28, ease: "easeInOut" }
-          }
-        />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              className="space-y-8"
-              initial={{ x: shouldReduceMotion ? 0 : -100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1, type: "spring", stiffness: 100 }}
-            >
-              <div>
-                <motion.div
-                  className="inline-block mb-6"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: 0.2 }}
-                >
-                  <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-xl">
-                    <span className="text-cyan-200 font-mono text-sm font-semibold">Our Purpose</span>
-                  </div>
-                </motion.div>
-
-                <h2 className="font-mono text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">Mission</span>
-                </h2>
-
-                <p className="text-white/90 mb-8 text-xl leading-relaxed">
-                  At Melbourne Math Circle, we believe that mathematics is a
-                  <span className="text-cyan-200 font-semibold"> creative</span>,
-                  <span className="text-blue-200 font-semibold"> collaborative</span>, and
-                  <span className="text-white font-bold"> joyful pursuit</span>.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    icon: "🌟",
-                    text: "Create a welcoming space for students to explore mathematics beyond the classroom curriculum"
-                  },
-                  {
-                    icon: "🤝",
-                    text: "Foster a community of young mathematicians who support and inspire each other"
-                  },
-                  {
-                    icon: "🧠",
-                    text: "Develop problem-solving skills through engaging meetings and collaborative activities"
-                  },
-                  {
-                    icon: "💡",
-                    text: "Share the beauty and relevance of mathematics with our broader community"
-                  }
-                ].map((mission, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: shouldReduceMotion ? 0 : 0.3 + index * 0.1,
-                      duration: 0.5
-                    }}
-                    whileHover={shouldReduceMotion ? {} : { scale: 1.02, x: 10 }}
-                  >
-                    <span className="text-2xl">{mission.icon}</span>
-                    <span className="text-white/90 text-base leading-relaxed">
-                      {mission.text}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: shouldReduceMotion ? 0 : 0.8 }}
-              >
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white border-0 shadow-xl hover:shadow-cyan-500/25 transform hover:scale-105 transition-all duration-300"
-                >
-                  <Link href="/join-us" className="flex items-center">
-                    Join Our Mission
-                    <motion.span
-                      className="inline-block ml-2"
-                      whileHover={shouldReduceMotion ? {} : { x: 5, rotate: -15 }}
-                      whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </motion.span>
-                  </Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              className="relative"
-              initial={{ x: shouldReduceMotion ? 0 : 100, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1, delay: 0.3, type: "spring", stiffness: 100 }}
-            >
-              <div className="relative">
-                <motion.div
-                  className="absolute -inset-8 bg-gradient-to-r from-cyan-400/20 via-blue-400/25 to-indigo-500/20 rounded-3xl blur-2xl"
-                  animate={
-                    shouldReduceMotion ? {} : {
-                      scale: [1, 1.1, 1],
-                      opacity: [0.2, 0.4, 0.2],
-                      rotate: [0, 5, -5, 0]
-                    }
-                  }
-                  transition={
-                    shouldReduceMotion ? {} : { repeat: Infinity, duration: 6, ease: "easeInOut" }
-                  }
-                />
-                <div className="relative aspect-square max-w-lg mx-auto overflow-hidden rounded-3xl shadow-2xl">
-                  <Image
-                    src="/about_2.jpg"
-                    alt="Our Mission"
-                    width={500}
-                    height={500}
-                    sizes="(max-width: 768px) 100vw, 500px"
-                    className="object-cover w-full h-full brightness-95 contrast-110 saturate-110 hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/30 via-transparent to-transparent" />
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ====== ENHANCED BY STUDENTS, FOR STUDENTS ====== */}
-      <section className="py-24 md:py-32 bg-gradient-to-br from-blue-50 via-cyan-50/50 to-blue-100 relative overflow-hidden">
-        <motion.div
-          className="absolute -bottom-48 left-0 w-[500px] h-[500px] bg-gradient-to-bl from-blue-400/20 to-cyan-400/25 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, -45, 30, 0],
-                y: [0, 40, -30, 0],
-                scale: [1, 1.2, 0.9, 1]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 30, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute top-20 right-20 w-[350px] h-[350px] bg-gradient-to-tr from-cyan-400/25 to-blue-500/20 rounded-[30%] blur-2xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                scale: [1, 1.15, 0.85, 1],
-                rotate: [0, 60, -45, 0],
-                x: [0, -20, 15, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 25, ease: "easeInOut" }
-          }
-        />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="mx-auto max-w-3xl text-center mb-8 md:mb-12">
-            <motion.h2
-              className="font-mono text-3xl md:text-4xl font-bold tracking-tight mb-4 text-blue-700"
-              initial={{ y: shouldReduceMotion ? 0 : 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
-            >
-              By <span className="text-blue-900">Students</span>, For{" "}
-              <span className="text-blue-900">Students</span>
-            </motion.h2>
-            <motion.p
-              className="text-blue-900/80 text-base md:text-lg"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: shouldReduceMotion ? 0 : 0.2 }}
-            >
-              What sets Melbourne Math Circle apart is that it’s entirely driven
-              and led by high school students. Peer-to-peer learning empowers
-              everyone to ask questions, explore new ideas, and take
-              intellectual risks.
-            </motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[
-              {
-                title: "Student-Led Meetings",
-                description:
-                  "Our meetings are designed and led by students who are passionate about mathematics, creating an engaging collaborative atmosphere.",
-              },
-              {
-                title: "Peer Collaboration",
-                description:
-                  "We foster an open environment where students work together, sharing ideas and tackling challenges collectively.",
-              },
-              {
-                title: "Collaborative Problem Solving",
-                description:
-                  "We explore challenging problems together, learning from one another’s approaches.",
-              },
-              {
-                title: "Community Outreach",
-                description:
-                  "We organize events to share our love for math with the broader community, inspiring creativity and curiosity.",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-all duration-300"
-                whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
-              >
-                <h3 className="font-mono text-base md:text-lg font-bold mb-2 text-blue-900">
-                  {item.title}
-                </h3>
-                <p className="text-blue-900/70 text-xs md:text-sm">
-                  {item.description}
-                </p>
-              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ====== ENHANCED CONTACT SECTION ======
-      <section className="py-24 md:py-32 bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-800 relative overflow-hidden">
-        <motion.div
-          className="absolute -top-40 left-0 w-[450px] h-[450px] bg-gradient-to-tr from-blue-400/20 to-cyan-500/25 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, 60, -30, 0],
-                scale: [1, 1.2, 0.9, 1],
-                x: [0, 30, -20, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 24, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute -bottom-32 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-cyan-400/25 to-blue-500/20 rounded-full blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, -45, 45, 0],
-                y: [0, 25, -35, 0],
-                scale: [1, 0.9, 1.1, 1]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 26, ease: "easeInOut" }
-          }
-        />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div
-            className="mx-auto max-w-4xl text-center"
-            initial={{ y: shouldReduceMotion ? 0 : 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 1 }}
+      {/* ── ORIGIN STORY ── */}
+      <section style={{ background: "#fff", padding: "clamp(72px,10vw,118px) 0" }}>
+        <div className="container">
+          <div
+            className="split-grid"
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px,6vw,72px)", alignItems: "center" }}
           >
-            <motion.div
-              className="mb-8"
-              initial={{ scale: 0, rotate: -180 }}
-              whileInView={{ scale: 1, rotate: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1, delay: 0.2, type: "spring", stiffness: 100 }}
-            >
-              <div className="inline-block p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-2xl">
-                <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">✉</span>
-                </div>
-              </div>
-            </motion.div>
+            {/* Image */}
+            <div className="img-rounded reveal" style={{ aspectRatio: "4/3" }}>
+              <Image
+                src="/about_1.jpg"
+                alt="Melbourne Math Circle Origin Story"
+                width={600} height={450}
+                sizes="(max-width: 768px) 100vw, 600px"
+                className="object-cover"
+              />
+            </div>
 
-            <h2 className="font-mono text-4xl md:text-6xl font-bold tracking-tight mb-8 text-white">
-              Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">Us</span>
-            </h2>
-
-            <motion.p
-              className="text-white/90 mb-12 text-xl leading-relaxed max-w-3xl mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: shouldReduceMotion ? 0 : 0.4 }}
-            >
-              We use <span className="text-cyan-200 font-semibold">OMC organizational emails</span> for all communications.
-              Reach out to us using the following contacts:
-            </motion.p>
-
-            <motion.div
-              className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: shouldReduceMotion ? 0 : 0.6 }}
-            >
-              {[
-                {
-                  // icon: "📧",
-                  title: "General Inquiries",
-                  email: "eshan.mmc@orlandomathcircle.org",
-                  description: "Questions about meetings, events, or general information"
-                },
-                {
-                  // icon: "👨‍💼",
-                  title: "Team Lead",
-                  email: "shoaib.mmc@orlandomathcircle.org",
-                  description: "Leadership inquiries and organizational matters"
-                },
-                {
-                  // icon: "🤝",
-                  title: "Volunteer Coordinator",
-                  email: "volunteer@orlandomathcircle.org",
-                  description: "Volunteer opportunities and community involvement"
-                }
-              ].map((contact, index) => (
-                <motion.div
-                  key={index}
-                  className="group relative"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: shouldReduceMotion ? 0 : 0.7 + index * 0.1 }}
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -5 }}
-                >
-                  <div className="relative">
-                    <motion.div
-                      className="absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"
-                    />
-                    <div className="relative bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-xl h-full flex flex-col min-h-[280px]">
-                      <div className="text-4xl mb-6">{contact.icon}</div>
-                      <h3 className="font-mono text-xl font-bold mb-4 text-white group-hover:text-cyan-200 transition-colors">
-                        {contact.title}
-                      </h3>
-                      <p className="text-white/80 text-base mb-6 flex-grow leading-relaxed">
-                        {contact.description}
-                      </p>
-                      <a
-                        href={`mailto:${contact.email}`}
-                        className="text-cyan-300 hover:text-cyan-200 font-medium text-sm transition-colors duration-300 hover:underlinene"
-                      >
-                        {contact.email}
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
+            {/* Text */}
+            <div>
+              <div className="section-kicker reveal">Our origin story</div>
+              <h2 className="serif section-title reveal reveal-d1">
+                Built by students,<br />
+                <em style={{ color: "#17689e", fontStyle: "italic" }}>for students.</em>
+              </h2>
+              <div className="divider reveal reveal-d1" />
+              <p className="section-text reveal reveal-d2" style={{ marginBottom: 16 }}>
+                Melbourne Math Circle, a chapter of the Orlando Math Circle (OMC), was founded in 2023 by a group
+                of high school students inspired by their experiences at OMC.
+              </p>
+              <p className="section-text reveal reveal-d3" style={{ marginBottom: 16 }}>
+                It all started as students witnessed the incredible work and dedication of older peers at OMC —
+                and decided to bring those opportunities closer to home in Melbourne.
+              </p>
+              <p className="section-text reveal reveal-d4">
+                Through close collaboration with our parent organization, we've built a vibrant community of
+                young thinkers who believe math isn't just about numbers — it's about curiosity, creativity,
+                and seeing the world through a sharper lens.
+              </p>
+            </div>
+          </div>
         </div>
-      </section> */}
+      </section>
 
-      {/* ====== ENHANCED CTA SECTION ====== */}
-      <section className="py-24 md:py-32 bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-800 text-white relative overflow-hidden">
-        <motion.div
-          className="absolute -top-60 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-cyan-400/25 to-blue-400/30 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                rotate: [0, 60, -45, 0],
-                y: [0, -50, 40, 0],
-                scale: [1, 1.2, 0.9, 1]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 25, ease: "easeInOut" }
-          }
-        />
-        <motion.div
-          className="absolute bottom-0 left-20 w-[400px] h-[400px] bg-gradient-to-tl from-blue-500/30 to-cyan-600/25 rounded-full blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                scale: [1, 1.15, 0.85, 1],
-                rotate: [0, -45, 30, 0],
-                x: [0, 30, -20, 0]
-              }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 28, ease: "easeInOut" }
-          }
-        />
+      {/* ── MISSION (dark) ── */}
+      <section
+        style={{
+          background: "linear-gradient(180deg,#0a2d44 0%,#082638 100%)",
+          padding: "clamp(72px,10vw,118px) 0",
+          position: "relative", overflow: "hidden",
+        }}
+      >
+        {/* Decorative ∑ */}
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "-0.04em", bottom: "-0.14em",
+            fontSize: "clamp(180px,25vw,360px)", fontWeight: 700, lineHeight: 1,
+            color: "rgba(255,255,255,.04)", userSelect: "none", pointerEvents: "none",
+          }}
+        >
+          ∑
+        </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div
-            className="mx-auto max-w-4xl text-center"
-            initial={{ y: shouldReduceMotion ? 0 : 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 1 }}
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div
+            className="split-grid"
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px,6vw,72px)", alignItems: "center" }}
           >
-            <motion.div
-              className="mb-8"
-              initial={{ scale: 0, rotate: -180 }}
-              whileInView={{ scale: 1, rotate: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 1, delay: 0.2, type: "spring", stiffness: 100 }}
-            >
-              <div className="inline-block p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-2xl">
-                <div className="w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl overflow-hidden border-2 border-white/50">
-                  <Image
-                    src="/mmc_logo.jpg"
-                    alt="Melbourne Math Circle Logo"
-                    width={48}
-                    height={48}
-                    className="object-contain"
-                    priority
-                  />
-                </div>
+            {/* Text */}
+            <div>
+              <div className="section-kicker-light reveal">Our purpose</div>
+              <h2
+                className="serif reveal reveal-d1"
+                style={{ fontSize: "clamp(2rem,4vw,3.2rem)", lineHeight: 1.12, fontWeight: 400, color: "#fff", marginBottom: 10 }}
+              >
+                Our{" "}
+                <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>Mission</em>
+              </h2>
+              <div style={{ width: 44, height: 2, background: "#8fd0ef", borderRadius: 999, margin: "18px 0 24px" }} className="reveal reveal-d1" />
+              <p
+                className="reveal reveal-d2"
+                style={{ color: "rgba(255,255,255,.75)", lineHeight: 1.85, fontWeight: 300, marginBottom: 32 }}
+              >
+                At Melbourne Math Circle, we believe mathematics is a creative, collaborative, and joyful pursuit —
+                accessible to every curious mind regardless of background or experience.
+              </p>
+
+              <div style={{ display: "grid", gap: 12 }}>
+                {MISSION_ITEMS.map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={i} className={`mission-item reveal reveal-d${Math.min(i + 2, 4)}`}>
+                      <div className="mission-icon"><Icon size={20} /></div>
+                      <p style={{ color: "rgba(255,255,255,.85)", lineHeight: 1.7, fontWeight: 300, fontSize: ".95rem" }}>
+                        {item.text}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
-            </motion.div>
 
-            <h2 className="font-mono text-5xl md:text-7xl font-bold tracking-tight mb-8">
-              Ready to Join the{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300">
-                Circle
-              </span>?
+              <div className="reveal reveal-d4" style={{ marginTop: 32 }}>
+                <Link href="/join-us" className="btn-primary-light btn-primary">
+                  Join our mission <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="img-rounded reveal reveal-d2" style={{ aspectRatio: "1/1" }}>
+              <Image
+                src="/about_2.jpg"
+                alt="Our Mission"
+                width={500} height={500}
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BY STUDENTS FOR STUDENTS ── */}
+      <section style={{ background: "#eaf4fb", padding: "clamp(72px,10vw,112px) 0" }}>
+        <div className="container">
+          <div style={{ maxWidth: 680, marginBottom: 48 }}>
+            <div className="section-kicker reveal">By students, for students</div>
+            <h2 className="serif section-title reveal reveal-d1">
+              What sets us apart is who runs it.
             </h2>
+            <div className="divider reveal reveal-d1" />
+            <p className="section-text reveal reveal-d2">
+              Melbourne Math Circle is entirely driven and led by high school students. Peer-to-peer
+              learning empowers everyone to ask questions, explore new ideas, and take intellectual risks
+              in an environment where everyone genuinely gets it.
+            </p>
+          </div>
 
-            <motion.p
-              className="text-white/90 mb-12 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: shouldReduceMotion ? 0 : 0.4 }}
-            >
-              Whether you're a <span className="text-cyan-200 font-semibold">math enthusiast</span> or simply
-              <span className="text-blue-200 font-semibold"> curious</span>, we welcome all
-               school students to our vibrant community.
-            </motion.p>
-
-            <motion.div
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: shouldReduceMotion ? 0 : 0.6 }}
-            >
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-              >
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white border-0 shadow-2xl hover:shadow-cyan-500/30 px-8 py-4 text-lg font-semibold"
-                  onMouseEnter={() => setHovered(true)}
-                  onMouseLeave={() => setHovered(false)}
+          <div className="values-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 18 }}>
+            {VALUES.map((item, i) => (
+              <div key={i} className="value-card reveal reveal-d1">
+                <div
+                  style={{
+                    width: 36, height: 36, borderRadius: 10,
+                    background: "#17689e", color: "#fff",
+                    display: "grid", placeItems: "center",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.1rem", fontWeight: 700, marginBottom: 16,
+                  }}
                 >
-                  <Link href="/join-us" className="flex items-center">
-                    Attend a Meeting
-                    <motion.div
-                      className="ml-2"
-                      animate={hovered && !shouldReduceMotion ? { x: [0, 5, 0] } : {}}
-                      transition={{ repeat: Infinity, duration: 1 }}
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </motion.div>
-                  </Link>
-                </Button>
-              </motion.div>
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div style={{ fontSize: "1rem", fontWeight: 700, color: "#0a2d44", marginBottom: 10 }}>{item.title}</div>
+                <div style={{ color: "#4c6b7f", lineHeight: 1.7, fontWeight: 300, fontSize: ".9rem" }}>{item.description}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-              >
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-2 border-white/40 text-white bg-white/5 backdrop-blur-md hover:border-white hover:bg-white hover:text-black px-8 py-4 text-lg font-semibold shadow-xl transition-all duration-300"
-                >
-                  <Link href="/team">
-                    Meet Our Team
-                  </Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+      {/* ── PULLQUOTE ── */}
+      <section style={{ background: "#fff", padding: "clamp(64px,9vw,96px) 0", borderTop: "1px solid #e1edf5", borderBottom: "1px solid #e1edf5" }}>
+        <div className="container" style={{ maxWidth: 860, textAlign: "center" }}>
+          <div
+            className="serif reveal"
+            style={{ fontSize: "clamp(2rem,4vw,3.2rem)", fontWeight: 300, fontStyle: "italic", lineHeight: 1.32, color: "#0a2d44" }}
+          >
+            Math is not a subject you are born good or bad at. It is a way of thinking, and anyone can learn to enjoy it.
+          </div>
+          <div
+            className="reveal reveal-d1"
+            style={{ marginTop: 22, fontSize: ".78rem", fontWeight: 700, letterSpacing: ".12em", textTransform: "uppercase", color: "#17689e" }}
+          >
+            Melbourne Math Circle
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section
+        style={{
+          background: "linear-gradient(180deg,#0a2d44 0%,#082638 100%)",
+          padding: "clamp(72px,10vw,116px) 0",
+          position: "relative", overflow: "hidden",
+        }}
+      >
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "-0.04em", bottom: "-0.14em",
+            fontSize: "clamp(180px,25vw,360px)", fontWeight: 700, lineHeight: 1,
+            color: "rgba(255,255,255,.04)", userSelect: "none", pointerEvents: "none",
+          }}
+        >
+          ∮
+        </div>
+        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 760 }}>
+          <div className="section-kicker-light">Get involved</div>
+          <h2
+            className="serif reveal"
+            style={{ color: "#fff", fontSize: "clamp(2.4rem,5vw,4rem)", lineHeight: 1.1, fontWeight: 300 }}
+          >
+            Ready to join the{" "}
+            <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>circle</em>?
+          </h2>
+          <p className="section-text reveal reveal-d1" style={{ color: "rgba(255,255,255,.68)", maxWidth: 520, marginTop: 18 }}>
+            Whether you're a math enthusiast or simply curious, we welcome all school students to our vibrant, student-led community.
+          </p>
+          <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
+            <Link href="/join-us" className="btn-primary">
+              Attend a meeting <ArrowRight size={16} />
+            </Link>
+            <Link href="/team" className="btn-ghost-light">
+              Meet our team
+            </Link>
+          </div>
         </div>
       </section>
     </div>

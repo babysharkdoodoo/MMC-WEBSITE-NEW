@@ -1,38 +1,231 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { ArrowRight, Mail, Linkedin } from "lucide-react";
 
-// Optional animated icon example
-function AnimatedArrow(props: any) {
-  // Subtle interactive effect on hover/tap
-  return (
-    <motion.svg
-      whileHover={{ x: 4 }}
-      whileTap={{ scale: 0.95 }}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M9 5l7 7-7 7" />
-    </motion.svg>
-  );
+const FONTS = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap');
+`;
+
+const CSS = `
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body, #root {
+    font-family: 'Outfit', sans-serif;
+    color: #0a2d44;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+  /* ── Layout ── */
+  .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity .75s cubic-bezier(0.16,1,0.3,1), transform .75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-d1 { transition-delay: .08s; }
+  .reveal-d2 { transition-delay: .16s; }
+  .reveal-d3 { transition-delay: .24s; }
+  .reveal-d4 { transition-delay: .32s; }
+
+  /* ── Tokens ── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px;
+    background: #e7f4fb; color: #17689e;
+    font-size: .76rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .btn-primary, .btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+  }
+  .btn-primary { background: #17689e; color: #fff; box-shadow: 0 12px 30px rgba(23,104,158,.18); }
+  .btn-primary:hover { transform: translateY(-2px); background: #0f557f; box-shadow: 0 16px 40px rgba(23,104,158,.25); }
+  .btn-ghost-light {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+    color: rgba(255,255,255,.9); border: 1.5px solid rgba(255,255,255,.25);
+  }
+  .btn-ghost-light:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.65); background: rgba(255,255,255,.06); }
+
+  /* ── Typography helpers ── */
+  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #17689e; margin-bottom: 14px; }
+  .section-kicker-light { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8bc4e2; margin-bottom: 14px; }
+  .divider { width: 44px; height: 2px; background: #17689e; border-radius: 999px; margin: 18px 0; }
+
+  /* ── Soft grid ── */
+  .soft-grid {
+    background-image:
+      linear-gradient(rgba(23,104,158,.05) 1px, transparent 1px),
+      linear-gradient(90deg,rgba(23,104,158,.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  /* ── Marquee ── */
+  .marquee-wrap { overflow: hidden; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Team card ── */
+  .team-card {
+    border: 1px solid rgba(23,104,158,.10);
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(10,45,68,.06);
+    display: flex;
+    flex-direction: column;
+    transition: transform .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  .team-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(10,45,68,.13);
+    border-color: rgba(23,104,158,.28);
+  }
+
+  .team-card-img {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: #eaf4fb;
+  }
+  .team-card-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .team-card:hover .team-card-img img { transform: scale(1.06); }
+
+  /* Index badge on image */
+  .team-card-badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.92);
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-weight: 700;
+    color: #17689e;
+    box-shadow: 0 4px 12px rgba(10,45,68,.12);
+    backdrop-filter: blur(6px);
+  }
+
+  .team-card-body {
+    padding: 24px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .team-card-role {
+    display: inline-block;
+    font-size: .72rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: #17689e;
+    margin-bottom: 8px;
+  }
+
+  .team-card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.65rem; font-weight: 400;
+    color: #0a2d44; line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .team-card-meta {
+    font-size: .8rem; color: #4c6b7f; font-weight: 300;
+    margin-bottom: 14px; line-height: 1.5;
+  }
+
+  .team-card-divider {
+    width: 28px; height: 1.5px;
+    background: rgba(23,104,158,.25);
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .team-card-bio {
+    color: #4c6b7f;
+    font-size: .88rem;
+    line-height: 1.78;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .team-card-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(23,104,158,.08);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .social-link {
+    display: grid; place-items: center;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1px solid rgba(23,104,158,.18);
+    color: #17689e;
+    text-decoration: none;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease, color .2s ease;
+  }
+  .social-link:hover {
+    background: #17689e; border-color: #17689e; color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .hide-mobile { display: none !important; }
+    .team-grid   { grid-template-columns: 1fr 1fr !important; }
+  }
+  @media (max-width: 560px) {
+    .container { width: min(100% - 32px, 1120px); }
+    .team-grid { grid-template-columns: 1fr !important; }
+  }
+`;
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); }),
+      { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 }
 
-// Mathematical symbols for subtle background
-const mathSymbols = [
-  "π", "∑", "∫", "∞", "≈", "θ", "λ", "Δ", "√", "∂", "Ω", "±", "×", "÷",
-  "σ", "μ", "φ", "Γ", "α", "β", "γ", "ε", "ζ", "η", "ι", "κ",
+const MARQUEE_ITEMS = [
+  "Student-Led", "West Shore High School", "Orlando Math Circle Chapter",
+  "Founded 2023", "Melbourne, FL", "Peer Learning", "Problem Solving", "Community Impact",
+  "Student-Led", "West Shore High School", "Orlando Math Circle Chapter",
+  "Founded 2023", "Melbourne, FL", "Peer Learning", "Problem Solving", "Community Impact",
 ];
 
-// 6 team members, with last two replaced
 const teamMembers = [
   {
     name: "Eshan Vipuil",
@@ -43,7 +236,6 @@ const teamMembers = [
     image: "/pfps/eshan.png",
     social: {
       email: "eshan.mmc@orlandomathcircle.org",
-      // github: "alexchen",
       linkedin: "eshan-vipuil-8042952a3",
     },
   },
@@ -65,25 +257,8 @@ const teamMembers = [
     school: "West Shore Jr./Sr. High",
     bio: "Sidharth Patsamatla is a dedicated high school student focused on facilitating higher-order student learning. As an ISEF finalist and FPS international qualifier, Sidharth is highly experienced in mathematics, critical thinking, and problem-solving. Outside of academics, Sidharth enjoys playing basketball and board games.",
     image: "/pfps/sid.jpg",
-    social: {
-      // email: "taylor@melbournemathcircle.org",
-      // github: "taylorkim",
-      // linkedin: "taylor-kim",
-    },
+    social: {},
   },
-  // {
-  //   name: "Faizan Ahmed",
-  //   role: "Website Developer",
-  //   grade: "9th Grade",
-  //   school: "West Shore Jr./Sr. High",
-  //   bio: "Faizan Ahmed is a 9th-grade student at West Shore with a passion for mathematics and its role in solving real-world problems. He conducts independent research at the intersection of mathematics, data science, and technology, focusing on healthcare challenges. Faizan is actively involved in math clubs like STEM Club, where he collaborates with peers to explore and solve complex mathematical problems.",
-  //   image: "/pfps/faizan.png",
-  //   social: {
-  //     email: "hello.faizan@proton.me",
-  //     // github: "jordanpatel",
-  //     linkedin: "thefaizanak",
-  //   },
-  // },
   {
     name: "Saaketh Kesireddy",
     role: "Alumni Advisor",
@@ -92,257 +267,272 @@ const teamMembers = [
     bio: "Saaketh is a freshman at the University of Florida, Class of 2029, with a keen interest in computer science and finance. As a dedicated volunteer at Health First Palm Bay Hospital, he combines his academic pursuits with a passion for community service. Outside of school, Saaketh enjoys tennis and challenges himself with new ways to merge technology and business.",
     image: "/pfps/saaketh.png",
     social: {
-      // email: "saakethr.kesiredddy@melbournemathcircle.org",
-      // github: "saakethk",
       linkedin: "saaketh-kesireddy",
     },
   },
-  // {
-  // name: "Margarita Azbel",
-  // role: "Advisor",
-  // grade: "",
-  // school: "",
-  // bio: "Margarita brings a wealth of knowledge and guidance as an experienced advisor, helping our students navigate complex math topics and community outreach. She is passionate about inspiring the next generation of problem-solvers.",
-  // image: "/placeholder.svg?height=400&width=400&text=MA",
-  // social: {
-  // email: "margarita@melbournemathcircle.org",
-  // github: "",
-  // linkedin: "",
-  // },
-  // },
 ];
 
 export default function TeamPage() {
-  const [hovered, setHovered] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  useReveal();
 
   return (
-    <div className="flex flex-col">
-      {/* ===== HERO SECTION ===== */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        {/* Background gradients and subtle pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-cyan-400 opacity-80 pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIi8+')] opacity-20 pointer-events-none" />
+    <div>
+      <style>{FONTS}</style>
+      <style>{CSS}</style>
 
-        {/* Floating animated shape */}
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-300 rounded-full blur-3xl opacity-30"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, 90, -90, 0], x: [0, -50, 50, 0] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 10 }
-          }
-        />
+      {/* ── HERO ── */}
+      <section
+        className="soft-grid"
+        style={{
+          minHeight: "60vh",
+          position: "relative", overflow: "hidden",
+          background: "linear-gradient(180deg,#ffffff 0%,#f7fbfe 60%,#ffffff 100%)",
+          padding: "clamp(64px,10vw,120px) 0 clamp(48px,7vw,88px)",
+          display: "flex", alignItems: "center",
+        }}
+      >
+        {/* Decorative large T */}
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "clamp(-10px,1vw,18px)", top: "50%",
+            transform: "translateY(-50%)",
+            fontSize: "clamp(220px,28vw,440px)", lineHeight: 1, fontWeight: 700,
+            color: "#e8f4fb", userSelect: "none", pointerEvents: "none",
+            letterSpacing: "-0.03em",
+          }}
+        >
+          T
+        </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <motion.h1
-              className="font-mono text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg"
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
-            >
-              Our <span className="text-blue-200">Team</span>
-            </motion.h1>
-            <motion.p
-              className="mt-6 text-2xl md:text-3xl text-white/90"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{
-                delay: shouldReduceMotion ? 0 : 0.2,
-                duration: shouldReduceMotion ? 0 : 0.8,
-              }}
-            >
-              Meet the passionate students who organize and lead the Melbourne
-              Math Circle.
-            </motion.p>
+        <div className="container" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="pill reveal">
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#17689e" }} />
+            Melbourne Math Circle
           </div>
+
+          <h1
+            className="serif reveal reveal-d1"
+            style={{
+              marginTop: 20, maxWidth: 680,
+              fontSize: "clamp(3.4rem,7vw,6.5rem)",
+              lineHeight: 0.95, letterSpacing: "-0.03em",
+              fontWeight: 300, color: "#0a2d44",
+            }}
+          >
+            Our{" "}
+            <em style={{ color: "#17689e", fontStyle: "italic" }}>Team</em>
+          </h1>
+
+          <div className="divider reveal reveal-d2" />
+
+          <p
+            className="reveal reveal-d3"
+            style={{
+              maxWidth: 520,
+              fontSize: "clamp(1rem,1.65vw,1.12rem)",
+              lineHeight: 1.85, color: "#4c6b7f", fontWeight: 300,
+            }}
+          >
+            Meet the passionate students who organize, lead, and shape the Melbourne Math Circle experience.
+          </p>
         </div>
       </section>
 
-      {/* ===== TEAM SECTION ===== */}
-      <section className="py-32 bg-gradient-to-b from-white to-blue-50/50 relative overflow-hidden">
-        {/* Subtle background with math symbols */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          {mathSymbols.slice(0, 8).map((symbol, i) => (
-            <motion.div
+      {/* ── MARQUEE ── */}
+      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+        <div className="marquee-track">
+          {MARQUEE_ITEMS.map((item, i) => (
+            <span
               key={i}
-              className="absolute text-blue-900 font-serif text-[200px] select-none"
               style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 15 + i * 2,
-                repeat: Infinity,
-                repeatType: "loop",
+                color: "rgba(255,255,255,.92)", fontSize: ".78rem", fontWeight: 600,
+                letterSpacing: ".11em", textTransform: "uppercase",
+                padding: "0 30px", display: "inline-flex", alignItems: "center", gap: 28, whiteSpace: "nowrap",
               }}
             >
-              {symbol}
-            </motion.div>
+              {item}
+              <span style={{ opacity: 0.4 }}>•</span>
+            </span>
           ))}
         </div>
+      </div>
 
-        {/* Floating gradient shapes */}
-        <motion.div
-          className="absolute -top-48 right-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/20 via-cyan-300/25 to-teal-300/20 rounded-full blur-3xl pointer-events-none"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0], opacity: [0.2, 0.3, 0.2] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20 }
-          }
-        />
-        <motion.div
-          className="absolute -bottom-48 left-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 rounded-full blur-3xl pointer-events-none"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
-          }
-        />
+      {/* ── TEAM GRID ── */}
+      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,112px) 0" }}>
+        <div className="container">
+          <div style={{ marginBottom: 52 }}>
+            <div className="section-kicker reveal">The people behind it</div>
+            <h2
+              className="serif reveal reveal-d1"
+              style={{ fontSize: "clamp(2rem,4vw,3.2rem)", lineHeight: 1.12, fontWeight: 400, color: "#0a2d44", maxWidth: 560 }}
+            >
+              Student leaders building something real.
+            </h2>
+          </div>
 
-        <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-          <motion.h2
-            className="font-mono text-5xl md:text-6xl font-bold tracking-tight mb-20 text-gray-900 text-center drop-shadow-md"
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
+          <div
+            className="team-grid reveal"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 24,
+            }}
           >
-            Meet Our <span className="text-cyan-600">Leaders</span>
-          </motion.h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
             {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                className="bg-gradient-to-b from-white to-blue-50/50 p-8 rounded-3xl shadow-xl border border-blue-100/50 hover:shadow-cyan-500/30 transition-all duration-500 flex flex-col group relative overflow-hidden"
-                whileHover={shouldReduceMotion ? {} : { scale: 1.03, y: -5 }}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1, type: "spring" }}
-              >
-                {/* Subtle hover gradient overlay */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                />
-
-                {/* Member Image with enhanced animations */}
-                <div className="relative aspect-square mb-8 overflow-hidden rounded-2xl shadow-lg group-hover:shadow-cyan-500/40 transition-shadow duration-500">
+              <div key={index} className="team-card" style={{ transitionDelay: `${index * 0.06}s` }}>
+                {/* Image */}
+                <div className="team-card-img">
                   <Image
                     src={member.image || "/placeholder.svg"}
                     alt={member.name}
                     fill
-                    className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
+                    className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="team-card-badge">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
                 </div>
 
-                {/* Name and Role with fade in */}
-                <motion.h3
-                  className="font-mono text-2xl font-bold text-gray-900 mb-2 group-hover:text-cyan-600 transition-colors duration-300"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                >
-                  {member.social.linkedin ? (
-                    <a
-                      href={`https://linkedin.com/in/${member.social.linkedin}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline cursor-pointer"
-                    >
-                      {member.name}
-                    </a>
-                  ) : (
-                    member.name
-                  )}
-                </motion.h3>
-                <motion.p
-                  className="text-cyan-600 text-lg font-medium mb-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
-                >
-                  {member.role}
-                </motion.p>
+                {/* Body */}
+                <div className="team-card-body">
+                  <span className="team-card-role">{member.role}</span>
 
-                {/* Grade and School */}
-                <motion.div
-                  className="flex flex-col gap-3 text-gray-700 text-base leading-relaxed font-light mb-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  {member.grade && (
-                    <span>
-                      <strong className="text-gray-900 font-medium">Grade:</strong>{" "}
-                      {member.grade}
-                    </span>
-                  )}
-                  {member.school && (
-                    <span>
-                      <strong className="text-gray-900 font-medium">School:</strong>{" "}
-                      {member.school}
-                    </span>
-                  )}
-                </motion.div>
+                  <div className="team-card-name">
+                    {member.social.linkedin ? (
+                      <a
+                        href={`https://linkedin.com/in/${member.social.linkedin}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "inherit", textDecoration: "none", transition: "color .2s" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#17689e")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#0a2d44")}
+                      >
+                        {member.name}
+                      </a>
+                    ) : (
+                      member.name
+                    )}
+                  </div>
 
-                {/* Bio without word animation */}
-                <motion.p
-                  className="text-gray-800 text-base leading-relaxed flex-grow"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                >
-                  {member.bio}
-                </motion.p>
+                  {(member.grade || member.school) && (
+                    <div className="team-card-meta">
+                      {member.grade && <span>{member.grade}</span>}
+                      {member.grade && member.school && <span> · </span>}
+                      {member.school && <span>{member.school}</span>}
+                    </div>
+                  )}
 
-                {/* Social Icons with bounce in */}
-                <motion.div
-                  className="mt-8 pt-6 flex items-center gap-6 text-blue-700 border-t border-blue-100/50"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                >
-                  {member.social.email && (
-                    <motion.a
-                      href={`mailto:${member.social.email}`}
-                      className="hover:text-cyan-600 transition-colors duration-300 cursor-pointer"
-                      whileHover={{ scale: 1.2, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <Mail className="h-6 w-6" />
-                    </motion.a>
+                  <div className="team-card-divider" />
+
+                  <p className="team-card-bio">{member.bio}</p>
+
+                  {(member.social.email || member.social.linkedin) && (
+                    <div className="team-card-footer">
+                      {member.social.email && (
+                        <a
+                          href={`mailto:${member.social.email}`}
+                          className="social-link"
+                          title={`Email ${member.name}`}
+                        >
+                          <Mail size={15} />
+                        </a>
+                      )}
+                      {member.social.linkedin && (
+                        <a
+                          href={`https://linkedin.com/in/${member.social.linkedin}`}
+                          className="social-link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={`${member.name} on LinkedIn`}
+                        >
+                          <Linkedin size={15} />
+                        </a>
+                      )}
+                    </div>
                   )}
-                  {member.social.linkedin && (
-                    <motion.a
-                      href={`https://linkedin.com/in/${member.social.linkedin}`}
-                      className="hover:text-cyan-600 transition-colors duration-300 cursor-pointer"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.2, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <Linkedin className="h-6 w-6" />
-                    </motion.a>
-                  )}
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── JOIN THE TEAM ── */}
+      <section style={{ background: "#fff", padding: "clamp(64px,9vw,96px) 0", borderTop: "1px solid #e1edf5" }}>
+        <div className="container">
+          <div
+            style={{
+              display: "grid", gridTemplateColumns: "1fr auto",
+              gap: "clamp(24px,4vw,48px)", alignItems: "center",
+            }}
+            className="split-grid"
+          >
+            <div>
+              <div className="section-kicker reveal">Get involved</div>
+              <h2
+                className="serif reveal reveal-d1"
+                style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", lineHeight: 1.15, fontWeight: 400, color: "#0a2d44", maxWidth: 560 }}
+              >
+                Interested in volunteering or joining the team?
+              </h2>
+              <p
+                className="reveal reveal-d2"
+                style={{ marginTop: 14, color: "#4c6b7f", lineHeight: 1.85, fontWeight: 300, maxWidth: 480 }}
+              >
+                We're always looking for students who are passionate about mathematics and community.
+                Reach out and let's build something together.
+              </p>
+            </div>
+            <div className="reveal reveal-d2" style={{ flexShrink: 0 }}>
+              <Link href="/join-us" className="btn-primary">
+                Get in touch <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA (dark) ── */}
+      <section
+        style={{
+          background: "linear-gradient(180deg,#0a2d44 0%,#082638 100%)",
+          padding: "clamp(72px,10vw,116px) 0",
+          position: "relative", overflow: "hidden",
+        }}
+      >
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "-0.04em", bottom: "-0.14em",
+            fontSize: "clamp(180px,25vw,360px)", fontWeight: 700, lineHeight: 1,
+            color: "rgba(255,255,255,.04)", userSelect: "none", pointerEvents: "none",
+          }}
+        >
+          π
+        </div>
+        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 760 }}>
+          <div className="section-kicker-light">Attend a session</div>
+          <h2
+            className="serif reveal"
+            style={{ color: "#fff", fontSize: "clamp(2.4rem,5vw,4rem)", lineHeight: 1.1, fontWeight: 300 }}
+          >
+            Ready to explore{" "}
+            <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>mathematics</em> with us?
+          </h2>
+          <p
+            className="reveal reveal-d1"
+            style={{ color: "rgba(255,255,255,.68)", maxWidth: 520, marginTop: 18, lineHeight: 1.85, fontWeight: 300 }}
+          >
+            Our events are free, student-led, and open to any student in the Melbourne area who wants more than what the classroom offers.
+          </p>
+          <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
+            <Link href="/join-us" className="btn-primary">
+              Join an event <ArrowRight size={16} />
+            </Link>
+            <Link href="/about" className="btn-ghost-light">
+              About us
+            </Link>
           </div>
         </div>
       </section>

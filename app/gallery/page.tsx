@@ -1,497 +1,610 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { ArrowRight, X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 
-const MotionCard = motion(Card);
+const FONTS = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap');
+`;
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1 },
-  },
-};
-const cardVariant = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-  hover: { scale: 1.05, boxShadow: "0px 8px 15px rgba(0,0,0,0.2)" },
-  tap: { scale: 0.95 },
-};
+const CSS = `
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body, #root {
+    font-family: 'Outfit', sans-serif;
+    color: #0a2d44;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
 
-// Mathematical symbols for subtle background
-const mathSymbols = [
-  "π", "∑", "∫", "∞", "≈", "θ", "λ", "Δ", "√", "∂", "Ω", "±", "×", "÷",
-  "σ", "μ", "φ", "Γ", "α", "β", "γ", "ε", "ζ", "η", "ι", "κ",
-];
+  /* ── Layout ── */
+  .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
 
-type Category = "monthly-meetings" | "indiafest";
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0; transform: translateY(22px);
+    transition: opacity .75s cubic-bezier(0.16,1,0.3,1), transform .75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-d1 { transition-delay: .08s; }
+  .reveal-d2 { transition-delay: .16s; }
+  .reveal-d3 { transition-delay: .24s; }
+  .reveal-d4 { transition-delay: .32s; }
 
-const galleryImages: Array<{
-  id: number;
-  src: string;
-  alt: string;
-  caption: string;
-  category: Category;
-}> = [
+  /* ── Tokens ── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 999px;
+    background: #e7f4fb; color: #17689e;
+    font-size: .76rem; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .btn-primary, .btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+  }
+  .btn-primary { background: #17689e; color: #fff; box-shadow: 0 12px 30px rgba(23,104,158,.18); }
+  .btn-primary:hover { transform: translateY(-2px); background: #0f557f; box-shadow: 0 16px 40px rgba(23,104,158,.25); }
+  .btn-secondary { background: transparent; color: #17689e; border: 1.5px solid rgba(23,104,158,.28); }
+  .btn-secondary:hover { transform: translateY(-2px); border-color: #17689e; background: rgba(23,104,158,.05); }
+  .btn-ghost-light {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 24px; border-radius: 999px; text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    font-size: .82rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+    color: rgba(255,255,255,.9); border: 1.5px solid rgba(255,255,255,.25);
+  }
+  .btn-ghost-light:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.65); background: rgba(255,255,255,.06); }
+
+  /* ── Typography ── */
+  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #17689e; margin-bottom: 14px; }
+  .section-kicker-light { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8bc4e2; margin-bottom: 14px; }
+  .divider { width: 44px; height: 2px; background: #17689e; border-radius: 999px; margin: 18px 0; }
+
+  /* ── Soft grid ── */
+  .soft-grid {
+    background-image:
+      linear-gradient(rgba(23,104,158,.05) 1px, transparent 1px),
+      linear-gradient(90deg,rgba(23,104,158,.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  /* ── Marquee ── */
+  .marquee-wrap { overflow: hidden; }
+  .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Filter tabs ── */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 18px; border-radius: 999px;
+    font-size: .78rem; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    border: 1.5px solid rgba(23,104,158,.18);
+    background: transparent; color: #4c6b7f;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease;
+  }
+  .filter-btn:hover { border-color: #17689e; color: #17689e; transform: translateY(-1px); }
+  .filter-btn.active { background: #17689e; color: #fff; border-color: #17689e; }
+  .filter-btn .count {
+    background: rgba(255,255,255,.22); color: inherit;
+    font-size: .68rem; padding: 1px 6px; border-radius: 999px;
+    font-weight: 700;
+  }
+  .filter-btn:not(.active) .count { background: rgba(23,104,158,.1); }
+
+  /* ── Section label ── */
+  .gallery-section-label {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px;
+  }
+  .gallery-section-label-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400; color: #0a2d44;
+    white-space: nowrap;
+  }
+  .gallery-section-label-line {
+    flex: 1; height: 1px; background: rgba(23,104,158,.15);
+  }
+  .gallery-section-label-count {
+    font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: #17689e;
+    white-space: nowrap;
+  }
+
+  /* ── Photo grid ── */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  /* ── Photo card ── */
+  .photo-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #eaf4fb;
+    cursor: pointer;
+    aspect-ratio: 4/3;
+    box-shadow: 0 4px 16px rgba(10,45,68,.07);
+    transition: transform .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s ease;
+  }
+  .photo-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(10,45,68,.14);
+  }
+  .photo-card img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .photo-card:hover img { transform: scale(1.06); }
+  .photo-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,45,68,.55) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    display: flex; align-items: flex-end;
+    padding: 14px;
+  }
+  .photo-card:hover .photo-card-overlay { opacity: 1; }
+  .photo-card-caption {
+    color: rgba(255,255,255,.92); font-size: .75rem;
+    font-weight: 500; line-height: 1.3;
+  }
+
+  /* ── Lightbox ── */
+  .lightbox-backdrop {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(8,38,56,.96);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    animation: fadeIn .2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox-inner {
+    position: relative;
+    width: 100%; max-width: 960px;
+    animation: slideUp .25s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .lightbox-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0a2d44;
+    box-shadow: 0 40px 80px rgba(0,0,0,.5);
+  }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 999px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+    display: grid; place-items: center; cursor: pointer;
+    color: #fff; backdrop-filter: blur(8px);
+    transition: background .2s ease, transform .2s ease;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,.22); transform: translateY(-50%) scale(1.08); }
+  .lightbox-nav.prev { left: -56px; }
+  .lightbox-nav.next { right: -56px; }
+  .lightbox-close {
+    position: absolute; top: -48px; right: 0;
+    width: 36px; height: 36px; border-radius: 999px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+    display: grid; place-items: center; cursor: pointer; color: #fff;
+    transition: background .2s ease;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,.22); }
+  .lightbox-meta {
+    margin-top: 16px; text-align: center;
+  }
+  .lightbox-caption { color: rgba(255,255,255,.85); font-size: .9rem; font-weight: 300; }
+  .lightbox-counter { color: rgba(255,255,255,.4); font-size: .75rem; margin-top: 4px; letter-spacing: .06em; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) { .photo-grid { grid-template-columns: repeat(3,1fr) !important; } }
+  @media (max-width: 900px) {
+    .hide-mobile { display: none !important; }
+    .photo-grid  { grid-template-columns: repeat(2,1fr) !important; }
+    .lightbox-nav.prev { left: 8px; }
+    .lightbox-nav.next { right: 8px; }
+  }
+  @media (max-width: 560px) {
+    .container { width: min(100% - 32px, 1120px); }
+    .photo-grid { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+  }
+`;
+
+type Category = "all" | "monthly-meetings" | "indiafest";
+
+const galleryImages = [
   // Monthly Meetings
-  {
-    id: 1,
-    src: "/photos/monthly_meetings/1.png",
-    alt: "Monthly Meeting Photo #1",
-    caption: "Monthly Meeting Photo #1",
-    category: "monthly-meetings",
-  },
-  {
-    id: 2,
-    src: "/photos/monthly_meetings/2.png",
-    alt: "Monthly Meeting Photo #2",
-    caption: "Monthly Meeting Photo #2",
-    category: "monthly-meetings",
-  },
-  {
-    id: 3,
-    src: "/photos/monthly_meetings/3.png",
-    alt: "Monthly Meeting Photo #3",
-    caption: "Monthly Meeting Photo #3",
-    category: "monthly-meetings",
-  },
-  {
-    id: 4,
-    src: "/photos/monthly_meetings/4.png",
-    alt: "Monthly Meeting Photo #4",
-    caption: "Monthly Meeting Photo #4",
-    category: "monthly-meetings",
-  },
-  {
-    id: 5,
-    src: "/photos/monthly_meetings/5.png",
-    alt: "Monthly Meeting Photo #5",
-    caption: "Monthly Meeting Photo #5",
-    category: "monthly-meetings",
-  },
-  {
-    id: 6,
-    src: "/photos/monthly_meetings/6.png",
-    alt: "Monthly Meeting Photo #6",
-    caption: "Monthly Meeting Photo #6",
-    category: "monthly-meetings",
-  },
-  {
-    id: 7,
-    src: "/photos/monthly_meetings/7.png",
-    alt: "Monthly Meeting Photo #7",
-    caption: "Monthly Meeting Photo #7",
-    category: "monthly-meetings",
-  },
-  {
-    id: 8,
-    src: "/photos/monthly_meetings/8.png",
-    alt: "Monthly Meeting Photo #8",
-    caption: "Monthly Meeting Photo #8",
-    category: "monthly-meetings",
-  },
-  {
-    id: 9,
-    src: "/photos/monthly_meetings/9.png",
-    alt: "Monthly Meeting Photo #9",
-    caption: "Monthly Meeting Photo #9",
-    category: "monthly-meetings",
-  },
-  {
-    id: 10,
-    src: "/photos/monthly_meetings/10.png",
-    alt: "Monthly Meeting Photo #10",
-    caption: "Monthly Meeting Photo #10",
-    category: "monthly-meetings",
-  },
-  {
-    id: 11,
-    src: "/photos/monthly_meetings/11.png",
-    alt: "Monthly Meeting Photo #11",
-    caption: "Monthly Meeting Photo #11",
-    category: "monthly-meetings",
-  },
-  {
-    id: 12,
-    src: "/photos/monthly_meetings/12.png",
-    alt: "Monthly Meeting Photo #12",
-    caption: "Monthly Meeting Photo #12",
-    category: "monthly-meetings",
-  },
-  {
-    id: 13,
-    src: "/photos/monthly_meetings/13.png",
-    alt: "Monthly Meeting Photo #13",
-    caption: "Monthly Meeting Photo #13",
-    category: "monthly-meetings",
-  },
-  {
-    id: 14,
-    src: "/photos/monthly_meetings/14.png",
-    alt: "Monthly Meeting Photo #14",
-    caption: "Monthly Meeting Photo #14",
-    category: "monthly-meetings",
-  },
-  {
-    id: 15,
-    src: "/photos/monthly_meetings/15.png",
-    alt: "Monthly Meeting Photo #15",
-    caption: "Monthly Meeting Photo #15",
-    category: "monthly-meetings",
-  },
-
+  ...Array.from({ length: 15 }, (_, i) => ({
+    id: i + 1,
+    src: `/photos/monthly_meetings/${i + 1}.png`,
+    alt: `Monthly Meeting Photo #${i + 1}`,
+    caption: `Monthly Meeting · #${i + 1}`,
+    category: "monthly-meetings" as const,
+  })),
   // IndiaFest
-  {
-    id: 16,
-    src: "/Photos/IndiaFest/1.png",
-    alt: "IndiaFest Photo #1",
-    caption: "IndiaFest Photo #1",
-    category: "indiafest",
-  },
-  {
-    id: 17,
-    src: "/Photos/IndiaFest/2.png",
-    alt: "IndiaFest Photo #2",
-    caption: "IndiaFest Photo #2",
-    category: "indiafest",
-  },
-  {
-    id: 18,
-    src: "/Photos/IndiaFest/3.png",
-    alt: "IndiaFest Photo #3",
-    caption: "IndiaFest Photo #3",
-    category: "indiafest",
-  },
+  ...Array.from({ length: 3 }, (_, i) => ({
+    id: 16 + i,
+    src: `/Photos/IndiaFest/${i + 1}.png`,
+    alt: `IndiaFest Photo #${i + 1}`,
+    caption: `IndiaFest · #${i + 1}`,
+    category: "indiafest" as const,
+  })),
 ];
+
+const SECTIONS: Array<{ key: Exclude<Category,"all">; label: string }> = [
+  { key: "monthly-meetings", label: "Monthly Meetings" },
+  { key: "indiafest",        label: "IndiaFest" },
+];
+
+const MARQUEE_ITEMS = [
+  "Monthly Meetings", "IndiaFest", "Melbourne, FL", "Student-Led Events",
+  "Community Impact", "Math Outreach", "Problem Solving", "Founded 2023",
+  "Monthly Meetings", "IndiaFest", "Melbourne, FL", "Student-Led Events",
+  "Community Impact", "Math Outreach", "Problem Solving", "Founded 2023",
+];
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); }),
+      { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
 
 export default function GalleryPage() {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const [lightboxId, setLightboxId] = useState<number | null>(null);
+  useReveal();
+
+  const lightboxImage = galleryImages.find((img) => img.id === lightboxId) ?? null;
+  const lightboxIndex = lightboxImage ? galleryImages.findIndex((img) => img.id === lightboxId) : -1;
+
+  const navigate = useCallback((dir: "prev" | "next") => {
+    if (lightboxIndex < 0) return;
+    const next = dir === "prev"
+      ? (lightboxIndex - 1 + galleryImages.length) % galleryImages.length
+      : (lightboxIndex + 1) % galleryImages.length;
+    setLightboxId(galleryImages[next].id);
+  }, [lightboxIndex]);
+
+  const close = useCallback(() => setLightboxId(null), []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (lightboxId === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft")  navigate("prev");
+      if (e.key === "ArrowRight") navigate("next");
+      if (e.key === "Escape")     close();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxId, navigate, close]);
 
-  const openLightbox = (id: number) => setSelectedImage(id);
-  const closeLightbox = () => setSelectedImage(null);
-
-  const navigateImage = (direction: "prev" | "next") => {
-    if (selectedImage === null) return;
-    const idx = galleryImages.findIndex((img) => img.id === selectedImage);
-    const nextIdx =
-      direction === "prev"
-        ? (idx + galleryImages.length - 1) % galleryImages.length
-        : (idx + 1) % galleryImages.length;
-    setSelectedImage(galleryImages[nextIdx].id);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (selectedImage === null) return;
-    if (e.key === "ArrowLeft") navigateImage("prev");
-    if (e.key === "ArrowRight") navigateImage("next");
-    if (e.key === "Escape") closeLightbox();
-  };
-
-  const renderSection = (title: string, emoji: string, category: Category) => (
-    <section key={category}>
-      <motion.h2
-        className="text-3xl md:text-4xl font-mono font-bold text-blue-800 mb-8 text-center"
-        initial={{ y: 30, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: shouldReduceMotion ? 0 : 0.7 }}
-      >
-        {emoji} {title}
-      </motion.h2>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-      >
-        {galleryImages
-          .filter((img) => img.category === category)
-          .map((image) => (
-            <MotionCard
-              key={image.id}
-              className={`overflow-hidden border border-blue-100 bg-gradient-to-b from-white to-blue-50/50 shadow-lg hover:shadow-cyan-500/30 transition-all duration-500 relative group ${
-                isMobile ? "cursor-default" : "cursor-pointer"
-              }`}
-              onClick={() => {
-                if (!isMobile) openLightbox(image.id);
-              }}
-              variants={cardVariant}
-              initial="hidden"
-              animate="visible"
-              whileHover={shouldReduceMotion ? {} : "hover"}
-              whileTap="tap"
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
-              <motion.div 
-                className="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              />
-              <CardContent className="p-0">
-                <div className="relative w-full aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:rotate-1"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
-                <div className="p-4 bg-blue-50">
-                  <p className="text-sm text-blue-900/80 text-center">{image.caption}</p>
-                </div>
-              </CardContent>
-            </MotionCard>
-          ))}
-      </motion.div>
-    </section>
-  );
+  // Lock body scroll when lightbox open
+  useEffect(() => {
+    document.body.style.overflow = lightboxId !== null ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [lightboxId]);
 
   return (
-    <div className="flex flex-col" onKeyDown={handleKeyDown} tabIndex={0}>
-      {/* Hero */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
-        {/* Background gradients and subtle pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-cyan-400 opacity-80 pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIi8+')] opacity-20 pointer-events-none" />
+    <div>
+      <style>{FONTS}</style>
+      <style>{CSS}</style>
 
-        {/* Floating animated shapes */}
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-300 rounded-full blur-3xl opacity-30"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, 90, -90, 0], x: [0, -50, 50, 0] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 10 }
-          }
-        />
-        <motion.div
-          className="absolute -top-52 right-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
-          }
-        />
+      {/* ── HERO ── */}
+      <section
+        className="soft-grid"
+        style={{
+          minHeight: "60vh",
+          position: "relative", overflow: "hidden",
+          background: "linear-gradient(180deg,#ffffff 0%,#f7fbfe 60%,#ffffff 100%)",
+          padding: "clamp(64px,10vw,120px) 0 clamp(48px,7vw,88px)",
+          display: "flex", alignItems: "center",
+        }}
+      >
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "clamp(-10px,1vw,18px)", top: "50%",
+            transform: "translateY(-50%)",
+            fontSize: "clamp(220px,28vw,440px)", lineHeight: 1, fontWeight: 700,
+            color: "#e8f4fb", userSelect: "none", pointerEvents: "none",
+            letterSpacing: "-0.03em",
+          }}
+        >
+          G
+        </div>
 
-        <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <motion.h1
-              className="font-mono text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-lg"
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.8 }}
-            >
-              Gallery of Our <span className="text-blue-200">Journey</span>
-            </motion.h1>
-            <motion.p
-              className="mt-6 text-xl md:text-2xl text-white/90"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{
-                delay: shouldReduceMotion ? 0 : 0.2,
-                duration: shouldReduceMotion ? 0 : 0.8,
+        <div className="container" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="pill reveal">
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#17689e" }} />
+            Melbourne Math Circle
+          </div>
+
+          <h1
+            className="serif reveal reveal-d1"
+            style={{
+              marginTop: 20, maxWidth: 680,
+              fontSize: "clamp(3.4rem,7vw,6.5rem)",
+              lineHeight: 0.95, letterSpacing: "-0.03em",
+              fontWeight: 300, color: "#0a2d44",
+            }}
+          >
+            Our{" "}
+            <em style={{ color: "#17689e", fontStyle: "italic" }}>Gallery</em>
+          </h1>
+
+          <div className="divider reveal reveal-d2" />
+
+          <p
+            className="reveal reveal-d3"
+            style={{
+              maxWidth: 500,
+              fontSize: "clamp(1rem,1.65vw,1.12rem)",
+              lineHeight: 1.85, color: "#4c6b7f", fontWeight: 300,
+            }}
+          >
+            A look at our meetings, events, and the community we're building — one session at a time.
+          </p>
+        </div>
+      </section>
+
+      {/* ── MARQUEE ── */}
+      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+        <div className="marquee-track">
+          {MARQUEE_ITEMS.map((item, i) => (
+            <span
+              key={i}
+              style={{
+                color: "rgba(255,255,255,.92)", fontSize: ".78rem", fontWeight: 600,
+                letterSpacing: ".11em", textTransform: "uppercase",
+                padding: "0 30px", display: "inline-flex", alignItems: "center", gap: 28, whiteSpace: "nowrap",
               }}
             >
-              Tap or click any image to enlarge (disabled on mobile). Swipe or use
-              arrow keys to navigate.
-            </motion.p>
+              {item}
+              <span style={{ opacity: 0.4 }}>•</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── GALLERY ── */}
+      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,112px) 0" }}>
+        <div className="container">
+
+          {/* Header row + filter */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 48 }}>
+            <div>
+              <div className="section-kicker reveal">Browse photos</div>
+              <h2
+                className="serif reveal reveal-d1"
+                style={{ fontSize: "clamp(2rem,4vw,3.2rem)", lineHeight: 1.12, fontWeight: 400, color: "#0a2d44" }}
+              >
+                Moments worth sharing.
+              </h2>
+            </div>
+
+          </div>
+
+          <div style={{ display: "grid", gap: 56 }}>
+            {SECTIONS.map(({ key, label }) => {
+              const imgs = galleryImages.filter((img) => img.category === key);
+              return (
+                <div key={key} className="reveal">
+                  <div className="gallery-section-label">
+                    <span className="gallery-section-label-text">{label}</span>
+                    <span className="gallery-section-label-line" />
+                    <span className="gallery-section-label-count">{imgs.length} photos</span>
+                  </div>
+                  <div className="photo-grid">
+                    {imgs.map((img, i) => (
+                      <div
+                        key={img.id}
+                        className="photo-card"
+                        style={{ animationDelay: `${i * 0.04}s` }}
+                        onClick={() => setLightboxId(img.id)}
+                        role="button"
+                        aria-label={`Open ${img.caption}`}
+                        tabIndex={0}
+                        onKeyDown={(e) => e.key === "Enter" && setLightboxId(img.id)}
+                      >
+                        <Image src={img.src} alt={img.alt} fill sizes="(max-width:560px) 50vw,(max-width:900px) 33vw,25vw" />
+                        <div className="photo-card-overlay">
+                          <span className="photo-card-caption">{img.caption}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Gallery */}
-      <section className="py-24 bg-gradient-to-b from-white to-blue-50/50 relative overflow-hidden">
-        {/* Subtle background with math symbols */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          {mathSymbols.slice(0, 8).map((symbol, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-blue-900 font-serif text-[200px] select-none"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 15 + i * 2,
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-            >
-              {symbol}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Floating gradient shapes */}
-        <motion.div
-          className="absolute -top-48 right-0 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/20 via-cyan-300/25 to-teal-300/20 rounded-full blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { scale: [1, 1.1, 1], rotate: [0, 60, -60, 0], opacity: [0.2, 0.3, 0.2] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 20 }
-          }
-        />
-        <motion.div
-          className="absolute -bottom-48 left-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
-          }
-        />
-
-        <div className="container mx-auto px-6 sm:px-8 lg:px-12 space-y-24 relative z-10">
-          {renderSection("Monthly Meetings", "", "monthly-meetings")}
-          {renderSection("IndiaFest", "", "indiafest")}
-        </div>
-      </section>
-
-      {/* Submit Photos */}
-      <section className="py-24 bg-gradient-to-tr from-blue-50 via-cyan-50 to-sky-50 relative overflow-hidden">
-        {/* Floating animated shapes */}
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-tl from-blue-400 to-cyan-400 blur-3xl opacity-30"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, 90, -90, 0], x: [0, -50, 50, 0] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 10 }
-          }
-        />
-        <motion.div
-          className="absolute -top-52 right-0 w-[450px] h-[450px] bg-gradient-to-bl from-cyan-300/25 to-blue-400/20 blur-3xl"
-          animate={
-            shouldReduceMotion
-              ? {}
-              : { rotate: [0, -45, 45, 0], y: [0, 30, -30, 0], opacity: [0.25, 0.35, 0.25] }
-          }
-          transition={
-            shouldReduceMotion ? {} : { repeat: Infinity, duration: 18 }
-          }
-        />
-
-        <div className="container mx-auto px-6 sm:px-8 lg:px-12 grid md:grid-cols-2 gap-12 items-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+      {/* ── SUBMIT CTA ── */}
+      <section style={{ background: "#fff", padding: "clamp(64px,9vw,96px) 0", borderTop: "1px solid #e1edf5" }}>
+        <div className="container">
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "clamp(24px,4vw,48px)", alignItems: "center" }}
+            className="split-grid"
           >
-            <h2 className="font-mono text-3xl md:text-4xl font-bold text-blue-800 mb-4">
-              Submit Your <span className="text-cyan-700">Photos</span>
-            </h2>
-            <p className="text-blue-900/80 mb-6 text-lg">
-              Share your Monthly Meeting snapshots or IndiaFest highlights!
-            </p>
-            <Button
-              asChild
-              className="bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-lg px-8 py-3"
-            >
-              <Link href="/contact#submit-photos">Submit Photos</Link>
-            </Button>
-          </motion.div>
-          <motion.div
-            className="hidden md:block relative w-full h-64"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Image
-              src="/placeholder.svg?height=256&width=512&text=Your+Photos+Here"
-              alt="Submit photos placeholder"
-              fill
-              className="object-cover rounded-xl shadow-lg"
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {selectedImage !== null && (
-          <motion.div
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-6 md:p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <button
-              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
-              onClick={closeLightbox}
-            >
-              <X className="h-8 w-8" />
-            </button>
-            <button
-              className="absolute left-4 text-white hover:text-gray-300 z-10 hidden md:block"
-              onClick={() => navigateImage("prev")}
-            >
-              <ChevronLeft className="h-8 w-8" />
-            </button>
-            <button
-              className="absolute right-4 text-white hover:text-gray-300 z-10 hidden md:block"
-              onClick={() => navigateImage("next")}
-            >
-              <ChevronRight className="h-8 w-8" />
-            </button>
-
-            <div className="w-full max-w-[90vw] md:max-w-5xl">
-              <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl shadow-2xl">
-                {galleryImages
-                  .filter((img) => img.id === selectedImage)
-                  .map((image) => (
-                    <Image
-                      key={image.id}
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-contain"
-                    />
-                  ))}
-              </div>
-              <div className="mt-4 text-white text-center">
-                {galleryImages
-                  .filter((img) => img.id === selectedImage)
-                  .map((image) => (
-                    <p key={image.id} className="text-lg">{image.caption}</p>
-                  ))}
-              </div>
-              <p className="text-white text-center text-sm mt-2">
-                Use arrows or ESC to exit.
+            <div>
+              <div className="section-kicker reveal">Share a moment</div>
+              <h2
+                className="serif reveal reveal-d1"
+                style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", lineHeight: 1.15, fontWeight: 400, color: "#0a2d44", maxWidth: 520 }}
+              >
+                Have a photo from one of our events?
+              </h2>
+              <p
+                className="reveal reveal-d2"
+                style={{ marginTop: 14, color: "#4c6b7f", lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}
+              >
+                Send us your snapshots from Monthly Meetings or IndiaFest and we'll add them to the gallery.
               </p>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div className="reveal reveal-d2" style={{ flexShrink: 0 }}>
+              <Link href="/contact#submit-photos" className="btn-primary">
+                Submit photos <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA DARK ── */}
+      <section
+        style={{
+          background: "linear-gradient(180deg,#0a2d44 0%,#082638 100%)",
+          padding: "clamp(72px,10vw,116px) 0",
+          position: "relative", overflow: "hidden",
+        }}
+      >
+        <div
+          className="serif hide-mobile"
+          style={{
+            position: "absolute", right: "-0.04em", bottom: "-0.14em",
+            fontSize: "clamp(180px,25vw,360px)", fontWeight: 700, lineHeight: 1,
+            color: "rgba(255,255,255,.04)", userSelect: "none", pointerEvents: "none",
+          }}
+        >
+          ∞
+        </div>
+        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 760 }}>
+          <div className="section-kicker-light">Get involved</div>
+          <h2
+            className="serif reveal"
+            style={{ color: "#fff", fontSize: "clamp(2.4rem,5vw,4rem)", lineHeight: 1.1, fontWeight: 300 }}
+          >
+            Want to be part of the{" "}
+            <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>story</em>?
+          </h2>
+          <p
+            className="reveal reveal-d1"
+            style={{ color: "rgba(255,255,255,.68)", maxWidth: 520, marginTop: 18, lineHeight: 1.85, fontWeight: 300 }}
+          >
+            Attend a session and be part of the community we're building in Melbourne, FL.
+          </p>
+          <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>
+            <Link href="/join-us" className="btn-primary">
+              Join an event <ArrowRight size={16} />
+            </Link>
+            <Link href="/about" className="btn-ghost-light">About us</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LIGHTBOX ── */}
+      {lightboxId !== null && lightboxImage && (
+        <div
+          className="lightbox-backdrop"
+          onClick={(e) => { if (e.target === e.currentTarget) close(); }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image lightbox"
+        >
+          <div className="lightbox-inner">
+            {/* Close */}
+            <button className="lightbox-close" onClick={close} aria-label="Close lightbox">
+              <X size={16} />
+            </button>
+
+            {/* Prev */}
+            <button
+              className="lightbox-nav prev hide-mobile"
+              onClick={() => navigate("prev")}
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            {/* Image */}
+            <div className="lightbox-img-wrap">
+              <Image
+                key={lightboxImage.id}
+                src={lightboxImage.src}
+                alt={lightboxImage.alt}
+                fill
+                className="object-contain"
+                sizes="90vw"
+                priority
+              />
+            </div>
+
+            {/* Next */}
+            <button
+              className="lightbox-nav next hide-mobile"
+              onClick={() => navigate("next")}
+              aria-label="Next image"
+            >
+              <ChevronRight size={20} />
+            </button>
+
+            {/* Meta */}
+            <div className="lightbox-meta">
+              <p className="lightbox-caption">{lightboxImage.caption}</p>
+              <p className="lightbox-counter">
+                {lightboxIndex + 1} / {galleryImages.length} &nbsp;·&nbsp; ← → to navigate &nbsp;·&nbsp; ESC to close
+              </p>
+            </div>
+
+            {/* Mobile nav */}
+            <div
+              style={{
+                display: "flex", justifyContent: "center", gap: 12, marginTop: 16,
+              }}
+              className="mobile-nav"
+            >
+              <button
+                onClick={() => navigate("prev")}
+                style={{
+                  background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.2)",
+                  borderRadius: 999, padding: "10px 20px", color: "#fff", cursor: "pointer",
+                  fontSize: ".78rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase",
+                }}
+              >
+                ← Prev
+              </button>
+              <button
+                onClick={() => navigate("next")}
+                style={{
+                  background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.2)",
+                  borderRadius: 999, padding: "10px 20px", color: "#fff", cursor: "pointer",
+                  fontSize: ".78rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase",
+                }}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
