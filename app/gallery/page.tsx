@@ -21,9 +21,9 @@ function useReveal() {
 type Category = "all" | "monthly-meetings" | "indiafest" | "university-park";
 
 const galleryImages = [
-  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/Photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
   ...Array.from({ length: 3 }, (_, i) => ({ id: 16 + i, src: `/Photos/IndiaFest/${i + 1}.png`, alt: `IndiaFest Photo #${i + 1}`, caption: `IndiaFest · #${i + 1}`, category: "indiafest" as const })),
-  ...Array.from({ length: 7 }, (_, i) => ({ id: 19 + i, src: `/photos/university_park/${i + 1}.png`, alt: `University Park Elementary Photo #${i + 1}`, caption: `University Park Elementary · #${i + 1}`, category: "university-park" as const })),
+  ...Array.from({ length: 7 }, (_, i) => ({ id: 19 + i, src: `/Photos/university_park/${i + 1}.png`, alt: `University Park Elementary Photo #${i + 1}`, caption: `University Park Elementary · #${i + 1}`, category: "university-park" as const })),
 ];
 
 const SECTIONS: Array<{ key: Exclude<Category, "all">; label: string }> = [
