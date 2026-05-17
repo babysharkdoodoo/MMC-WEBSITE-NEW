@@ -23,7 +23,8 @@ export default async function RelatedPosts({
   const relatedPosts = allPosts
     .filter((post) => post.id !== currentPostId)
     .map((post) => {
-      const matchingTags = post.tags.filter((tag) => tags.includes(tag))
+      const postTags = post.tags || []
+      const matchingTags = postTags.filter((tag) => tags.includes(tag))
       return {
         ...post,
         relevance: matchingTags.length,
@@ -68,7 +69,7 @@ export default async function RelatedPosts({
           <CardContent>
             <p className="text-navy/70 text-sm line-clamp-2 mb-3">{post.excerpt}</p>
             <div className="flex flex-wrap gap-1">
-              {post.tags.slice(0, 2).map((tag) => (
+              {(post.tags || []).slice(0, 2).map((tag) => (
                 <Link
                   key={tag}
                   href={`/${contentType === "blog" ? "math-bites" : contentType}/tag/${tag}`}
@@ -77,9 +78,9 @@ export default async function RelatedPosts({
                   #{tag}
                 </Link>
               ))}
-              {post.tags.length > 2 && (
+              {(post.tags || []).length > 2 && (
                 <span className="inline-flex items-center rounded-md bg-navy/10 px-2 py-1 text-xs font-medium text-navy">
-                  +{post.tags.length - 2}
+                  +{(post.tags || []).length - 2}
                 </span>
               )}
             </div>

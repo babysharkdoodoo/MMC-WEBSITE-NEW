@@ -168,9 +168,9 @@ export default async function MathBitePage({ params }: { params: { id: string } 
   try {
     const post = await getPostData(params.id, "blog");
 
-    const hasGeometry   = post.tags.some((t) => ["geometry","shapes","area","perimeter"].includes(t));
-    const hasNumberTheory = post.tags.some((t) => ["number-theory","primes","factors","gcd","lcm"].includes(t));
-    const hasFunctions  = post.tags.some((t) => ["functions","graphs","calculus","trigonometry"].includes(t));
+    const hasGeometry = post.tags.some((t) => ["geometry", "shapes", "area", "perimeter"].includes(t));
+    const hasNumberTheory = post.tags.some((t) => ["number-theory", "primes", "factors", "gcd", "lcm"].includes(t));
+    const hasFunctions = post.tags.some((t) => ["functions", "graphs", "calculus", "trigonometry"].includes(t));
 
     // Pick a decorative character from the title's math tags
     const decorChar = hasGeometry ? "△" : hasNumberTheory ? "∑" : hasFunctions ? "∫" : "∞";
@@ -187,10 +187,10 @@ export default async function MathBitePage({ params }: { params: { id: string } 
               <ArrowLeft size={14} /> Back to Math Bites
             </Link>
 
-            <div className="meta-row" style={{ marginBottom: 16 }}>
+            {/* <div className="meta-row" style={{ marginBottom: 16 }}>
               <Calendar size={14} />
               <span>{post.date}</span>
-            </div>
+            </div> */}
 
             <h1
               className="serif"
@@ -204,12 +204,12 @@ export default async function MathBitePage({ params }: { params: { id: string } 
               {post.title}
             </h1>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
+            {/* <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
               <div style={{ width: 38, height: 38, borderRadius: "50%", background: "rgba(255,255,255,.18)", color: "#fff", display: "grid", placeItems: "center", fontFamily: "'Cormorant Garamond',serif", fontSize: "1.3rem", fontWeight: 600 }}>
                 {post.author.charAt(0)}
               </div>
               <span style={{ color: "rgba(255,255,255,.8)", fontSize: ".88rem" }}>By {post.author}</span>
-            </div>
+            </div> */}
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {post.tags.map((tag) => (

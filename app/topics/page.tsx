@@ -1,268 +1,535 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+"use client";
 
-const topics = [
+import { useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, ChevronRight } from "lucide-react";
+import { FONTS, CSS } from "@/lib/design-tokens";
+import { getAllTopics } from "@/lib/topics";
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const obs = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("in");
+        }),
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
+const MARQUEE_ITEMS = [
+  "Number Theory",
+  "Graph Theory",
+  "Topology",
+  "Game Theory",
+  "Fractals & Chaos",
+  "Combinatorics",
+  "Cryptography",
+  "Probability",
+  "Number Theory",
+  "Graph Theory",
+  "Topology",
+  "Game Theory",
+  "Fractals & Chaos",
+  "Combinatorics",
+  "Cryptography",
+  "Probability",
+];
+
+const CONNECTIONS = [
   {
-    id: "number-theory",
-    title: "Number Theory",
-    description: "The study of integers and their properties, from prime numbers to modular arithmetic.",
-    image: "/placeholder.svg?height=300&width=300&text=Number Theory",
-    example:
-      "The Riemann Hypothesis, one of the most famous unsolved problems in mathematics, concerns the distribution of prime numbers.",
-    fact: "Every even integer greater than 2 can be expressed as the sum of two primes (Goldbach's Conjecture).",
-    color: "primary",
+    a: "Number Theory",
+    b: "Cryptography",
+    aId: "number-theory",
+    bId: "cryptography",
+    desc: "Prime number properties are the mathematical foundation of RSA encryption, the algorithm securing HTTPS connections across the internet.",
   },
   {
-    id: "graph-theory",
-    title: "Graph Theory",
-    description: "The mathematical study of networks, connections, and relationships between objects.",
-    image: "/placeholder.svg?height=300&width=300&text=Graph Theory",
-    example: "The famous Seven Bridges of Königsberg problem, solved by Euler, laid the foundation for graph theory.",
-    fact: "The Four Color Theorem states that any map can be colored using at most four colors, such that no adjacent regions share the same color.",
-    color: "primary",
+    a: "Topology",
+    b: "Graph Theory",
+    aId: "topology",
+    bId: "graph-theory",
+    desc: "Both study structure and connectivity: one through continuous deformation, the other through discrete networks.",
   },
   {
-    id: "topology",
-    title: "Topology",
-    description: "The study of properties preserved under continuous deformations like stretching and bending.",
-    image: "/placeholder.svg?height=300&width=300&text=Topology",
-    example:
-      "In topology, a coffee mug and a donut (torus) are considered equivalent because they both have exactly one hole.",
-    fact: "The Möbius strip is a surface with only one side and one edge, creating a non-orientable surface.",
-    color: "primary",
+    a: "Fractals",
+    b: "Probability",
+    aId: "fractals",
+    bId: "probability",
+    desc: "Chaos theory reveals how deterministic rules can generate unpredictable behavior, bridging fractal geometry and probabilistic thinking.",
   },
-  {
-    id: "game-theory",
-    title: "Game Theory",
-    description: "The study of mathematical models of strategic interaction between rational decision-makers.",
-    image: "/placeholder.svg?height=300&width=300&text=Game Theory",
-    example:
-      "The Prisoner's Dilemma demonstrates why two rational individuals might not cooperate, even when it's in their best interest.",
-    fact: "John Nash, whose life was portrayed in 'A Beautiful Mind,' won a Nobel Prize for his work on non-cooperative games.",
-    color: "primary",
-  },
-  {
-    id: "fractals",
-    title: "Fractals & Chaos",
-    description: "The study of infinitely complex patterns that are self-similar across different scales.",
-    image: "/placeholder.svg?height=300&width=300&text=Fractals",
-    example:
-      "The Mandelbrot Set is one of the most famous fractals, created by iterating a simple equation in the complex plane.",
-    fact: "The coastline paradox states that the length of a coastline depends on the scale at which it's measured, due to its fractal-like properties.",
-    color: "primary",
-  },
-  {
-    id: "combinatorics",
-    title: "Combinatorics",
-    description: "The study of counting, arrangement, and combination of objects within a set.",
-    image: "/placeholder.svg?height=300&width=300&text=Combinatorics",
-    example:
-      "The famous 'Handshake Problem' asks how many handshakes occur if everyone in a group shakes hands exactly once with everyone else.",
-    fact: "Pascal's Triangle contains the binomial coefficients and hides numerous patterns, including the Fibonacci sequence.",
-    color: "primary",
-  },
-  {
-    id: "cryptography",
-    title: "Cryptography",
-    description: "The mathematical foundation of secure communication in the presence of adversaries.",
-    image: "/placeholder.svg?height=300&width=300&text=Cryptography",
-    example:
-      "RSA encryption, used in secure internet communications, relies on the difficulty of factoring large prime numbers.",
-    fact: "The one-time pad is the only encryption method that has been mathematically proven to be unbreakable if used correctly.",
-    color: "primary",
-  },
-  {
-    id: "probability",
-    title: "Probability & Statistics",
-    description: "The mathematical study of random phenomena and the analysis of data.",
-    image: "/placeholder.svg?height=300&width=300&text=Probability",
-    example: "The Monty Hall problem demonstrates how conditional probability can be counterintuitive.",
-    fact: "The normal distribution (bell curve) appears naturally in many phenomena, from height distributions to measurement errors.",
-    color: "primary",
-  },
-]
+];
 
 export default function TopicsPage() {
+  useReveal();
+  const topics = getAllTopics();
+
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative py-16 md:py-24 bg-muted/50">
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-mono text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Fields We <span className="text-primary">Orbit</span>
-            </h1>
-            <p className="mt-6 text-xl text-muted-foreground">
-              Explore the diverse and fascinating branches of mathematics that we cover in our meetings and discussions.
-            </p>
+    <div>
+      <style>{FONTS}</style>
+      <style>{CSS}</style>
+      <style>{`
+        .topic-card {
+          border: 1px solid rgba(23,104,158,.10);
+          background: rgba(255,255,255,.92);
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 12px 30px rgba(10,45,68,.06);
+          display: flex;
+          flex-direction: column;
+          transition: box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+          text-decoration: none;
+          color: inherit;
+          height: 100%;
+          min-height: 520px;
+          backdrop-filter: blur(8px);
+        }
+        .topic-card:hover {
+          box-shadow: 0 22px 52px rgba(10,45,68,.12);
+          border-color: rgba(23,104,158,.24);
+        }
+        .topic-card-img {
+          position: relative;
+          aspect-ratio: 16/9;
+          overflow: hidden;
+          background: #eaf4fb;
+          flex-shrink: 0;
+        }
+        .topic-card-img img {
+          transition: transform .6s cubic-bezier(0.16,1,0.3,1);
+        }
+        .topic-card:hover .topic-card-img img {
+          transform: scale(1.05);
+        }
+        .topic-card-body {
+          padding: 22px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+        }
+        .icon-badge {
+          width: 44px;
+          height: 44px;
+          border-radius: 14px;
+          background: #e7f4fb;
+          color: #17689e;
+          display: grid;
+          place-items: center;
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.35rem;
+          font-weight: 700;
+          margin-bottom: 14px;
+          flex-shrink: 0;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+        }
+        .connection-card {
+          border: 1px solid rgba(23,104,158,.10);
+          background: rgba(255,255,255,.92);
+          border-radius: 22px;
+          padding: 24px;
+          box-shadow: 0 10px 26px rgba(10,45,68,.05);
+          transition: box-shadow .22s ease, border-color .22s ease, background-color .22s ease;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 210px;
+          backdrop-filter: blur(8px);
+        }
+        .connection-card:hover {
+          border-color: rgba(23,104,158,.24);
+          box-shadow: 0 18px 40px rgba(10,45,68,.09);
+        }
+        .cta-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          color: #17689e;
+          font-weight: 700;
+          letter-spacing: .07em;
+          text-transform: uppercase;
+          font-size: .78rem;
+        }
+        .topic-meta {
+          font-size: .72rem;
+          font-weight: 800;
+          letter-spacing: .1em;
+          text-transform: uppercase;
+          color: #17689e;
+          margin-bottom: 6px;
+        }
+      `}</style>
+
+      <section className="hero-light soft-grid">
+        <div className="serif hide-mobile bg-letter" aria-hidden="true">F</div>
+
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="pill reveal">
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#17689e",
+              }}
+            />
+            Mathematical fields
+          </div>
+
+          <h1
+            className="serif reveal reveal-d1"
+            style={{
+              marginTop: 20,
+              fontSize: "clamp(3.2rem,6.5vw,6.4rem)",
+              lineHeight: 0.94,
+              letterSpacing: "-0.035em",
+              fontWeight: 300,
+              color: "#0a2d44",
+              maxWidth: 720,
+            }}
+          >
+            Fields We <em style={{ color: "#17689e", fontStyle: "italic" }}>Orbit</em>
+          </h1>
+
+          <div className="divider reveal reveal-d2" />
+
+          <p
+            className="reveal reveal-d3"
+            style={{
+              maxWidth: 560,
+              fontSize: "clamp(1rem,1.65vw,1.12rem)",
+              lineHeight: 1.85,
+              color: "#4c6b7f",
+              fontWeight: 300,
+            }}
+          >
+            Explore the branches of mathematics we cover in our sessions, from the structure of integers to the mathematics of infinite complexity.
+          </p>
+
+          <div
+            className="reveal reveal-d4"
+            style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}
+          >
+            <Link href="/join-us" className="btn-primary">
+              Join a session <ArrowRight size={16} />
+            </Link>
+            <Link href="/fun-math-problems" className="btn-secondary">
+              Try some problems
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Topics Grid */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {topics.map((topic, index) => (
-              <Card
-                key={index}
-                className="bg-card border-border shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+        <div className="marquee-track">
+          {MARQUEE_ITEMS.map((item, i) => (
+            <span
+              key={i}
+              style={{
+                color: "rgba(255,255,255,.92)",
+                fontSize: ".78rem",
+                fontWeight: 700,
+                letterSpacing: ".11em",
+                textTransform: "uppercase",
+                padding: "0 30px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 28,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {item}
+              <span style={{ opacity: 0.35 }}>•</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,112px) 0" }}>
+        <div className="container">
+          <div className="section-kicker reveal">All topics</div>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 40 }}>
+            Where curiosity <em style={{ color: "#17689e", fontStyle: "italic" }}>leads.</em>
+          </h2>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              gap: 28,
+              alignItems: "stretch",
+            }}
+          >
+            {topics.map((topic, i) => (
+              <Link
+                key={topic.id}
+                href={`/topics/${topic.id}`}
+                className="topic-card reveal"
+                style={{ transitionDelay: `${(i % 4) * 0.05}s` }}
               >
-                <div className={`h-2 bg-primary`} />
-                <CardHeader>
-                  <CardTitle className="font-mono text-lg">{topic.title}</CardTitle>
-                  <CardDescription>{topic.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="aspect-video relative">
-                    <Image src={topic.image || "/placeholder.svg"} alt={topic.title} fill className="object-cover" />
+                <div className="topic-card-img">
+                  <Image
+                    src={topic.image}
+                    alt={topic.title}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width:900px) 100vw, 25vw"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(to top, rgba(10,45,68,.55) 0%, transparent 62%)",
+                    }}
+                  />
+                  <div style={{ position: "absolute", bottom: 14, left: 14, right: 14 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {topic.tags.slice(0, 2).map((tag) => (
+                        <span
+                          key={tag}
+                          style={{
+                            background: "rgba(255,255,255,.18)",
+                            backdropFilter: "blur(6px)",
+                            color: "rgba(255,255,255,.9)",
+                            fontSize: ".68rem",
+                            fontWeight: 600,
+                            letterSpacing: ".07em",
+                            padding: "3px 9px",
+                            borderRadius: 999,
+                          }}
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </CardContent>
-                <CardFooter className="flex justify-end pt-4">
-                  <Link
-                    href={`/topics/${topic.id}`}
-                    className={`text-primary hover:text-primary/80 font-mono text-sm flex items-center`}
+                </div>
+
+                <div className="topic-card-body">
+                  <div className="icon-badge">{topic.icon}</div>
+
+                  <div className="topic-meta">{topic.level}</div>
+
+                  <div
+                    className="serif"
+                    style={{
+                      fontSize: "1.45rem",
+                      fontWeight: 400,
+                      color: "#0a2d44",
+                      lineHeight: 1.1,
+                      marginBottom: 6,
+                    }}
                   >
-                    Explore <ChevronRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
+                    {topic.title}
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: ".8rem",
+                      color: "#7a9eb0",
+                      fontStyle: "italic",
+                      marginBottom: 12,
+                    }}
+                  >
+                    {topic.tagline}
+                  </div>
+
+                  <p
+                    style={{
+                      color: "#4c6b7f",
+                      fontSize: ".86rem",
+                      lineHeight: 1.7,
+                      fontWeight: 300,
+                      marginBottom: 16,
+                      flex: 1,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 4,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {topic.description}
+                  </p>
+
+                  <div className="cta-link" style={{ marginTop: "auto" }}>
+                    Explore <ChevronRight size={14} />
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Topic */}
-      <section className="py-16 bg-muted/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-mono text-3xl font-bold tracking-tight text-center mb-12">
-            Featured Topic: <span className="text-primary">Fractals & Chaos</span>
+      <section
+        style={{
+          background: "#fff",
+          padding: "clamp(72px,10vw,112px) 0",
+          borderTop: "1px solid #e1edf5",
+        }}
+      >
+        <div className="container">
+          <div className="section-kicker reveal">Featured topic</div>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 40 }}>
+            Fractals & <em style={{ color: "#17689e", fontStyle: "italic" }}>Chaos Theory</em>
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-square max-w-md mx-auto">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(280px, 0.95fr) minmax(320px, 1.05fr)",
+              gap: "clamp(28px,5vw,64px)",
+              alignItems: "center",
+            }}
+          >
+            <div
+              className="reveal"
+              style={{
+                position: "relative",
+                aspectRatio: "1/1",
+                borderRadius: 24,
+                overflow: "hidden",
+                boxShadow: "0 20px 60px rgba(10,45,68,.12)",
+                border: "1px solid rgba(23,104,158,.08)",
+                background: "#eaf4fb",
+              }}
+            >
               <Image
-                src="/placeholder.svg?height=400&width=400&text=Mandelbrot Set"
+                src="/placeholder.svg?height=500&width=500&text=Mandelbrot+Set"
                 alt="Mandelbrot Set"
-                width={400}
-                height={400}
-                className="rounded-lg shadow-lg"
+                fill
+                style={{ objectFit: "cover" }}
               />
             </div>
+
             <div>
-              <h3 className="font-serif text-2xl font-bold mb-4">The Beauty of Infinite Complexity</h3>
-              <p className="text-muted-foreground mb-4">
-                Fractals are infinitely complex patterns that are self-similar across different scales. They are created
-                by repeating a simple process over and over in an ongoing feedback loop.
+              <p className="section-text reveal" style={{ marginBottom: 18 }}>
+                Fractals arise from iterating simple rules indefinitely. The Mandelbrot set, one of the most complex objects in mathematics, emerges from a single equation: <strong>z → z² + c</strong>.
               </p>
-              <p className="text-muted-foreground mb-4">
-                The term "fractal" was coined by mathematician Benoit Mandelbrot in 1975. He recognized that many
-                natural phenomena exhibit fractal-like properties, from the branching patterns of trees to the structure
-                of our lungs.
+              <p className="section-text reveal reveal-d1" style={{ marginBottom: 18 }}>
+                Chaos theory shows that deterministic systems can still produce unpredictable outcomes, often described as the butterfly effect. Weather, ecosystems, and financial markets are all chaotic in this precise sense.
               </p>
-              <div className="bg-primary/10 p-4 rounded-lg mb-6">
-                <h4 className="font-mono text-primary font-bold mb-2">Did You Know?</h4>
-                <p className="text-muted-foreground text-sm">
-                  The Mandelbrot Set, despite its infinite complexity, can be generated from an extremely simple
-                  equation: z = z² + c, where z and c are complex numbers.
+
+              <div
+                className="reveal reveal-d2"
+                style={{
+                  borderRadius: 18,
+                  padding: 20,
+                  marginBottom: 24,
+                  border: "1px solid rgba(23,104,158,.10)",
+                  background: "rgba(255,255,255,.92)",
+                  boxShadow: "0 10px 26px rgba(10,45,68,.05)",
+                  backdropFilter: "blur(8px)",
+                }}
+              >
+                <div
+                  style={{
+                    fontWeight: 800,
+                    fontSize: ".8rem",
+                    letterSpacing: ".1em",
+                    textTransform: "uppercase",
+                    color: "#17689e",
+                    marginBottom: 8,
+                  }}
+                >
+                  Did you know?
+                </div>
+                <p style={{ color: "#4c6b7f", fontSize: ".9rem", lineHeight: 1.7, fontWeight: 300 }}>
+                  The Mandelbrot set has infinite perimeter but finite area, and fractal antennas inspired by it are used in modern smartphones.
                 </p>
               </div>
-              <Button asChild>
-                <Link href="/topics/fractals">
-                  Explore Fractals <ArrowRight className="ml-2 h-4 w-4" />
+
+              <div className="reveal reveal-d3">
+                <Link href="/topics/fractals" className="btn-primary">
+                  Explore fractals <ArrowRight size={15} />
                 </Link>
-              </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Topic Connections */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-mono text-3xl font-bold tracking-tight text-center mb-12">
-            Mathematical <span className="text-primary">Connections</span>
+      <section style={{ background: "#eaf4fb", padding: "clamp(72px,10vw,112px) 0" }}>
+        <div className="container">
+          <div className="section-kicker reveal">Cross-field connections</div>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 36 }}>
+            Mathematics is <em style={{ color: "#17689e", fontStyle: "italic" }}>one unified story.</em>
+          </h2>
+          <p className="section-text reveal reveal-d2" style={{ maxWidth: 560, marginBottom: 40 }}>
+            One of the most beautiful aspects of mathematics is how separate-seeming fields are deeply intertwined.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 22,
+              alignItems: "stretch",
+            }}
+          >
+            {CONNECTIONS.map((c, i) => (
+              <div key={i} className={`connection-card reveal reveal-d${i + 1}`}>
+                <p
+                  style={{
+                    color: "#4c6b7f",
+                    fontSize: ".9rem",
+                    lineHeight: 1.75,
+                    fontWeight: 300,
+                    marginBottom: 20,
+                  }}
+                >
+                  {c.desc}
+                </p>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
+                  <Link href={`/topics/${c.aId}`} className="cta-link" style={{ fontSize: ".76rem" }}>
+                    {c.a} <ChevronRight size={14} />
+                  </Link>
+                  <Link href={`/topics/${c.bId}`} className="cta-link" style={{ fontSize: ".76rem" }}>
+                    {c.b} <ChevronRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-dark">
+        <div className="serif hide-mobile bg-symbol" aria-hidden="true">∞</div>
+
+        <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
+          <div className="section-kicker-light reveal">Explore in person</div>
+          <h2
+            className="serif reveal reveal-d1"
+            style={{
+              color: "#fff",
+              fontSize: "clamp(2.2rem,4.5vw,3.6rem)",
+              lineHeight: 1.1,
+              fontWeight: 300,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Come explore these <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>ideas with us.</em>
           </h2>
 
-          <div className="mx-auto max-w-3xl text-center mb-12">
-            <p className="text-muted-foreground">
-              One of the most beautiful aspects of mathematics is how different fields connect and overlap, revealing
-              unexpected relationships and insights.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="bg-card p-6 rounded-lg shadow-sm border border-border">
-              <h3 className="font-mono text-lg font-bold mb-3">Number Theory & Cryptography</h3>
-              <p className="text-muted-foreground mb-4">
-                The properties of prime numbers form the foundation of modern encryption systems like RSA, protecting
-                our digital communications.
-              </p>
-              <div className="flex justify-between">
-                <Link href="/topics/number-theory" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Number Theory
-                </Link>
-                <Link href="/topics/cryptography" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Cryptography
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-card p-6 rounded-lg shadow-sm border border-border">
-              <h3 className="font-mono text-lg font-bold mb-3">Topology & Graph Theory</h3>
-              <p className="text-muted-foreground mb-4">
-                Both fields study connections and relationships, with topology focusing on continuous deformations and
-                graph theory on discrete structures.
-              </p>
-              <div className="flex justify-between">
-                <Link href="/topics/topology" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Topology
-                </Link>
-                <Link href="/topics/graph-theory" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Graph Theory
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-card p-6 rounded-lg shadow-sm border border-border">
-              <h3 className="font-mono text-lg font-bold mb-3">Fractals & Probability</h3>
-              <p className="text-muted-foreground mb-4">
-                Chaos theory and fractals reveal how deterministic systems can produce seemingly random outcomes,
-                connecting to probability in surprising ways.
-              </p>
-              <div className="flex justify-between">
-                <Link href="/topics/fractals" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Fractals
-                </Link>
-                <Link href="/topics/probability" className="text-primary hover:text-primary/80 font-mono text-sm">
-                  Probability
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Meeting Connection */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-mono text-3xl font-bold tracking-tight mb-6">
-              Explore These Topics in Our <span className="text-yellow-400">Meetings</span>
-            </h2>
-            <p className="text-primary-foreground/80 mb-8">
-              Our monthly meetings dive deep into these mathematical fields, with hands-on activities and collaborative
-              problem-solving.
-            </p>
-            <Button asChild size="lg" className="bg-yellow-400 text-primary hover:bg-yellow-300">
-              <Link href="/join-us">Join Our Next Meeting</Link>
-            </Button>
+          <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>
+            <Link href="/join-us" className="btn-primary">
+              Join an event <ArrowRight size={15} />
+            </Link>
+            <Link href="/fun-math-problems" className="btn-ghost-light">
+              Try problems
+            </Link>
           </div>
         </div>
       </section>
     </div>
-  )
+  );
 }
