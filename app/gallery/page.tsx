@@ -21,7 +21,7 @@ function useReveal() {
 type Category = "all" | "monthly-meetings" | "indiafest" | "university-park";
 
 const galleryImages = [
-  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/Photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
   ...Array.from({ length: 3 }, (_, i) => ({ id: 16 + i, src: `/Photos/IndiaFest/${i + 1}.png`, alt: `IndiaFest Photo #${i + 1}`, caption: `IndiaFest · #${i + 1}`, category: "indiafest" as const })),
   ...Array.from({ length: 7 }, (_, i) => ({ id: 19 + i, src: `/Photos/university_park/${i + 1}.png`, alt: `University Park Elementary Photo #${i + 1}`, caption: `University Park Elementary · #${i + 1}`, category: "university-park" as const })),
 ];
@@ -76,7 +76,7 @@ export default function GalleryPage() {
       <style>{CSS}</style>
       <style>{`
         .gallery-section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-        .gallery-section-label-text { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #0a2d44; white-space: nowrap; }
+        .gallery-section-label-text { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #0a2d44; }
         .gallery-section-label-line { flex: 1; height: 1px; background: rgba(23,104,158,.15); }
         .gallery-section-label-count { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #17689e; white-space: nowrap; }
         .photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -100,7 +100,12 @@ export default function GalleryPage() {
         .lightbox-close:hover { background: rgba(255,255,255,.22); }
         @media (max-width: 1024px) { .photo-grid { grid-template-columns: repeat(3,1fr) !important; } }
         @media (max-width: 900px) { .photo-grid { grid-template-columns: repeat(2,1fr) !important; } .lightbox-nav.prev { left: 8px; } .lightbox-nav.next { right: 8px; } }
-        @media (max-width: 560px) { .photo-grid { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; } }
+        @media (max-width: 560px) { 
+          .photo-grid { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; } 
+          .gallery-section-label { flex-direction: column; align-items: flex-start; gap: 8px; }
+          .gallery-section-label-text { font-size: 1.4rem; white-space: normal; line-height: 1.2; }
+          .gallery-section-label-line { display: none; }
+        }
       `}</style>
 
       {/* HERO */}
