@@ -65,7 +65,8 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
 .text-link:hover svg { transform: translateX(5px); }
 .chapter-heading { display: grid; grid-template-columns: 7fr 5fr; align-items: end; gap: var(--mmc-layout-gap); margin-bottom: var(--mmc-content-gap); }
 .chapter-heading > p, .chapter-heading > div { max-width: 38ch; margin-bottom: 0; }
-.intro-bottom { display: grid; grid-template-columns: 6fr 5fr; gap: var(--mmc-layout-gap); align-items: center; }
+.circle-intro .chapter-heading { grid-template-columns: 6fr 5fr; align-items: start; }
+.intro-bottom { display: grid; grid-template-columns: 6fr 5fr; gap: var(--mmc-layout-gap); align-items: start; }
 .intro-bottom img { aspect-ratio: 4/3; object-fit: cover; }
 .intro-text { max-width: 44ch; }
 .game-chapter { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mmc-layout-gap); align-items: center; }
@@ -216,7 +217,7 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
 .opening-title h1 span:last-child { animation-delay: .12s; }
 @supports (animation-timeline: view()) {
   .opening-photo img { animation: photo-settle linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
-  .intro-bottom > figure, .founder-photo { animation: photo-settle linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+  .founder-photo { animation: photo-settle linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
   .big-index > a { animation: index-arrive linear both; animation-timeline: view(); animation-range: entry 0% cover 20%; }
   @keyframes photo-settle { from { transform: scale(.97); } to { transform: scale(1); } }
   @keyframes index-arrive { from { transform: translateY(18px); } to { transform: translateY(0); } }
@@ -250,8 +251,8 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
   .opening-photo { grid-row: 2; }
   .opening-copy .mmc-button { width: fit-content; }
   .mmc-home .opening-note { margin: 0; }
-  .chapter-heading, .community-chapter .chapter-heading, .intro-bottom, .game-chapter, .people-chapter, .interview-chapter, .circle-split, .team-member, .volunteer-invitation { grid-template-columns: 1fr; gap: 32px; }
-  .chapter-heading { gap: 24px; margin-bottom: 32px; }
+  .chapter-heading, .circle-intro .chapter-heading, .community-chapter .chapter-heading, .intro-bottom, .game-chapter, .people-chapter, .interview-chapter, .circle-split, .team-member, .volunteer-invitation { grid-template-columns: 1fr; gap: 32px; }
+  .chapter-heading, .circle-intro .chapter-heading { gap: 24px; margin-bottom: 32px; }
   .chapter-heading > div > :last-child, .interview-chapter > div > :last-child { margin-bottom: 0; }
   .mmc-home h2 { font-size: clamp(42px, 10vw, 70px); }
   .documentary-pair { grid-template-columns: 1fr; gap: 32px; }
