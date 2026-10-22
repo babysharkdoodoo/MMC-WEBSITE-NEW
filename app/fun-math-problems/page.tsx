@@ -401,7 +401,7 @@ export default function FunMathProblemsPage() {
       `}</style>
 
       <div className="page-shell">
-        <section className="soft-grid" style={{ padding: "clamp(80px, 10vw, 120px) 0" }}>
+        <section className="section-space soft-grid">
           <div className="container">
             <div className="max-w-3xl">
               <div className="pill">
@@ -418,7 +418,7 @@ export default function FunMathProblemsPage() {
           </div>
         </section>
 
-        <section style={{ padding: "0 0 clamp(72px, 9vw, 104px)" }}>
+        <section style={{ padding: "0 0 var(--mmc-section-space)" }}>
           <div className="container">
             <div
               className="panel"

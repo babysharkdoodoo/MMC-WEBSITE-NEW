@@ -97,7 +97,7 @@ export default function TopicsPage() {
           position: relative;
           aspect-ratio: 16/9;
           overflow: hidden;
-          background: #eaf4fb;
+          background: #e7e8e3;
           flex-shrink: 0;
         }
         .topic-card-img img {
@@ -117,11 +117,11 @@ export default function TopicsPage() {
           width: 44px;
           height: 44px;
           border-radius: 14px;
-          background: #e7f4fb;
-          color: #17689e;
+          background: #e7e8e3;
+          color: #45616b;
           display: grid;
           place-items: center;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: 'Switzer', sans-serif;
           font-size: 1.35rem;
           font-weight: 700;
           margin-bottom: 14px;
@@ -151,7 +151,7 @@ export default function TopicsPage() {
           align-items: center;
           gap: 10px;
           text-decoration: none;
-          color: #17689e;
+          color: #45616b;
           font-weight: 700;
           letter-spacing: .07em;
           text-transform: uppercase;
@@ -162,7 +162,7 @@ export default function TopicsPage() {
           font-weight: 800;
           letter-spacing: .1em;
           text-transform: uppercase;
-          color: #17689e;
+          color: #45616b;
           margin-bottom: 6px;
         }
       `}</style>
@@ -177,7 +177,7 @@ export default function TopicsPage() {
                 width: 6,
                 height: 6,
                 borderRadius: "50%",
-                background: "#17689e",
+                background: "#45616b",
               }}
             />
             Mathematical fields
@@ -191,11 +191,11 @@ export default function TopicsPage() {
               lineHeight: 0.94,
               letterSpacing: "-0.035em",
               fontWeight: 300,
-              color: "#0a2d44",
+              color: "#263238",
               maxWidth: 720,
             }}
           >
-            Fields We <em style={{ color: "#17689e", fontStyle: "italic" }}>Orbit</em>
+            Fields We <em style={{ color: "#45616b", fontStyle: "italic" }}>Orbit</em>
           </h1>
 
           <div className="divider reveal reveal-d2" />
@@ -206,7 +206,7 @@ export default function TopicsPage() {
               maxWidth: 560,
               fontSize: "clamp(1rem,1.65vw,1.12rem)",
               lineHeight: 1.85,
-              color: "#4c6b7f",
+              color: "#263238",
               fontWeight: 300,
             }}
           >
@@ -227,7 +227,7 @@ export default function TopicsPage() {
         </div>
       </section>
 
-      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+      <div className="marquee-wrap" style={{ background: "#45616b", padding: "14px 0" }}>
         <div className="marquee-track">
           {MARQUEE_ITEMS.map((item, i) => (
             <span
@@ -252,17 +252,17 @@ export default function TopicsPage() {
         </div>
       </div>
 
-      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space" style={{ background: "#f4f3ef" }}>
         <div className="container">
           <div className="section-kicker reveal">All topics</div>
-          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 40 }}>
-            Where curiosity <em style={{ color: "#17689e", fontStyle: "italic" }}>leads.</em>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: "var(--mmc-content-gap)" }}>
+            Where curiosity <em style={{ color: "#45616b", fontStyle: "italic" }}>leads.</em>
           </h2>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 250px), 1fr))",
               gap: 28,
               alignItems: "stretch",
             }}
@@ -323,7 +323,7 @@ export default function TopicsPage() {
                     style={{
                       fontSize: "1.45rem",
                       fontWeight: 400,
-                      color: "#0a2d44",
+                      color: "#263238",
                       lineHeight: 1.1,
                       marginBottom: 6,
                     }}
@@ -344,7 +344,7 @@ export default function TopicsPage() {
 
                   <p
                     style={{
-                      color: "#4c6b7f",
+                      color: "#263238",
                       fontSize: ".86rem",
                       lineHeight: 1.7,
                       fontWeight: 300,
@@ -369,23 +369,22 @@ export default function TopicsPage() {
         </div>
       </section>
 
-      <section
+      <section className="section-space"
         style={{
           background: "#fff",
-          padding: "clamp(72px,10vw,112px) 0",
           borderTop: "1px solid #e1edf5",
         }}
       >
         <div className="container">
           <div className="section-kicker reveal">Featured topic</div>
-          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 40 }}>
-            Fractals & <em style={{ color: "#17689e", fontStyle: "italic" }}>Chaos Theory</em>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: "var(--mmc-content-gap)" }}>
+            Fractals & <em style={{ color: "#45616b", fontStyle: "italic" }}>Chaos Theory</em>
           </h2>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "minmax(280px, 0.95fr) minmax(320px, 1.05fr)",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
               gap: "clamp(28px,5vw,64px)",
               alignItems: "center",
             }}
@@ -399,7 +398,7 @@ export default function TopicsPage() {
                 overflow: "hidden",
                 boxShadow: "0 20px 60px rgba(10,45,68,.12)",
                 border: "1px solid rgba(23,104,158,.08)",
-                background: "#eaf4fb",
+                background: "#e7e8e3",
               }}
             >
               <Image
@@ -436,13 +435,13 @@ export default function TopicsPage() {
                     fontSize: ".8rem",
                     letterSpacing: ".1em",
                     textTransform: "uppercase",
-                    color: "#17689e",
+                    color: "#45616b",
                     marginBottom: 8,
                   }}
                 >
                   Did you know?
                 </div>
-                <p style={{ color: "#4c6b7f", fontSize: ".9rem", lineHeight: 1.7, fontWeight: 300 }}>
+                <p style={{ color: "#263238", fontSize: ".9rem", lineHeight: 1.7, fontWeight: 300 }}>
                   The Mandelbrot set has infinite perimeter but finite area, and fractal antennas inspired by it are used in modern smartphones.
                 </p>
               </div>
@@ -457,20 +456,20 @@ export default function TopicsPage() {
         </div>
       </section>
 
-      <section style={{ background: "#eaf4fb", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space" style={{ background: "#e7e8e3" }}>
         <div className="container">
           <div className="section-kicker reveal">Cross-field connections</div>
           <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 36 }}>
-            Mathematics is <em style={{ color: "#17689e", fontStyle: "italic" }}>one unified story.</em>
+            Mathematics is <em style={{ color: "#45616b", fontStyle: "italic" }}>one unified story.</em>
           </h2>
-          <p className="section-text reveal reveal-d2" style={{ maxWidth: 560, marginBottom: 40 }}>
+          <p className="section-text reveal reveal-d2" style={{ maxWidth: 560, marginBottom: "var(--mmc-content-gap)" }}>
             One of the most beautiful aspects of mathematics is how separate-seeming fields are deeply intertwined.
           </p>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
               gap: 22,
               alignItems: "stretch",
             }}
@@ -479,7 +478,7 @@ export default function TopicsPage() {
               <div key={i} className={`connection-card reveal reveal-d${i + 1}`}>
                 <p
                   style={{
-                    color: "#4c6b7f",
+                    color: "#263238",
                     fontSize: ".9rem",
                     lineHeight: 1.75,
                     fontWeight: 300,
@@ -517,7 +516,7 @@ export default function TopicsPage() {
               letterSpacing: "-0.02em",
             }}
           >
-            Come explore these <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>ideas with us.</em>
+            Come explore these <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>ideas with us.</em>
           </h2>
 
           <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>

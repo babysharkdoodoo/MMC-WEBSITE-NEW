@@ -175,14 +175,14 @@ export default function MathBitesPage() {
           align-items: center;
           padding: 6px 12px;
           border-radius: 999px;
-          background: #e7f4fb;
-          color: #17689e;
+          background: #e7e8e3;
+          color: #45616b;
           font-size: .74rem;
           font-weight: 700;
           letter-spacing: .05em;
           text-decoration: none;
           transition: background .15s ease, transform .15s ease;
-          font-family: 'Outfit', sans-serif;
+          font-family: 'Switzer', sans-serif;
           border: none;
           cursor: pointer;
         }
@@ -194,8 +194,8 @@ export default function MathBitesPage() {
           width: 34px;
           height: 34px;
           border-radius: 50%;
-          background: #e7f4fb;
-          color: #17689e;
+          background: #e7e8e3;
+          color: #45616b;
           display: grid;
           place-items: center;
           font-weight: 700;
@@ -206,7 +206,7 @@ export default function MathBitesPage() {
           padding: 72px 32px;
           border: 1px solid rgba(23,104,158,.10);
           border-radius: 24px;
-          background: #f9fcfe;
+          background: #f4f3ef;
         }
         .submit-cta {
           display: grid;
@@ -241,7 +241,7 @@ export default function MathBitesPage() {
                 width: 6,
                 height: 6,
                 borderRadius: "50%",
-                background: "#8fd0ef",
+                background: "#e7e8e3",
               }}
             />
             Student explorations
@@ -259,7 +259,7 @@ export default function MathBitesPage() {
           >
             Math
             <br />
-            <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>Insights</em>
+            <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>Insights</em>
           </h1>
           <div
             className="divider reveal reveal-d2"
@@ -281,8 +281,8 @@ export default function MathBitesPage() {
       </section>
 
       <section
-        className="soft-grid"
-        style={{ background: "#f4f9fc", padding: "clamp(36px,5vw,56px) 0" }}
+        className="soft-grid filter-section"
+        style={{ background: "#f4f3ef" }}
       >
         <div className="container">
           <div
@@ -295,14 +295,14 @@ export default function MathBitesPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: "'Switzer', sans-serif",
                 fontSize: ".95rem",
                 fontWeight: 300,
                 padding: "13px 18px",
                 borderRadius: 999,
                 border: "1.5px solid rgba(23,104,158,.18)",
                 background: "#fff",
-                color: "#0a2d44",
+                color: "#263238",
                 outline: "none",
                 minWidth: 240,
               }}
@@ -320,13 +320,13 @@ export default function MathBitesPage() {
                 key={tag}
                 onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
                 style={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'Switzer', sans-serif",
                   padding: "8px 14px",
                   borderRadius: 999,
                   border: "1.5px solid",
-                  borderColor: selectedTag === tag ? "#17689e" : "rgba(23,104,158,.2)",
-                  background: selectedTag === tag ? "#17689e" : "#fff",
-                  color: selectedTag === tag ? "#fff" : "#17689e",
+                  borderColor: selectedTag === tag ? "#45616b" : "rgba(23,104,158,.2)",
+                  background: selectedTag === tag ? "#45616b" : "#fff",
+                  color: selectedTag === tag ? "#fff" : "#45616b",
                   fontSize: ".76rem",
                   fontWeight: 700,
                   letterSpacing: ".06em",
@@ -345,7 +345,7 @@ export default function MathBitesPage() {
                   setSelectedTag(null);
                 }}
                 style={{
-                  fontFamily: "'Outfit', sans-serif",
+                  fontFamily: "'Switzer', sans-serif",
                   background: "none",
                   border: "none",
                   color: "#7a9eb0",
@@ -361,11 +361,11 @@ export default function MathBitesPage() {
       </section>
 
       {featured && (
-        <section style={{ background: "#fff", padding: "clamp(72px,10vw,110px) 0" }}>
+        <section className="section-space" style={{ background: "#fff" }}>
           <div className="container">
             <div className="section-kicker reveal">Featured pick</div>
-            <div className="featured-card reveal reveal-d1" style={{ marginTop: 20 }}>
-              <div style={{ position: "relative", minHeight: 420, background: "#e7f4fb" }}>
+            <div className="featured-card reveal reveal-d1">
+              <div className="featured-image" style={{ position: "relative", background: "#e7e8e3" }}>
                 <Image
                   src={featured.image || "/placeholder.svg"}
                   alt={featured.title}
@@ -377,7 +377,7 @@ export default function MathBitesPage() {
                     position: "absolute",
                     top: 18,
                     right: 18,
-                    background: "#17689e",
+                    background: "#45616b",
                     color: "#fff",
                     padding: "6px 12px",
                     borderRadius: 999,
@@ -395,7 +395,7 @@ export default function MathBitesPage() {
               </div>
               <div
                 style={{
-                  padding: "44px 36px",
+                  padding: "clamp(24px,3vw,40px)",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -407,7 +407,7 @@ export default function MathBitesPage() {
                     fontSize: "clamp(1.9rem,3vw,2.8rem)",
                     lineHeight: 1.08,
                     fontWeight: 400,
-                    color: "#0a2d44",
+                    color: "#263238",
                     marginBottom: 18,
                   }}
                 >
@@ -440,11 +440,11 @@ export default function MathBitesPage() {
         </section>
       )}
 
-      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,110px) 0" }}>
+      <section className="section-space" style={{ background: "#f4f3ef" }}>
         <div className="container">
           <div className="section-kicker reveal">More to explore</div>
-          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 42 }}>
-            Bigger, easier, <em style={{ color: "#17689e", fontStyle: "italic" }}>more fun.</em>
+          <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: "var(--mmc-content-gap)" }}>
+            Bigger, easier, <em style={{ color: "#45616b", fontStyle: "italic" }}>more fun.</em>
           </h2>
 
           {rest.length > 0 ? (
@@ -462,8 +462,7 @@ export default function MathBitesPage() {
                     style={{
                       position: "relative",
                       aspectRatio: "16/10",
-                      background: "#e7f4fb",
-                      minHeight: 260,
+                      background: "#e7e8e3",
                     }}
                   >
                     <Image
@@ -479,7 +478,7 @@ export default function MathBitesPage() {
                       style={{
                         fontSize: "1.55rem",
                         fontWeight: 400,
-                        color: "#0a2d44",
+                        color: "#263238",
                         lineHeight: 1.15,
                         marginBottom: 12,
                       }}
@@ -488,7 +487,7 @@ export default function MathBitesPage() {
                     </h3>
                     <p
                       style={{
-                        color: "#4c6b7f",
+                        color: "#263238",
                         fontSize: ".98rem",
                         lineHeight: 1.75,
                         fontWeight: 300,
@@ -536,7 +535,7 @@ export default function MathBitesPage() {
                       <Link
                         href={`/math-bites/${bite.id}`}
                         style={{
-                          color: "#17689e",
+                          color: "#45616b",
                           fontWeight: 700,
                           fontSize: ".85rem",
                           textDecoration: "none",
@@ -563,7 +562,7 @@ export default function MathBitesPage() {
                   setSelectedTag(null);
                 }}
                 className="btn-secondary"
-                style={{ fontFamily: "'Outfit', sans-serif" }}
+                style={{ fontFamily: "'Switzer', sans-serif" }}
               >
                 Clear filters
               </button>
@@ -572,10 +571,9 @@ export default function MathBitesPage() {
         </div>
       </section>
 
-      <section
+      <section className="section-space"
         style={{
           background: "#fff",
-          padding: "clamp(72px,10vw,112px) 0",
           borderTop: "1px solid #e1edf5",
         }}
       >
@@ -586,7 +584,7 @@ export default function MathBitesPage() {
               <h2 className="serif section-title reveal reveal-d1">
                 Got a cool
                 <br />
-                <em style={{ color: "#17689e", fontStyle: "italic" }}>math idea? 💡</em>
+                <em style={{ color: "#45616b", fontStyle: "italic" }}>math idea? 💡</em>
               </h2>
               <p
                 className="section-text reveal reveal-d2"
@@ -608,7 +606,7 @@ export default function MathBitesPage() {
                 aspectRatio: "4/3",
                 borderRadius: 24,
                 overflow: "hidden",
-                background: "#e7f4fb",
+                background: "#e7e8e3",
               }}
             >
               <Image
@@ -630,7 +628,7 @@ export default function MathBitesPage() {
           className="container"
           style={{ position: "relative", zIndex: 1, maxWidth: 700 }}
         >
-          <div className="section-kicker reveal" style={{ color: "#8bc4e2" }}>
+          <div className="section-kicker reveal" style={{ color: "#e7e8e3" }}>
             Get involved
           </div>
           <h2
@@ -644,7 +642,7 @@ export default function MathBitesPage() {
           >
             Ready to join
             <br />
-            <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>the circle?</em>
+            <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>the circle?</em>
           </h2>
           <div
             className="reveal reveal-d2"

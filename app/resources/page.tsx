@@ -21,7 +21,7 @@ function useReveal() {
 const PAGE_CSS = `
   .hero-res {
     min-height: 52vh; display: flex; align-items: center;
-    background: linear-gradient(180deg,#ffffff 0%,#f7fbfe 60%,#ffffff 100%);
+    background: linear-gradient(180deg,#ffffff 0%,#f4f3ef 60%,#ffffff 100%);
     padding: clamp(72px,10vw,120px) 0 clamp(48px,7vw,88px);
     position: relative; overflow: hidden;
   }
@@ -34,17 +34,17 @@ const PAGE_CSS = `
   }
   .cat-icon {
     width: 40px; height: 40px; border-radius: 12px;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     display: grid; place-items: center; flex-shrink: 0;
   }
   .cat-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.85rem; font-weight: 400; color: #0a2d44; line-height: 1;
+    font-family: 'Switzer', sans-serif;
+    font-size: 1.85rem; font-weight: 400; color: #263238; line-height: 1;
   }
   .cat-count {
     margin-left: auto; font-size: .72rem; font-weight: 700;
-    letter-spacing: .1em; text-transform: uppercase; color: #17689e;
-    background: #e7f4fb; padding: 4px 10px; border-radius: 999px;
+    letter-spacing: .1em; text-transform: uppercase; color: #45616b;
+    background: #e7e8e3; padding: 4px 10px; border-radius: 999px;
   }
 
   /* ── PDF cards ── */
@@ -63,7 +63,7 @@ const PAGE_CSS = `
   .pdf-card:hover { border-color: rgba(23,104,158,.35); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(10,45,68,.08); }
   .pdf-file-icon {
     width: 44px; height: 52px; border-radius: 8px;
-    background: linear-gradient(160deg,#1e88c2,#17689e);
+    background: linear-gradient(160deg,#1e88c2,#45616b);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     flex-shrink: 0;
     position: relative; overflow: hidden;
@@ -83,7 +83,7 @@ const PAGE_CSS = `
   .pdf-dl-btn {
     display: inline-flex; align-items: center; gap: 7px;
     margin-top: 10px; padding: 6px 12px; border-radius: 6px;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
     text-decoration: none; border: 1px solid rgba(23,104,158,.2);
     transition: background .15s ease, border-color .15s ease;
@@ -91,7 +91,7 @@ const PAGE_CSS = `
   .pdf-dl-btn:hover { background: #d0e9f5; border-color: rgba(23,104,158,.4); }
   .pdf-topic {
     font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    color: #17689e; margin-bottom: 5px;
+    color: #45616b; margin-bottom: 5px;
   }
 
   /* ── Book cards ── */
@@ -112,22 +112,22 @@ const PAGE_CSS = `
     height: 6px; width: 100%;
   }
   .book-cover {
-    background: #eaf4fb;
+    background: #e7e8e3;
     aspect-ratio: 3/2;
     display: grid; place-items: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem; color: #17689e; font-weight: 300;
+    font-family: 'Switzer', sans-serif;
+    font-size: 2.2rem; color: #45616b; font-weight: 300;
   }
   .book-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
-  .book-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: #0a2d44; line-height: 1.2; margin-bottom: 4px; }
+  .book-title { font-family: 'Switzer', sans-serif; font-size: 1.2rem; font-weight: 600; color: #263238; line-height: 1.2; margin-bottom: 4px; }
   .book-author { font-size: .78rem; color: #7a9eb0; margin-bottom: 12px; }
-  .book-desc { font-size: .85rem; color: #4c6b7f; line-height: 1.7; font-weight: 300; flex: 1; margin-bottom: 14px; }
+  .book-desc { font-size: .85rem; color: #263238; line-height: 1.7; font-weight: 300; flex: 1; margin-bottom: 14px; }
   .book-why {
-    background: #f4f9fc; border-radius: 10px; padding: 10px 12px;
-    font-size: .78rem; color: #4c6b7f; line-height: 1.6;
-    border-left: 2px solid #17689e; margin-bottom: 14px;
+    background: #f4f3ef; border-radius: 10px; padding: 10px 12px;
+    font-size: .78rem; color: #263238; line-height: 1.6;
+    border-left: 2px solid #45616b; margin-bottom: 14px;
   }
-  .book-why strong { color: #0a2d44; display: block; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+  .book-why strong { color: #263238; display: block; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
 
   /* ── Channel cards ── */
   .channel-grid {
@@ -147,11 +147,11 @@ const PAGE_CSS = `
   .channel-avatar {
     width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
     display: grid; place-items: center;
-    font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: #fff;
+    font-family: 'Switzer', sans-serif; font-size: 1.4rem; font-weight: 600; color: #fff;
   }
-  .channel-name { font-size: .97rem; font-weight: 700; color: #0a2d44; margin-bottom: 3px; }
+  .channel-name { font-size: .97rem; font-weight: 700; color: #263238; margin-bottom: 3px; }
   .channel-by { font-size: .76rem; color: #7a9eb0; margin-bottom: 8px; }
-  .channel-desc { font-size: .84rem; color: #4c6b7f; line-height: 1.65; font-weight: 300; }
+  .channel-desc { font-size: .84rem; color: #263238; line-height: 1.65; font-weight: 300; }
 
   /* ── Tool cards ── */
   .tool-grid {
@@ -166,9 +166,9 @@ const PAGE_CSS = `
     text-decoration: none; color: inherit; display: block;
   }
   .tool-card:hover { border-color: rgba(23,104,158,.35); transform: translateY(-2px); }
-  .tool-name { font-weight: 700; font-size: .97rem; color: #0a2d44; margin-bottom: 5px; }
-  .tool-desc { font-size: .84rem; color: #4c6b7f; line-height: 1.65; font-weight: 300; margin-bottom: 10px; }
-  .tool-tag { font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #17689e; }
+  .tool-name { font-weight: 700; font-size: .97rem; color: #263238; margin-bottom: 5px; }
+  .tool-desc { font-size: .84rem; color: #263238; line-height: 1.65; font-weight: 300; margin-bottom: 10px; }
+  .tool-tag { font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #45616b; }
 
   /* ── Website list ── */
   .site-list { display: grid; gap: 12px; }
@@ -181,13 +181,13 @@ const PAGE_CSS = `
     gap: 16px;
   }
   .site-item:hover { border-color: rgba(23,104,158,.35); }
-  .site-name { font-weight: 700; font-size: .95rem; color: #17689e; margin-bottom: 4px; }
-  .site-desc { font-size: .84rem; color: #4c6b7f; line-height: 1.6; font-weight: 300; }
-  .site-arrow { color: #17689e; flex-shrink: 0; margin-top: 2px; }
+  .site-name { font-weight: 700; font-size: .95rem; color: #45616b; margin-bottom: 4px; }
+  .site-desc { font-size: .84rem; color: #263238; line-height: 1.6; font-weight: 300; }
+  .site-arrow { color: #45616b; flex-shrink: 0; margin-top: 2px; }
 
   /* ── Level badge ── */
   .level { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .06em; margin-bottom: 8px; }
-  .level-beginner    { background: #e7f4fb; color: #17689e; }
+  .level-beginner    { background: #e7e8e3; color: #45616b; }
   .level-intermediate { background: #fff4e6; color: #b07d00; }
   .level-advanced    { background: #fdf0f0; color: #b04040; }
   .level-all         { background: #f0f7ee; color: #3a7d44; }
@@ -199,16 +199,16 @@ const PAGE_CSS = `
     transition: transform .2s ease;
   }
   .rec-card:hover { transform: translateY(-2px); }
-  .rec-quote-mark { font-family: 'Cormorant Garamond',serif; font-size: 3rem; color: #e7f4fb; line-height: 1; margin-bottom: 6px; }
+  .rec-quote-mark { font-family: 'Cormorant Garamond',serif; font-size: 3rem; color: #e7e8e3; line-height: 1; margin-bottom: 6px; }
   .rec-avatar {
     width: 34px; height: 34px; border-radius: 50%;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     display: grid; place-items: center;
     font-family: 'Cormorant Garamond',serif; font-size: 1.1rem; font-weight: 700;
   }
 
   /* ── CTA dark ── */
-  .cta-dark { background: linear-gradient(180deg,#0a2d44 0%,#082638 100%); padding: clamp(72px,10vw,112px) 0; position: relative; overflow: hidden; }
+  .cta-dark { background: linear-gradient(180deg,#263238 0%,#263238 100%); padding: clamp(72px,10vw,112px) 0; position: relative; overflow: hidden; }
 
   /* ── Competition section ── */
   .comp-grid {
@@ -228,7 +228,7 @@ const PAGE_CSS = `
   }
   .comp-num {
     width: 36px; height: 36px; border-radius: 10px;
-    background: #0a2d44; color: #fff;
+    background: #263238; color: #fff;
     display: grid; place-items: center;
     font-family: 'Cormorant Garamond',serif; font-size: 1rem; font-weight: 700;
   }
@@ -328,7 +328,7 @@ const BOOKS = [
     title: "The Art and Craft of Problem Solving",
     author: "Paul Zeitz",
     level: "Intermediate",
-    spineColor: "#17689e",
+    spineColor: "#45616b",
     symbol: "∑",
     desc: "The best single book for getting into mathematical olympiad thinking. Covers strategy, tactics, and mindset across all competition topics.",
     why: "If you only buy one book, make it this one. Evan Chen recommends it as the best general introduction to olympiad problem-solving.",
@@ -371,7 +371,7 @@ const CHANNELS = [
     name: "3Blue1Brown",
     by: "Grant Sanderson",
     level: "All Levels",
-    color: "#17689e",
+    color: "#45616b",
     desc: "Animated visualizations of calculus, linear algebra, probability, and number theory. Build the kind of geometric intuition that no textbook can.",
     url: "https://www.youtube.com/@3blue1brown",
     pick: "Start with \"Essence of Linear Algebra\" or \"But what is the Fourier Transform?\"",
@@ -528,21 +528,21 @@ export default function ResourcesPage() {
         <div className="serif hide-mobile" style={{ position: "absolute", right: "clamp(-10px,1vw,18px)", top: "50%", transform: "translateY(-50%)", fontSize: "clamp(220px,28vw,440px)", lineHeight: 1, fontWeight: 700, color: "#e8f4fb", userSelect: "none", pointerEvents: "none", letterSpacing: "-0.03em" }}>R</div>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="pill reveal">
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#17689e" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#45616b" }} />
             Curated by the team
           </div>
-          <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, fontSize: "clamp(3.2rem,6.8vw,6.5rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#0a2d44", maxWidth: 680 }}>
+          <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, fontSize: "clamp(3.2rem,6.8vw,6.5rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#263238", maxWidth: 680 }}>
             Resources
           </h1>
           <div className="divider reveal reveal-d2" />
-          <p className="reveal reveal-d3" style={{ maxWidth: 540, fontSize: "clamp(1rem,1.65vw,1.12rem)", lineHeight: 1.85, color: "#4c6b7f", fontWeight: 300 }}>
+          <p className="reveal reveal-d3" style={{ maxWidth: 540, fontSize: "clamp(1rem,1.65vw,1.12rem)", lineHeight: 1.85, color: "#263238", fontWeight: 300 }}>
             The books, videos, tools, and free PDFs our team actually uses — not a generic list. Every item here was chosen because it genuinely works.
           </p>
         </div>
       </section>
 
       {/* ── MARQUEE ── */}
-      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+      <div className="marquee-wrap" style={{ background: "#45616b", padding: "14px 0" }}>
         <div className="marquee-track">
           {MARQUEE_ITEMS.map((item, i) => (
             <span key={i} style={{ color: "rgba(255,255,255,.92)", fontSize: ".78rem", fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", padding: "0 30px", display: "inline-flex", alignItems: "center", gap: 28, whiteSpace: "nowrap" }}>
@@ -553,7 +553,7 @@ export default function ResourcesPage() {
       </div>
 
       {/* ── FREE PDFs ── */}
-      <section style={{ background: "#f4f9fc", padding: "clamp(64px,9vw,100px) 0" }}>
+      <section className="section-space" style={{ background: "#f4f3ef" }}>
         <div className="container">
           <div className="cat-header reveal">
             <div className="cat-icon"><FileText size={20} /></div>
@@ -572,9 +572,9 @@ export default function ResourcesPage() {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="pdf-topic">{pdf.topic}</div>
-                  <div style={{ fontWeight: 700, fontSize: ".92rem", color: "#0a2d44", marginBottom: 3, lineHeight: 1.3 }}>{pdf.title}</div>
+                  <div style={{ fontWeight: 700, fontSize: ".92rem", color: "#263238", marginBottom: 3, lineHeight: 1.3 }}>{pdf.title}</div>
                   <div style={{ fontSize: ".76rem", color: "#7a9eb0", marginBottom: 8 }}>by {pdf.author}</div>
-                  <div style={{ fontSize: ".82rem", color: "#4c6b7f", lineHeight: 1.65, fontWeight: 300, marginBottom: 10 }}>{pdf.desc}</div>
+                  <div style={{ fontSize: ".82rem", color: "#263238", lineHeight: 1.65, fontWeight: 300, marginBottom: 10 }}>{pdf.desc}</div>
                   <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="pdf-dl-btn">
                     {pdf.isDirect ? <Download size={12} /> : <ExternalLink size={12} />}
                     {pdf.isDirect ? "Download PDF" : "Get it free"}
@@ -587,10 +587,10 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── COMPETITION PREP ── */}
-      <section style={{ background: "#fff", padding: "clamp(64px,9vw,100px) 0", borderTop: "1px solid #e1edf5" }}>
+      <section className="section-space" style={{ background: "#fff", borderTop: "1px solid #e1edf5" }}>
         <div className="container">
           <div className="cat-header reveal">
-            <div className="cat-icon" style={{ background: "#0a2d44", color: "#fff" }}>
+            <div className="cat-icon" style={{ background: "#263238", color: "#fff" }}>
               <Star size={20} />
             </div>
             <h2 className="cat-title">Competition Prep</h2>
@@ -605,12 +605,12 @@ export default function ResourcesPage() {
                 <div className="comp-card-header">
                   <div className="comp-num">{String(i + 1).padStart(2, "0")}</div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: ".95rem", color: "#0a2d44", lineHeight: 1.2 }}>{c.name}</div>
+                    <div style={{ fontWeight: 700, fontSize: ".95rem", color: "#263238", lineHeight: 1.2 }}>{c.name}</div>
                     <div style={{ fontSize: ".75rem", color: "#7a9eb0" }}>by {c.by}</div>
                   </div>
                 </div>
-                <p style={{ fontSize: ".86rem", color: "#4c6b7f", lineHeight: 1.7, fontWeight: 300, marginBottom: 12 }}>{c.desc}</p>
-                <span style={{ fontSize: ".72rem", fontWeight: 700, color: "#17689e", letterSpacing: ".06em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 5 }}>
+                <p style={{ fontSize: ".86rem", color: "#263238", lineHeight: 1.7, fontWeight: 300, marginBottom: 12 }}>{c.desc}</p>
+                <span style={{ fontSize: ".72rem", fontWeight: 700, color: "#45616b", letterSpacing: ".06em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 5 }}>
                   Visit <ExternalLink size={11} />
                 </span>
               </a>
@@ -620,7 +620,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── BOOKS ── */}
-      <section style={{ background: "#eaf4fb", padding: "clamp(64px,9vw,100px) 0" }}>
+      <section className="section-space" style={{ background: "#e7e8e3" }}>
         <div className="container">
           <div className="cat-header reveal">
             <div className="cat-icon"><BookOpen size={20} /></div>
@@ -657,7 +657,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── YOUTUBE ── */}
-      <section style={{ background: "#fff", padding: "clamp(64px,9vw,100px) 0", borderTop: "1px solid #e1edf5" }}>
+      <section className="section-space" style={{ background: "#fff", borderTop: "1px solid #e1edf5" }}>
         <div className="container">
           <div className="cat-header reveal">
             <div className="cat-icon" style={{ background: "#fdf0f0", color: "#b04040" }}><Youtube size={20} /></div>
@@ -677,7 +677,7 @@ export default function ResourcesPage() {
                   <div className="channel-name">{ch.name}</div>
                   <div className="channel-by">by {ch.by} · <span className={`level level-${ch.level.toLowerCase().replace(/\s+/g, "-").replace("–", "-")}`}>{ch.level}</span></div>
                   <p className="channel-desc" style={{ marginBottom: 8 }}>{ch.desc}</p>
-                  <div style={{ fontSize: ".78rem", color: "#17689e", fontWeight: 600 }}>
+                  <div style={{ fontSize: ".78rem", color: "#45616b", fontWeight: 600 }}>
                     ↳ {ch.pick}
                   </div>
                 </div>
@@ -688,7 +688,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── INTERACTIVE TOOLS ── */}
-      <section style={{ background: "#f4f9fc", padding: "clamp(64px,9vw,100px) 0" }}>
+      <section className="section-space" style={{ background: "#f4f3ef" }}>
         <div className="container">
           <div className="cat-header reveal">
             <div className="cat-icon"><Gamepad2 size={20} /></div>
@@ -711,7 +711,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── WEBSITES ── */}
-      <section style={{ background: "#fff", padding: "clamp(64px,9vw,100px) 0", borderTop: "1px solid #e1edf5" }}>
+      <section className="section-space" style={{ background: "#fff", borderTop: "1px solid #e1edf5" }}>
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: "clamp(32px,6vw,72px)", alignItems: "start" }} className="split-grid">
             <div>
@@ -739,21 +739,21 @@ export default function ResourcesPage() {
       </section>
 
       {/* ── TEAM RECOMMENDATIONS ──
-      <section style={{ background: "#eaf4fb", padding: "clamp(64px,9vw,100px) 0" }}>
+      <section className="section-space" style={{ background: "#e7e8e3" }}>
         <div className="container">
           <div className="section-kicker reveal">From our team</div>
           <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 36 }}>
-            Personal <em style={{ color: "#17689e", fontStyle: "italic" }}>recommendations.</em>
+            Personal <em style={{ color: "#45616b", fontStyle: "italic" }}>recommendations.</em>
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 18 }}>
             {TEAM_RECS.map((r, i) => (
               <div key={i} className={`rec-card reveal reveal-d${(i % 2) + 1}`}>
                 <div className="rec-quote-mark">"</div>
-                <p style={{ color: "#0a2d44", fontStyle: "italic", lineHeight: 1.75, marginBottom: 18, fontWeight: 300, fontSize: ".92rem" }}>{r.q}</p>
+                <p style={{ color: "#263238", fontStyle: "italic", lineHeight: 1.75, marginBottom: 18, fontWeight: 300, fontSize: ".92rem" }}>{r.q}</p>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div className="rec-avatar">{r.name[0]}</div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: ".85rem", color: "#0a2d44" }}>{r.name}</div>
+                    <div style={{ fontWeight: 700, fontSize: ".85rem", color: "#263238" }}>{r.name}</div>
                     <div style={{ fontSize: ".75rem", color: "#7a9eb0" }}>{r.role}</div>
                   </div>
                 </div>
@@ -769,7 +769,7 @@ export default function ResourcesPage() {
         <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 720 }}>
           <div className="section-kicker-light reveal">Suggest a resource</div>
           <h2 className="serif reveal reveal-d1" style={{ color: "#fff", fontSize: "clamp(2.2rem,4.5vw,3.6rem)", lineHeight: 1.1, fontWeight: 300 }}>
-            Found something <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>we should include?</em>
+            Found something <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>we should include?</em>
           </h2>
           <p className="section-text reveal reveal-d2" style={{ color: "rgba(255,255,255,.68)", maxWidth: 500, marginTop: 14 }}>
             We'd love your recommendations. Send us a book, PDF, or site that changed how you think about math.

@@ -18,13 +18,13 @@ function useReveal() {
 }
 
 const FAQS = [
-  { q: "How can I join Melbourne Math Circle?", a: "Register for our next meeting on the Join Us page and fill out the registration form." },
-  { q: "Is there a fee to attend meetings?", a: "No — our meetings are completely free. We're a nonprofit dedicated to making mathematics accessible to all students." },
-  { q: "How can I support Melbourne Math Circle?", a: "We welcome volunteers and donations. Reach out directly for more information." },
+  { q: "How can I join Melbourne Math Circle?", a: "Complete the registration form on the Join Us page. We’ll email session announcements and RSVP links; use each event’s link to sign up for that session." },
+  { q: "Is there a fee to attend meetings?", a: "No. Our sessions are free." },
+  { q: "How can I support Melbourne Math Circle?", a: "If you’d like to volunteer or ask about bringing a math activity to your school, send us a message." },
   { q: "Can parents attend meetings with their children?", a: "Parents are welcome to attend and observe. We believe family involvement enhances the learning experience." },
   { q: "Do I need any special background to participate?", a: "Not at all. Our events cater to various skill levels — from math novices to competition-ready enthusiasts." },
-  { q: "Where are the events held?", a: "Events take place at a variety of local venues around Melbourne, FL, and occasionally online. Check the Join Us page for details." },
-  { q: "Are events online or in-person?", a: "We host both. Some sessions are fully online; others happen in-person. We note location details in each event listing." },
+  { q: "Where are the events held?", a: "Check the session email for the location and arrival details. If anything is unclear, contact us before the meeting." },
+  { q: "Are events online or in-person?", a: "The session announcement will say whether to come to a venue or join online, with the details you need to attend." },
   { q: "How can I stay updated on future events?", a: "Sign up once on the Join Us page and we'll email RSVP links whenever a new event is scheduled." },
 ];
 
@@ -61,11 +61,11 @@ export default function ContactPage() {
         <div className="serif bg-symbol-hero" aria-hidden="true">∑</div>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="pill reveal" style={{ background: "rgba(255,255,255,.12)", color: "rgba(255,255,255,.9)" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#8fd0ef" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#e7e8e3" }} />
             Get in touch
           </div>
           <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, fontSize: "clamp(3.2rem,6.5vw,6rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#fff" }}>
-            Contact <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>Us</em>
+            Contact <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>Us</em>
           </h1>
           <div className="divider reveal reveal-d2" style={{ background: "rgba(255,255,255,.35)", margin: "22px 0 24px" }} />
           <p className="reveal reveal-d3" style={{ maxWidth: 540, fontSize: "clamp(.95rem,1.5vw,1.1rem)", lineHeight: 1.85, color: "rgba(255,255,255,.75)", fontWeight: 300 }}>
@@ -75,16 +75,16 @@ export default function ContactPage() {
       </section>
 
       {/* FORM + INFO */}
-      <section className="soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f4f9fc 100%)", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f4f3ef 100%)" }}>
         <div className="container">
           <div className="split-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: "clamp(36px,6vw,80px)", alignItems: "start" }}>
             <div>
               <div className="section-kicker reveal">Send a message</div>
-              <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 32 }}>We're happy to<br /><em style={{ color: "#17689e", fontStyle: "italic" }}>hear from you.</em></h2>
+              <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 32 }}>We're happy to<br /><em style={{ color: "#45616b", fontStyle: "italic" }}>hear from you.</em></h2>
               {status === "success" ? (
                 <div className="reveal glass-card" style={{ borderRadius: 22, padding: "32px 28px", textAlign: "center" }}>
                   <div style={{ fontSize: "2.4rem", marginBottom: 12 }}>✓</div>
-                  <div className="serif" style={{ fontSize: "1.6rem", color: "#0a2d44", fontWeight: 400, marginBottom: 10 }}>Message sent!</div>
+                  <div className="serif" style={{ fontSize: "1.6rem", color: "#263238", fontWeight: 400, marginBottom: 10 }}>Message sent!</div>
                   <p className="section-text">We'll get back to you as soon as we can.</p>
                 </div>
               ) : (
@@ -105,19 +105,19 @@ export default function ContactPage() {
             </div>
             <div style={{ paddingTop: 8 }}>
               <div className="section-kicker reveal">Contact information</div>
-              <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 32 }}>Reach us<br /><em style={{ color: "#17689e", fontStyle: "italic" }}>directly.</em></h2>
+              <h2 className="serif section-title reveal reveal-d1" style={{ marginBottom: 32 }}>Reach us<br /><em style={{ color: "#45616b", fontStyle: "italic" }}>directly.</em></h2>
               <div className="reveal reveal-d2">
                 <div className="info-chip">
                   <div className="chip-icon"><Mail size={18} /></div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#0a2d44", marginBottom: 6 }}>Email</div>
-                    <div style={{ fontSize: ".82rem", color: "#4c6b7f", marginBottom: 6 }}>General Inquiries</div>
-                    <a href="mailto:eshan.mmc@orlandomathcircle.org" style={{ color: "#17689e", fontWeight: 600, fontSize: ".9rem", textDecoration: "none" }}>eshan.mmc@orlandomathcircle.org</a>
+                    <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#263238", marginBottom: 6 }}>Email</div>
+                    <div style={{ fontSize: ".82rem", color: "#263238", marginBottom: 6 }}>General Inquiries</div>
+                    <a href="mailto:eshan.mmc@orlandomathcircle.org" style={{ color: "#45616b", fontWeight: 600, fontSize: ".9rem", textDecoration: "none" }}>eshan.mmc@orlandomathcircle.org</a>
                   </div>
                 </div>
               </div>
               <div className="glass-card reveal reveal-d3" style={{ borderRadius: 22, padding: 28, marginTop: 28 }}>
-                <div className="serif" style={{ fontSize: "1.5rem", fontWeight: 400, color: "#0a2d44", marginBottom: 12 }}>A chapter of Orlando Math Circle</div>
+                <div className="serif" style={{ fontSize: "1.5rem", fontWeight: 400, color: "#263238", marginBottom: 12 }}>A chapter of Orlando Math Circle</div>
                 <p className="section-text" style={{ fontSize: ".9rem" }}>Melbourne Math Circle is a student-led, free community dedicated to mathematical exploration in the Melbourne, FL area.</p>
               </div>
             </div>
@@ -126,17 +126,17 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ background: "#eaf4fb", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space" style={{ background: "#e7e8e3" }}>
         <div className="container">
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <div className="section-kicker reveal">FAQ</div>
-            <h2 className="serif section-title reveal reveal-d1">Frequently asked <em style={{ color: "#17689e", fontStyle: "italic" }}>questions.</em></h2>
+            <h2 className="serif section-title reveal reveal-d1">Frequently asked <em style={{ color: "#45616b", fontStyle: "italic" }}>questions.</em></h2>
           </div>
           <div className="faq-grid reveal reveal-d2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {FAQS.map((item, i) => (
               <div key={i} className="faq-card">
-                <div style={{ fontWeight: 700, fontSize: ".95rem", color: "#0a2d44", marginBottom: 8 }}>{item.q}</div>
-                <p style={{ color: "#4c6b7f", fontSize: ".9rem", lineHeight: 1.75, fontWeight: 300 }}>{item.a}</p>
+                <div style={{ fontWeight: 700, fontSize: ".95rem", color: "#263238", marginBottom: 8 }}>{item.q}</div>
+                <p style={{ color: "#263238", fontSize: ".9rem", lineHeight: 1.75, fontWeight: 300 }}>{item.a}</p>
               </div>
             ))}
           </div>
@@ -147,9 +147,9 @@ export default function ContactPage() {
       <section className="cta-dark">
         <div className="serif bg-symbol" aria-hidden="true">∂</div>
         <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
-          <div className="section-kicker reveal" style={{ color: "#8bc4e2" }}>Join us</div>
+          <div className="section-kicker reveal" style={{ color: "#e7e8e3" }}>Join us</div>
           <h2 className="serif reveal reveal-d1" style={{ color: "#fff", fontSize: "clamp(2.2rem,4.5vw,3.6rem)", lineHeight: 1.1, fontWeight: 300 }}>
-            Ready to explore <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>mathematics</em> with us?
+            Ready to explore <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>mathematics</em> with us?
           </h2>
           <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>
             <Link href="/join-us" className="btn-primary">Join an event <ArrowRight size={16} /></Link>

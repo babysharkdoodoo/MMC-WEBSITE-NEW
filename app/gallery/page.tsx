@@ -21,7 +21,7 @@ function useReveal() {
 type Category = "all" | "monthly-meetings" | "indiafest" | "university-park";
 
 const galleryImages = [
-  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
+  ...Array.from({ length: 15 }, (_, i) => ({ id: i + 1, src: `/Photos/monthly_meetings/${i + 1}.png`, alt: `Monthly Meeting Photo #${i + 1}`, caption: `Monthly Meeting · #${i + 1}`, category: "monthly-meetings" as const })),
   ...Array.from({ length: 3 }, (_, i) => ({ id: 16 + i, src: `/Photos/IndiaFest/${i + 1}.png`, alt: `IndiaFest Photo #${i + 1}`, caption: `IndiaFest · #${i + 1}`, category: "indiafest" as const })),
   ...Array.from({ length: 7 }, (_, i) => ({ id: 19 + i, src: `/Photos/university_park/${i + 1}.png`, alt: `University Park Elementary Photo #${i + 1}`, caption: `University Park Elementary · #${i + 1}`, category: "university-park" as const })),
 ];
@@ -76,11 +76,11 @@ export default function GalleryPage() {
       <style>{CSS}</style>
       <style>{`
         .gallery-section-label { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-        .gallery-section-label-text { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #0a2d44; }
+        .gallery-section-label-text { font-family: 'Switzer', sans-serif; font-size: 1.6rem; font-weight: 400; color: #263238; }
         .gallery-section-label-line { flex: 1; height: 1px; background: rgba(23,104,158,.15); }
-        .gallery-section-label-count { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #17689e; white-space: nowrap; }
+        .gallery-section-label-count { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #45616b; white-space: nowrap; }
         .photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-        .photo-card { position: relative; border-radius: 14px; overflow: hidden; background: #eaf4fb; cursor: pointer; aspect-ratio: 4/3; box-shadow: 0 4px 16px rgba(10,45,68,.07); transition: transform .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s ease; }
+        .photo-card { position: relative; border-radius: 14px; overflow: hidden; background: #e7e8e3; cursor: pointer; aspect-ratio: 4/3; box-shadow: 0 4px 16px rgba(10,45,68,.07); transition: transform .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s ease; }
         .photo-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 40px rgba(10,45,68,.14); }
         .photo-card img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(0.16,1,0.3,1); }
         .photo-card:hover img { transform: scale(1.06); }
@@ -91,7 +91,7 @@ export default function GalleryPage() {
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .lightbox-inner { position: relative; width: 100%; max-width: 960px; animation: slideUp .25s cubic-bezier(0.16,1,0.3,1); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .lightbox-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; background: #0a2d44; box-shadow: 0 40px 80px rgba(0,0,0,.5); }
+        .lightbox-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; background: #263238; box-shadow: 0 40px 80px rgba(0,0,0,.5); }
         .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); display: grid; place-items: center; cursor: pointer; color: #fff; backdrop-filter: blur(8px); transition: background .2s ease, transform .2s ease; }
         .lightbox-nav:hover { background: rgba(255,255,255,.22); transform: translateY(-50%) scale(1.08); }
         .lightbox-nav.prev { left: -56px; }
@@ -113,19 +113,19 @@ export default function GalleryPage() {
         <div className="serif hide-mobile bg-letter" aria-hidden="true">G</div>
         <div className="container" style={{ position: "relative", zIndex: 1, width: "100%" }}>
           <div className="pill reveal">
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#17689e" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#45616b" }} />
             Melbourne Math Circle
           </div>
-          <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, maxWidth: 680, fontSize: "clamp(3.4rem,7vw,6.5rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#0a2d44" }}>
-            Our <em style={{ color: "#17689e", fontStyle: "italic" }}>Gallery</em>
+          <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, maxWidth: 680, fontSize: "clamp(3.4rem,7vw,6.5rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#263238" }}>
+            Our <em style={{ color: "#45616b", fontStyle: "italic" }}>Gallery</em>
           </h1>
           <div className="divider reveal reveal-d2" />
-          <p className="reveal reveal-d3" style={{ maxWidth: 500, fontSize: "clamp(1rem,1.65vw,1.12rem)", lineHeight: 1.85, color: "#4c6b7f", fontWeight: 300 }}>A look at our meetings, events, and the community we're building — one session at a time.</p>
+          <p className="reveal reveal-d3" style={{ maxWidth: 500, fontSize: "clamp(1rem,1.65vw,1.12rem)", lineHeight: 1.85, color: "#263238", fontWeight: 300 }}>A look at our meetings, events, and the community we're building — one session at a time.</p>
         </div>
       </section>
 
       {/* MARQUEE */}
-      <div className="marquee-wrap" style={{ background: "#17689e", padding: "14px 0" }}>
+      <div className="marquee-wrap" style={{ background: "#45616b", padding: "14px 0" }}>
         <div className="marquee-track">
           {MARQUEE_ITEMS.map((item, i) => (
             <span key={i} style={{ color: "rgba(255,255,255,.92)", fontSize: ".78rem", fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", padding: "0 30px", display: "inline-flex", alignItems: "center", gap: 28, whiteSpace: "nowrap" }}>
@@ -136,15 +136,15 @@ export default function GalleryPage() {
       </div>
 
       {/* GALLERY */}
-      <section style={{ background: "#f4f9fc", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space" style={{ background: "#f4f3ef" }}>
         <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 48 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: "var(--mmc-content-gap)" }}>
             <div>
               <div className="section-kicker reveal">Browse photos</div>
-              <h2 className="serif reveal reveal-d1" style={{ fontSize: "clamp(2rem,4vw,3.2rem)", lineHeight: 1.12, fontWeight: 400, color: "#0a2d44" }}>Moments worth sharing.</h2>
+              <h2 className="serif reveal reveal-d1" style={{ fontSize: "clamp(2rem,4vw,3.2rem)", lineHeight: 1.12, fontWeight: 400, color: "#263238" }}>Moments worth sharing.</h2>
             </div>
           </div>
-          <div style={{ display: "grid", gap: 56 }}>
+          <div style={{ display: "grid", gap: "var(--mmc-layout-gap)" }}>
             {SECTIONS.map(({ key, label }) => {
               const imgs = galleryImages.filter((img) => img.category === key);
               return (
@@ -170,13 +170,13 @@ export default function GalleryPage() {
       </section>
 
       {/* SUBMIT CTA */}
-      <section style={{ background: "#fff", padding: "clamp(64px,9vw,96px) 0", borderTop: "1px solid #e1edf5" }}>
+      <section className="section-space" style={{ background: "#fff", borderTop: "1px solid #e1edf5" }}>
         <div className="container">
           <div className="split-grid" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "clamp(24px,4vw,48px)", alignItems: "center" }}>
             <div>
               <div className="section-kicker reveal">Share a moment</div>
-              <h2 className="serif reveal reveal-d1" style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", lineHeight: 1.15, fontWeight: 400, color: "#0a2d44", maxWidth: 520 }}>Have a photo from one of our events?</h2>
-              <p className="reveal reveal-d2" style={{ marginTop: 14, color: "#4c6b7f", lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}>Send us your snapshots from Monthly Meetings or IndiaFest and we'll add them to the gallery.</p>
+              <h2 className="serif reveal reveal-d1" style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", lineHeight: 1.15, fontWeight: 400, color: "#263238", maxWidth: 520 }}>Have a photo from one of our events?</h2>
+              <p className="reveal reveal-d2" style={{ marginTop: 14, color: "#263238", lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}>Send us your snapshots from Monthly Meetings or IndiaFest and we'll add them to the gallery.</p>
             </div>
             <div className="reveal reveal-d2" style={{ flexShrink: 0 }}>
               <Link href="/contact#submit-photos" className="btn-primary">Submit photos <ArrowRight size={16} /></Link>
@@ -191,7 +191,7 @@ export default function GalleryPage() {
         <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 760 }}>
           <div className="section-kicker-light">Get involved</div>
           <h2 className="serif reveal" style={{ color: "#fff", fontSize: "clamp(2.4rem,5vw,4rem)", lineHeight: 1.1, fontWeight: 300 }}>
-            Want to be part of the <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>story</em>?
+            Want to be part of the <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>story</em>?
           </h2>
           <p className="reveal reveal-d1" style={{ color: "rgba(255,255,255,.68)", maxWidth: 520, marginTop: 18, lineHeight: 1.85, fontWeight: 300 }}>Attend a session and be part of the community we're building in Melbourne, FL.</p>
           <div className="reveal reveal-d2" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 34 }}>

@@ -5,33 +5,15 @@ import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Quicksand, STIX_Two_Text } from "next/font/google";
 import type React from "react";
 import "./globals.css";
-
-// Fonts
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-ibm-plex-mono",
-});
-const stixTwo = STIX_Two_Text({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-stix-two",
-});
-const quicksand = Quicksand({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-quicksand",
-});
+import "./circle.css";
 
 // Site Metadata
 export const metadata: Metadata = {
   title: "Melbourne Math Circle",
   description:
-    "A monthly student-led math workshop series in Melbourne, Florida, run by high school students.",
-  generator: "v0.dev",
+    "Free, student-led math sessions and outreach in Melbourne, Florida. A local chapter of Orlando Math Circle.",
 };
 
 export default function RootLayout({
@@ -42,7 +24,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexMono.variable} ${stixTwo.variable} ${quicksand.variable}`}
+      className="mmc-site"
       suppressHydrationWarning
     >
       <head>

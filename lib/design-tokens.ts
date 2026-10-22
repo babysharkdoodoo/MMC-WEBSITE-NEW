@@ -1,22 +1,20 @@
 // ── Single source of truth for all page styling ──────────────────────────────
 // Every page imports { FONTS, CSS } from here. No inline <style> duplication.
 
-export const FONTS = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap');
-`;
+export const FONTS = "";
 
 export const CSS = `
   /* ── Reset & base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body, #root {
-    font-family: 'Outfit', sans-serif;
-    color: #0a2d44;
+    font-family: 'Switzer', sans-serif;
+    color: #263238;
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+  .serif { font-family: 'Switzer', sans-serif; }
 
   /* ── Layout ── */
   .container {
@@ -26,8 +24,8 @@ export const CSS = `
 
   /* ── Scroll reveal ── */
   .reveal {
-    opacity: 0;
-    transform: translateY(22px);
+    opacity: 1;
+    transform: none;
     transition: opacity .75s cubic-bezier(0.16,1,0.3,1), transform .75s cubic-bezier(0.16,1,0.3,1);
   }
   .reveal.in { opacity: 1; transform: translateY(0); }
@@ -40,7 +38,7 @@ export const CSS = `
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 7px 14px; border-radius: 999px;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     font-size: .76rem; font-weight: 600;
     letter-spacing: .06em; text-transform: uppercase;
   }
@@ -51,27 +49,27 @@ export const CSS = `
     min-height: 48px; padding: 0 24px; border-radius: 999px;
     text-decoration: none; cursor: pointer; border: none;
     transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Switzer', sans-serif;
     font-size: .82rem; font-weight: 700;
     letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     will-change: transform;
   }
   .btn-primary {
-    background: #17689e; color: #fff;
+    background: #45616b; color: #fff;
     box-shadow: 0 12px 30px rgba(23,104,158,.18);
   }
   .btn-primary:hover {
-    transform: translateY(-2px); background: #0f557f;
+    transform: translateY(-2px); background: #45616b;
     box-shadow: 0 16px 40px rgba(23,104,158,.25);
   }
   .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
   .btn-secondary {
-    background: transparent; color: #17689e;
+    background: transparent; color: #45616b;
     border: 1.5px solid rgba(23,104,158,.28);
   }
   .btn-secondary:hover {
-    transform: translateY(-2px); border-color: #17689e;
+    transform: translateY(-2px); border-color: #45616b;
     background: rgba(23,104,158,.05);
   }
 
@@ -89,21 +87,21 @@ export const CSS = `
   /* ── Typography helpers ── */
   .section-kicker {
     font-size: .75rem; font-weight: 700; letter-spacing: .14em;
-    text-transform: uppercase; color: #17689e; margin-bottom: 14px;
+    text-transform: uppercase; color: #45616b; margin-bottom: 14px;
   }
   .section-kicker-light {
     font-size: .75rem; font-weight: 700; letter-spacing: .14em;
-    text-transform: uppercase; color: #8bc4e2; margin-bottom: 14px;
+    text-transform: uppercase; color: #e7e8e3; margin-bottom: 14px;
   }
   .section-title {
     font-size: clamp(2rem,4vw,3.2rem); line-height: 1.12;
-    font-weight: 400; color: #0a2d44; letter-spacing: -0.02em;
+    font-weight: 400; color: #263238; letter-spacing: -0.02em;
   }
   .section-text {
-    color: #4c6b7f; line-height: 1.85; font-size: 1rem; font-weight: 300;
+    color: #263238; line-height: 1.85; font-size: 1rem; font-weight: 300;
   }
   .divider {
-    width: 44px; height: 2px; background: #17689e;
+    width: 44px; height: 2px; background: #45616b;
     border-radius: 999px; margin: 18px 0;
   }
 
@@ -148,14 +146,14 @@ export const CSS = `
   .feature-icon {
     width: 48px; height: 48px; border-radius: 16px;
     display: grid; place-items: center;
-    background: #e7f4fb; color: #17689e; margin-bottom: 16px;
+    background: #e7e8e3; color: #45616b; margin-bottom: 16px;
   }
 
   .step-card {
     display: flex; align-items: flex-start; gap: 14px;
     padding: 20px 22px; border-radius: 18px;
     border: 1px solid rgba(23,104,158,.10);
-    background: #f9fcfe; color: #0a2d44;
+    background: #f4f3ef; color: #263238;
     line-height: 1.65;
     transition: border-color .2s ease, transform .2s ease, background .2s ease;
   }
@@ -168,7 +166,7 @@ export const CSS = `
     flex: 0 0 auto;
     width: 36px; height: 36px; border-radius: 12px;
     display: grid; place-items: center;
-    background: #e7f4fb; color: #17689e; font-weight: 800;
+    background: #e7e8e3; color: #45616b; font-weight: 800;
     font-size: .88rem;
   }
 
@@ -244,19 +242,19 @@ export const CSS = `
   .field { display: flex; flex-direction: column; gap: 8px; }
   .field label {
     font-size: .78rem; font-weight: 600;
-    letter-spacing: .07em; text-transform: uppercase; color: #0a2d44;
+    letter-spacing: .07em; text-transform: uppercase; color: #263238;
   }
   .field input, .field textarea {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Switzer', sans-serif;
     font-size: .95rem; font-weight: 300;
     padding: 13px 16px; border-radius: 12px;
     border: 1.5px solid rgba(23,104,158,.18);
-    background: #f9fcfe; color: #0a2d44;
+    background: #f4f3ef; color: #263238;
     outline: none; resize: vertical;
     transition: border-color .2s ease, box-shadow .2s ease;
   }
   .field input:focus, .field textarea:focus {
-    border-color: #17689e;
+    border-color: #45616b;
     box-shadow: 0 0 0 3px rgba(23,104,158,.10);
   }
   .field input::placeholder, .field textarea::placeholder { color: #a0b8c8; }
@@ -266,14 +264,14 @@ export const CSS = `
     display: flex; align-items: flex-start; gap: 14px;
     padding: 20px 22px; border-radius: 18px;
     border: 1px solid rgba(23,104,158,.12);
-    background: #f4f9fc;
+    background: #f4f3ef;
     transition: border-color .2s ease;
   }
   .info-chip:hover { border-color: rgba(23,104,158,.4); }
   .chip-icon {
     width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
     display: grid; place-items: center;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
   }
 
   /* ── Misc ── */
@@ -296,23 +294,23 @@ export const CSS = `
     letter-spacing: .08em; text-transform: uppercase;
     margin-bottom: 4px;
   }
-  .level-beginner { color: #17689e; }
-  .level-intermediate { color: #0a2d44; }
+  .level-beginner { color: #45616b; }
+  .level-intermediate { color: #263238; }
   .level-advanced { color: #264a6c; }
-  .level-all { color: #17689e; }
+  .level-all { color: #45616b; }
 
   /* ── Hero variants ── */
   .hero-light {
     min-height: 60vh;
     position: relative; overflow: hidden;
-    background: linear-gradient(180deg,#ffffff 0%,#f7fbfe 58%,#ffffff 100%);
+    background: linear-gradient(180deg,#ffffff 0%,#f4f3ef 58%,#ffffff 100%);
     padding: clamp(68px,10vw,124px) 0 clamp(56px,7vw,92px);
     display: flex; align-items: center;
   }
   .hero-dark {
     min-height: 48vh;
     display: flex; align-items: center;
-    background: linear-gradient(160deg, #0a2d44 0%, #17689e 100%);
+    background: linear-gradient(160deg, #263238 0%, #45616b 100%);
     position: relative; overflow: hidden;
     padding: clamp(72px,10vw,110px) 0;
   }
@@ -322,7 +320,7 @@ export const CSS = `
     position: absolute;
     right: clamp(-10px,1vw,18px); top: 50%;
     transform: translateY(-50%);
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Switzer', sans-serif;
     font-size: clamp(220px,28vw,440px); line-height: 1;
     font-weight: 700; color: #e8f4fb;
     user-select: none; pointer-events: none;
@@ -331,13 +329,13 @@ export const CSS = `
   .bg-symbol {
     position: absolute;
     right: -0.04em; bottom: -0.14em;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Switzer', sans-serif;
     font-size: clamp(180px,25vw,360px); font-weight: 700;
     line-height: 1; color: rgba(255,255,255,.04);
     user-select: none; pointer-events: none;
   }
   .bg-symbol-hero {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Switzer', sans-serif;
     position: absolute; right: clamp(-10px,2vw,30px); bottom: -0.12em;
     font-size: clamp(200px,26vw,400px); font-weight: 700; line-height: 1;
     color: rgba(255,255,255,.05); pointer-events: none; user-select: none;
@@ -345,7 +343,7 @@ export const CSS = `
 
   /* ── Dark CTA section (shared bottom of pages) ── */
   .cta-dark {
-    background: linear-gradient(180deg,#0a2d44 0%,#082638 100%);
+    background: linear-gradient(180deg,#263238 0%,#263238 100%);
     padding: clamp(72px,10vw,116px) 0;
     position: relative; overflow: hidden;
   }

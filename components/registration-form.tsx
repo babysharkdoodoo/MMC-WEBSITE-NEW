@@ -168,19 +168,19 @@ export default function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="registration-form space-y-8">
       {/* desktop tabs */}
       <Tabs
         value={currentStep}
         onValueChange={(v) => setStepIdx(steps.findIndex((s) => s === v))}
         className="w-full"
       >
-        <TabsList className="hidden sm:flex flex-nowrap space-x-4 overflow-x-auto mb-8">
+        <TabsList className="registration-tabs hidden sm:grid grid-cols-2 gap-2 h-auto mb-6 w-full">
           {steps.map((s) => (
             <TabsTrigger
               key={s}
               value={s}
-              className="min-w-[120px] whitespace-nowrap"
+              className="min-w-0 whitespace-normal py-3 px-2 leading-snug"
             >
               {
                 {
@@ -342,7 +342,7 @@ export default function RegistrationForm() {
                   <RadioGroup
                     value={formData.ethnicity}
                     onValueChange={(v) => handleRadio("ethnicity", v)}
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-2"
+                    className="registration-options grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-2"
                   >
                     {[
                       "African American/Black",
@@ -651,7 +651,7 @@ export default function RegistrationForm() {
           `.trim(),
                 },
               ].map(({ id, label, body }) => (
-                <div key={id} className="flex items-start space-x-2">
+                <div key={id} className="registration-agreement">
                   <Checkbox
                     id={id}
                     checked={(formData as any)[id]}
@@ -669,7 +669,7 @@ export default function RegistrationForm() {
               ))}
 
               {/* Final Agreement */}
-              <div className="flex items-start space-x-2">
+              <div className="registration-agreement">
                 <Checkbox
                   id="finalAgreement"
                   checked={formData.finalAgreement}
@@ -707,14 +707,14 @@ export default function RegistrationForm() {
         </div>
         <div className="flex justify-between">
           {stepIdx > 0 ? (
-            <Button variant="outline" onClick={() => setStepIdx((i) => i - 1)}>
+            <Button type="button" variant="outline" onClick={(event) => { event.preventDefault(); setStepIdx((i) => i - 1); }}>
               Back
             </Button>
           ) : (
             <div />
           )}
           {stepIdx < steps.length - 1 ? (
-            <Button onClick={() => setStepIdx((i) => i + 1)}>Next</Button>
+            <Button type="button" onClick={(event) => { event.preventDefault(); setStepIdx((i) => i + 1); }}>Next</Button>
           ) : (
             <Button type="submit">Submit</Button>
           )}

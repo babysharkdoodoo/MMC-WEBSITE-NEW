@@ -19,8 +19,8 @@ const CSS = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body, #root {
-    font-family: 'Outfit', sans-serif;
-    color: #0a2d44;
+    font-family: 'Switzer', sans-serif;
+    color: #263238;
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -35,7 +35,7 @@ const CSS = `
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 7px 14px; border-radius: 999px;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     font-size: .76rem; font-weight: 600;
     letter-spacing: .06em; text-transform: uppercase;
   }
@@ -44,20 +44,20 @@ const CSS = `
     min-height: 48px; padding: 0 28px; border-radius: 999px;
     text-decoration: none; cursor: pointer; border: none;
     transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Switzer', sans-serif;
     font-size: .82rem; font-weight: 700;
     letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
   }
-  .btn-primary  { background: #17689e; color: #fff; box-shadow: 0 12px 30px rgba(23,104,158,.18); }
-  .btn-primary:hover  { transform: translateY(-2px); background: #0f557f; }
-  .btn-secondary { background: transparent; color: #17689e; border: 1.5px solid rgba(23,104,158,.28); }
-  .btn-secondary:hover { transform: translateY(-2px); border-color: #17689e; background: rgba(23,104,158,.05); }
+  .btn-primary  { background: #45616b; color: #fff; box-shadow: 0 12px 30px rgba(23,104,158,.18); }
+  .btn-primary:hover  { transform: translateY(-2px); background: #45616b; }
+  .btn-secondary { background: transparent; color: #45616b; border: 1.5px solid rgba(23,104,158,.28); }
+  .btn-secondary:hover { transform: translateY(-2px); border-color: #45616b; background: rgba(23,104,158,.05); }
 
-  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #17689e; margin-bottom: 14px; }
-  .section-title   { font-size: clamp(2rem,4vw,3.2rem); line-height: 1.12; font-weight: 400; color: #0a2d44; }
-  .section-text    { color: #4c6b7f; line-height: 1.85; font-size: 1rem; font-weight: 300; }
+  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #45616b; margin-bottom: 14px; }
+  .section-title   { font-size: clamp(2rem,4vw,3.2rem); line-height: 1.12; font-weight: 400; color: #263238; }
+  .section-text    { color: #263238; line-height: 1.85; font-size: 1rem; font-weight: 300; }
 
-  .divider { width: 44px; height: 2px; background: #17689e; border-radius: 999px; margin: 18px 0; }
+  .divider { width: 44px; height: 2px; background: #45616b; border-radius: 999px; margin: 18px 0; }
 
   .soft-grid {
     background-image:
@@ -68,13 +68,13 @@ const CSS = `
 
   /* Hero */
   .hero-detail {
-    background: linear-gradient(160deg, #0a2d44 0%, #17689e 100%);
+    background: linear-gradient(160deg, #263238 0%, #45616b 100%);
     position: relative; overflow: hidden;
     padding: clamp(72px,10vw,110px) 0 clamp(48px,6vw,72px);
   }
   .hero-detail::after {
     content: attr(data-char);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Switzer', sans-serif;
     position: absolute; right: clamp(-10px,2vw,20px); bottom: -0.12em;
     font-size: clamp(200px,28vw,420px); font-weight: 700; line-height: 1;
     color: rgba(255,255,255,.05); pointer-events: none; user-select: none;
@@ -93,27 +93,27 @@ const CSS = `
 
   /* Article prose */
   .prose-body {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.05rem; line-height: 1.9; color: #0a2d44; font-weight: 300;
+    font-family: 'Switzer', sans-serif;
+    font-size: 1.05rem; line-height: 1.9; color: #263238; font-weight: 300;
   }
-  .prose-body h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem,2.5vw,2.2rem); font-weight: 400; color: #0a2d44; margin: 2.4em 0 .8em; line-height: 1.2; }
-  .prose-body h3 { font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; color: #0a2d44; margin: 2em 0 .6em; letter-spacing: .02em; }
+  .prose-body h2 { font-family: 'Switzer', sans-serif; font-size: clamp(1.6rem,2.5vw,2.2rem); font-weight: 400; color: #263238; margin: 2.4em 0 .8em; line-height: 1.2; }
+  .prose-body h3 { font-family: 'Switzer', sans-serif; font-size: 1.05rem; font-weight: 700; color: #263238; margin: 2em 0 .6em; letter-spacing: .02em; }
   .prose-body p  { margin-bottom: 1.4em; }
   .prose-body ul, .prose-body ol { margin: 1em 0 1.4em 1.4em; }
   .prose-body li { margin-bottom: .5em; }
   .prose-body blockquote {
     margin: 2em 0; padding: 18px 24px;
-    border-left: 3px solid #17689e;
-    background: #f4f9fc; border-radius: 0 12px 12px 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem; font-style: italic; color: #0a2d44; line-height: 1.6;
+    border-left: 3px solid #45616b;
+    background: #f4f3ef; border-radius: 0 12px 12px 0;
+    font-family: 'Switzer', sans-serif;
+    font-size: 1.2rem; font-style: italic; color: #263238; line-height: 1.6;
   }
-  .prose-body a { color: #17689e; text-decoration: underline; text-decoration-color: rgba(23,104,158,.35); }
-  .prose-body a:hover { text-decoration-color: #17689e; }
+  .prose-body a { color: #45616b; text-decoration: underline; text-decoration-color: rgba(23,104,158,.35); }
+  .prose-body a:hover { text-decoration-color: #45616b; }
 
   /* Interactive section */
   .interactive-wrap {
-    background: #f4f9fc;
+    background: #f4f3ef;
     border: 1px solid rgba(23,104,158,.12);
     border-radius: 22px; padding: 32px;
     margin-top: 48px;
@@ -124,14 +124,14 @@ const CSS = `
     display: flex; align-items: center; gap: 16px;
     padding: 24px; border-radius: 18px;
     border: 1px solid rgba(23,104,158,.12);
-    background: #f9fcfe;
+    background: #f4f3ef;
     margin-top: 48px;
   }
   .author-avatar {
     width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
-    background: #e7f4fb; color: #17689e;
+    background: #e7e8e3; color: #45616b;
     display: grid; place-items: center;
-    font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600;
+    font-family: 'Switzer', sans-serif; font-size: 1.5rem; font-weight: 600;
   }
 
   /* Back link */
@@ -220,7 +220,7 @@ export default async function MathBitePage({ params }: { params: { id: string } 
         </section>
 
         {/* ── FEATURED IMAGE ── */}
-        <section style={{ background: "#fff", padding: "clamp(40px,5vw,64px) 0" }}>
+        <section className="reading-image" style={{ background: "#fff" }}>
           <div className="container">
             <div style={{ maxWidth: 860, margin: "0 auto" }}>
               <div style={{ position: "relative", aspectRatio: "16/9", borderRadius: 22, overflow: "hidden", boxShadow: "0 20px 60px rgba(10,45,68,.12)" }}>
@@ -236,7 +236,7 @@ export default async function MathBitePage({ params }: { params: { id: string } 
         </section>
 
         {/* ── ARTICLE CONTENT ── */}
-        <section className="soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f9fcfe 100%)", padding: "clamp(48px,7vw,80px) 0" }}>
+        <section className="section-space soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f4f3ef 100%)" }}>
           <div className="container">
             <div style={{ maxWidth: 720, margin: "0 auto" }}>
               <div className="prose-body">
@@ -247,24 +247,24 @@ export default async function MathBitePage({ params }: { params: { id: string } 
               {(hasGeometry || hasNumberTheory || hasFunctions) && (
                 <div className="interactive-wrap">
                   <div className="section-kicker">Interactive explorer</div>
-                  <h2 className="serif" style={{ fontSize: "clamp(1.5rem,2.5vw,2rem)", fontWeight: 400, color: "#0a2d44", marginBottom: 24 }}>
+                  <h2 className="serif" style={{ fontSize: "clamp(1.5rem,2.5vw,2rem)", fontWeight: 400, color: "#263238", marginBottom: 24 }}>
                     Explore the concepts
                   </h2>
                   {hasGeometry && (
                     <div style={{ marginBottom: 32 }}>
-                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#0a2d44", marginBottom: 14 }}>Geometric Concepts</div>
+                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#263238", marginBottom: 14 }}>Geometric Concepts</div>
                       <InteractiveGeometryExplorer />
                     </div>
                   )}
                   {hasNumberTheory && (
                     <div style={{ marginBottom: 32 }}>
-                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#0a2d44", marginBottom: 14 }}>Number Theory</div>
+                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#263238", marginBottom: 14 }}>Number Theory</div>
                       <InteractiveNumberTheory />
                     </div>
                   )}
                   {hasFunctions && (
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#0a2d44", marginBottom: 14 }}>Functions & Graphs</div>
+                      <div style={{ fontWeight: 600, fontSize: ".9rem", color: "#263238", marginBottom: 14 }}>Functions & Graphs</div>
                       <InteractiveFunctionGraph />
                     </div>
                   )}
@@ -275,8 +275,8 @@ export default async function MathBitePage({ params }: { params: { id: string } 
               <div className="author-card">
                 <div className="author-avatar">{post.author.charAt(0)}</div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: ".9rem", color: "#0a2d44", marginBottom: 4 }}>About the Author</div>
-                  <p style={{ color: "#4c6b7f", fontSize: ".88rem", lineHeight: 1.65, fontWeight: 300 }}>
+                  <div style={{ fontWeight: 700, fontSize: ".9rem", color: "#263238", marginBottom: 4 }}>About the Author</div>
+                  <p style={{ color: "#263238", fontSize: ".88rem", lineHeight: 1.65, fontWeight: 300 }}>
                     {post.author} is a student at Melbourne High School and a member of the Melbourne Math Circle.
                   </p>
                 </div>
@@ -293,12 +293,12 @@ export default async function MathBitePage({ params }: { params: { id: string } 
         </section>
 
         {/* ── RELATED POSTS ── */}
-        <section style={{ background: "#eaf4fb", padding: "clamp(64px,9vw,100px) 0" }}>
+        <section className="section-space" style={{ background: "#e7e8e3" }}>
           <div className="container">
-            <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <div style={{ textAlign: "center", marginBottom: "var(--mmc-content-gap)" }}>
               <div className="section-kicker">Keep reading</div>
               <h2 className="serif section-title">
-                More <em style={{ color: "#17689e", fontStyle: "italic" }}>math bites.</em>
+                More <em style={{ color: "#45616b", fontStyle: "italic" }}>math bites.</em>
               </h2>
             </div>
             <RelatedPosts currentPostId={post.id} tags={post.tags} contentType="blog" />
@@ -306,15 +306,15 @@ export default async function MathBitePage({ params }: { params: { id: string } 
         </section>
 
         {/* ── CTA ── */}
-        <section style={{ background: "linear-gradient(180deg,#0a2d44 0%,#082638 100%)", padding: "clamp(72px,10vw,100px) 0", position: "relative", overflow: "hidden" }}>
+        <section className="section-space" style={{ background: "linear-gradient(180deg,#263238 0%,#263238 100%)", position: "relative", overflow: "hidden" }}>
           <div className="serif" style={{ position: "absolute", right: "-0.04em", bottom: "-0.14em", fontSize: "clamp(180px,25vw,340px)", fontWeight: 700, lineHeight: 1, color: "rgba(255,255,255,.04)", userSelect: "none", pointerEvents: "none" }}>
             {decorChar}
           </div>
           <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
-            <div className="section-kicker" style={{ color: "#8bc4e2" }}>Get involved</div>
+            <div className="section-kicker" style={{ color: "#e7e8e3" }}>Get involved</div>
             <h2 className="serif" style={{ color: "#fff", fontSize: "clamp(2.2rem,4.5vw,3.6rem)", lineHeight: 1.1, fontWeight: 300 }}>
               Want to explore<br />
-              <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>math with us?</em>
+              <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>math with us?</em>
             </h2>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>
               <Link href="/join-us" className="btn-primary">Join an event <ArrowRight size={15} /></Link>

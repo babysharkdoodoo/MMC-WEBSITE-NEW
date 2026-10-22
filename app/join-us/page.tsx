@@ -35,7 +35,7 @@ export default function JoinUsPage() {
       <style>{`
         .hero-join::after {
           content: 'π';
-          font-family: 'Cormorant Garamond', serif;
+          font-family: 'Switzer', sans-serif;
           position: absolute; right: clamp(-10px,2vw,30px); bottom: -0.12em;
           font-size: clamp(200px,26vw,400px); font-weight: 700; line-height: 1;
           color: rgba(255,255,255,.05); pointer-events: none; user-select: none;
@@ -56,11 +56,11 @@ export default function JoinUsPage() {
       <section className="hero-dark hero-join">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="pill reveal" style={{ background: "rgba(255,255,255,.12)", color: "rgba(255,255,255,.9)" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#8fd0ef" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#e7e8e3" }} />
             Melbourne, FL
           </div>
           <h1 className="serif reveal reveal-d1" style={{ marginTop: 20, fontSize: "clamp(3.4rem,7vw,6.5rem)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 300, color: "#fff" }}>
-            Join <em style={{ color: "#8fd0ef", fontStyle: "italic" }}>Us</em>
+            Join <em style={{ color: "#e7e8e3", fontStyle: "italic" }}>Us</em>
           </h1>
           <div className="divider reveal reveal-d2" style={{ background: "rgba(255,255,255,.35)", margin: "22px 0 24px" }} />
           <p className="reveal reveal-d3" style={{ maxWidth: 520, fontSize: "clamp(.95rem,1.5vw,1.12rem)", lineHeight: 1.85, color: "rgba(255,255,255,.75)", fontWeight: 300 }}>
@@ -74,19 +74,19 @@ export default function JoinUsPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f4f9fc 100%)", padding: "clamp(72px,10vw,112px) 0" }}>
+      <section className="section-space soft-grid" style={{ background: "linear-gradient(180deg,#fff 0%,#f4f3ef 100%)" }}>
         <div className="container">
           <div className="split-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(32px,6vw,80px)", alignItems: "center" }}>
             <div>
               <div className="section-kicker reveal">How it works</div>
-              <h2 className="serif section-title reveal reveal-d1">One sign-up.<br /><em style={{ color: "#17689e", fontStyle: "italic" }}>Unlimited events.</em></h2>
-              <p className="section-text reveal reveal-d2" style={{ marginTop: 20, maxWidth: 480 }}>Register once and we'll take care of the rest. You'll get notified by email whenever a new session opens up — no need to check back.</p>
+              <h2 className="serif section-title reveal reveal-d1">Sign up for<br /><em style={{ color: "#45616b", fontStyle: "italic" }}>meeting updates.</em></h2>
+              <p className="section-text reveal reveal-d2" style={{ marginTop: 20, maxWidth: 480 }}>Register below to receive session announcements and RSVP links with the date, time, and location. The form asks for student, parent, and emergency contact information, followed by the participation agreements.</p>
             </div>
             <div className="reveal reveal-d2" style={{ display: "grid", gap: 12 }}>
               {HOW_IT_WORKS.map((item, i) => (
                 <div key={i} className="step-card">
-                  <span style={{ color: "#17689e", fontWeight: 700, fontSize: "1.1rem", lineHeight: 1, minWidth: 28 }}>0{i + 1}</span>
-                  <span style={{ color: "#0a2d44", lineHeight: 1.65, fontSize: ".95rem" }}>{item}</span>
+                  <span style={{ color: "#45616b", fontWeight: 700, fontSize: "1.1rem", lineHeight: 1, minWidth: 28 }}>0{i + 1}</span>
+                  <span style={{ color: "#263238", lineHeight: 1.65, fontSize: ".95rem" }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -95,14 +95,14 @@ export default function JoinUsPage() {
       </section>
 
       {/* REGISTRATION */}
-      <section id="register" style={{ background: "#eaf4fb", padding: "clamp(72px,10vw,112px) 0", position: "relative", overflow: "hidden" }}>
+      <section className="section-space" id="register" style={{ background: "#e7e8e3", position: "relative", overflow: "hidden" }}>
         <div className="serif" style={{ position: "absolute", right: "-0.06em", top: "50%", transform: "translateY(-50%)", fontSize: "clamp(200px,26vw,420px)", fontWeight: 700, lineHeight: 1, color: "rgba(23,104,158,.06)", pointerEvents: "none", userSelect: "none" }}>∞</div>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 680, margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{ textAlign: "center", marginBottom: "var(--mmc-content-gap)" }}>
               <div className="section-kicker reveal">Registration</div>
-              <h2 className="serif section-title reveal reveal-d1">RSVP <em style={{ color: "#17689e", fontStyle: "italic" }}>one time</em></h2>
-              <p className="section-text reveal reveal-d2" style={{ marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Complete this form once and we'll email you RSVP links for all future Melbourne Math Circle events. Free and open to anyone.</p>
+              <h2 className="serif section-title reveal reveal-d1">Register for <em style={{ color: "#45616b", fontStyle: "italic" }}>the circle</em></h2>
+              <p className="section-text reveal reveal-d2" style={{ marginTop: 16, maxWidth: 520, margin: "16px auto 0" }}>Complete this form once to register with the circle and receive meeting updates. Then use the RSVP link in each event email to sign up for that session.</p>
             </div>
             <div className="reg-wrapper reveal reveal-d3">
               <RegistrationForm />
@@ -115,9 +115,9 @@ export default function JoinUsPage() {
       <section className="cta-dark">
         <div className="serif bg-symbol" aria-hidden="true">√</div>
         <div className="container" style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
-          <div className="section-kicker reveal" style={{ color: "#8bc4e2" }}>Already signed up?</div>
+          <div className="section-kicker reveal" style={{ color: "#e7e8e3" }}>Already signed up?</div>
           <h2 className="serif reveal reveal-d1" style={{ color: "#fff", fontSize: "clamp(2.2rem,4.5vw,3.6rem)", lineHeight: 1.1, fontWeight: 300 }}>
-            Check your email for<br /><em style={{ color: "#8fd0ef", fontStyle: "italic" }}>RSVP links.</em>
+            Check your email for<br /><em style={{ color: "#e7e8e3", fontStyle: "italic" }}>RSVP links.</em>
           </h2>
           <p className="section-text reveal reveal-d2" style={{ color: "rgba(255,255,255,.68)", maxWidth: 480, marginTop: 16 }}>If you have any questions, reach out and we'll get back to you shortly.</p>
           <div className="reveal reveal-d3" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 32 }}>

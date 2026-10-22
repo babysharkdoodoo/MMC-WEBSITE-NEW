@@ -1,0 +1,5 @@
+Switzer, by Indian Type Foundry / Fontshare.
+Downloaded October 21, 2026, from the official Fontshare CSS distribution:
+https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap
+License and usage terms: https://www.fontshare.com/licenses/itf-free-font-license
+Weights: 400, 500, 600, 700. Served locally to avoid a third-party font request.
