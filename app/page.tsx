@@ -48,8 +48,23 @@ export default function HomePage() {
       </section>
 
       <section className="chapter chapter-paper interview-chapter">
-        <h2>Professor Kev Show</h2>
-        <div><p>Melbourne Math Circle was featured on the Professor Kev Show. Watch the conversation about the circle and our work in Melbourne.</p><a href="https://www.youtube.com/watch?v=bwqcqY0FlEE" target="_blank" rel="noopener noreferrer" className="mmc-button button-interview">Watch the interview <ArrowUpRight size={22} /></a></div>
+        <div className="interview-copy">
+          <h2>Professor Kev Show</h2>
+          <p>Melbourne Math Circle was featured on the Professor Kev Show. Watch the conversation about the circle and our work in Melbourne.</p>
+          <a href="https://www.youtube.com/watch?v=bwqcqY0FlEE" target="_blank" rel="noopener noreferrer" className="text-link">Watch on YouTube <ArrowUpRight size={20} /></a>
+        </div>
+        <div className="interview-preview">
+          <iframe
+            src="https://www.youtube.com/embed/bwqcqY0FlEE?rel=0"
+            title="Melbourne Math Circle on the Professor Kev Show"
+            width="560"
+            height="315"
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
       </section>
 
       <section className="chapter chapter-paper explore-chapter">

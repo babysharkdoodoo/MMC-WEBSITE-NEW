@@ -95,8 +95,10 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
 .interview-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--mmc-layout-gap); align-items: center; padding-bottom: calc(var(--mmc-section-space) / 2); }
 .explore-chapter { padding-top: calc(var(--mmc-section-space) / 2); }
 .mmc-home .interview-chapter h2 { max-width: 12ch; font-size: clamp(40px, 5vw, 80px); line-height: 1.02; }
-.button-interview { background: var(--mmc-accent); color: white; }
-.button-interview:hover { background: var(--mmc-ink); }
+.interview-copy h2 { margin-bottom: var(--mmc-title-gap); }
+.interview-preview { width: 100%; aspect-ratio: 16/9; background: var(--mmc-ink); }
+.interview-preview iframe { display: block; width: 100%; height: 100%; border: 0; }
+.interview-preview:focus-within { outline: 3px solid var(--mmc-ink); outline-offset: 5px; }
 .people-chapter { display: grid; grid-template-columns: 7fr 5fr; gap: var(--mmc-layout-gap); align-items: center; }
 .people-copy h2 { margin-bottom: var(--mmc-title-gap); }
 .parent-link { display: flex; align-items: center; gap: 10px; margin-top: 28px; font-size: 15px; }
