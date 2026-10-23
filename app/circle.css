@@ -13,7 +13,7 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
 .mmc-site h1, .mmc-site h2, .mmc-site h3 { text-wrap: balance; }
 .mmc-header { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 22px var(--mmc-gutter); background: var(--mmc-paper); color: var(--mmc-ink); position: relative; z-index: 40; font: 500 16px/1.2 Switzer, sans-serif; }
 .mmc-wordmark { display: flex; align-items: center; gap: 12px; flex-shrink: 0; text-decoration: none; font-size: 19px; line-height: 1.02; letter-spacing: -.03em; font-weight: 600; }
-.wordmark-circle { display: grid; place-items: center; width: 45px; height: 45px; background: var(--mmc-red); color: white; border-radius: 50%; font-size: 32px; line-height: 1; font-weight: 500; padding-bottom: 6px; }
+.wordmark-logo { display: block; width: 64px; height: 64px; flex-shrink: 0; object-fit: contain; }
 .desktop-navigation { display: flex; align-items: center; gap: clamp(20px, 2vw, 36px); }
 .desktop-navigation > a { padding: 12px 0; text-decoration: none; }
 .desktop-navigation > a:hover, .desktop-navigation > a[aria-current] { text-decoration: underline; }
@@ -247,7 +247,7 @@ html.mmc-site body { font-family: Switzer, Arial, sans-serif; background: var(--
 @media (max-width: 750px) {
   .mmc-header { padding-top: 16px; padding-bottom: 16px; gap: 16px; }
   .mmc-wordmark { font-size: 17px; }
-  .wordmark-circle { width: 40px; height: 40px; font-size: 28px; }
+  .wordmark-logo { width: 52px; height: 52px; }
   .header-join { display: none; }
   .mobile-menu-toggle { margin-left: auto; }
   .opening-title h1 { font-size: 12.9vw; line-height: .94; margin-bottom: 32px; }

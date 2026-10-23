@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 
@@ -36,7 +37,7 @@ export default function Header() {
 
   return (
     <header className="mmc-header">
-      <Link href="/" className="mmc-wordmark" aria-label="Melbourne Math Circle home"><span className="wordmark-circle" aria-hidden="true">m</span><span>Melbourne<br />Math Circle</span></Link>
+      <Link href="/" className="mmc-wordmark" aria-label="Melbourne Math Circle home"><Image src="/mmc_logo.jpg" alt="" width={64} height={64} className="wordmark-logo" priority /><span>Melbourne<br />Math Circle</span></Link>
       <nav className="desktop-navigation" aria-label="Main navigation">
         {circleLinks.map(link => <Link key={link.href} href={link.href} aria-current={pathname === link.href ? "page" : undefined}>{link.name}</Link>)}
         <details className="math-dropdown"><summary>Some math <ChevronDown size={15} /></summary><div>{mathLinks.map(link => <Link key={link.href} href={link.href}>{link.name}<ArrowUpRight size={17} /></Link>)}</div></details>
