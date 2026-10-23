@@ -24,7 +24,7 @@ export default function HomePage() {
       <section className="chapter chapter-paper circle-intro">
         <div className="chapter-heading"><h2>Off the<br />worksheet.</h2><p>A chance to wonder, try something, get stuck, and figure it out with someone else.</p></div>
         <div className="intro-bottom">
-          <figure><Image src="/Photos/monthly_meetings/10.png" alt="Student volunteers leading a discussion with students and families at a Melbourne Math Circle meeting" width={1080} height={1080} sizes="(max-width: 750px) 100vw, 50vw" /><figcaption>Students, volunteers, and families at a circle meeting.</figcaption></figure>
+          <figure><Image src="/Photos/monthly_meetings/13.png" alt="Melbourne Math Circle participants standing together in front of a whiteboard" width={1080} height={1080} sizes="(max-width: 750px) 100vw, 50vw" /><figcaption>A group photo from one of our monthly meetings.</figcaption></figure>
           <div className="intro-text"><p>We start with an idea, give everyone time to try it, and compare the ways we got there. High school volunteers guide the conversation. Questions are part of the work.</p><p>You don’t have to be on a math team. You don’t have to arrive with the answer. You just need a place to start.</p><Link className="text-link" href="/about">How the circle began <ArrowRight size={20} /></Link></div>
         </div>
       </section>
