@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import CounterGame from "@/components/counter-game";
+import { teamMembers } from "@/lib/team";
 
 export default function HomePage() {
+  const seniors = teamMembers.filter(member => member.grade === "Senior");
+
   return (
     <div className="mmc-home">
       <section className="chapter chapter-red home-opening">
@@ -43,8 +46,27 @@ export default function HomePage() {
       </section>
 
       <section className="chapter chapter-maroon people-chapter">
-        <div className="people-copy"><h2>Students<br />behind it.</h2><p>The circle began in 2023, when students who had taken part in Orlando Math Circle brought the idea closer to home.</p><p>Eshan Vipuil is our founder and president. Fellow students help run the circle, share their interests, and welcome younger learners.</p><Link href="/team" className="text-link">Meet the whole team <ArrowRight size={20} /></Link><a href="https://www.orlandomathcircle.org/pages/about-us" target="_blank" rel="noopener noreferrer" className="parent-link">Part of Orlando Math Circle <ArrowUpRight size={16} /></a></div>
-        <figure className="founder-photo"><Image src="/pfps/eshan.png" alt="Eshan Vipuil, Melbourne Math Circle founder and president" width={600} height={700} sizes="(max-width: 750px) 100vw, 40vw" /><figcaption>Eshan Vipuil · Founder &amp; president</figcaption></figure>
+        <div className="chapter-heading">
+          <h2>Students<br />behind it.</h2>
+          <div className="people-copy">
+            <p>The circle began in 2023, when students who had taken part in Orlando Math Circle brought the idea closer to home.</p>
+            <p>Meet the seniors who help run the circle. Faizan Ahmed, a sophomore, is our president elect.</p>
+            <Link href="/team" className="text-link">Meet the whole team <ArrowRight size={20} /></Link>
+            <a href="https://www.orlandomathcircle.org/pages/about-us" target="_blank" rel="noopener noreferrer" className="parent-link">Part of Orlando Math Circle <ArrowUpRight size={16} /></a>
+          </div>
+        </div>
+        <div className="senior-portraits">
+          {seniors.map(member => (
+            <figure key={member.name}>
+              <Image src={member.image} alt={member.name} width={800} height={800} sizes="(max-width: 750px) 40vw, 33vw" />
+              <figcaption>
+                <h3><Link href={`/team#${member.name.toLowerCase().replace(/\s+/g, "-")}`}>{member.name}</Link></h3>
+                <p className="senior-role">{member.role}</p>
+                <p className="senior-grade">{member.grade}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </section>
 
       <section className="chapter chapter-paper interview-chapter">

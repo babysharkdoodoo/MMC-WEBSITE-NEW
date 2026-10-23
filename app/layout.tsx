@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   title: "Melbourne Math Circle",
   description:
     "Free, student-led math sessions and outreach in Melbourne, Florida. A local chapter of Orlando Math Circle.",
+  icons: {
+    icon: { url: "/mmc_logo.jpg", type: "image/jpeg" },
+    shortcut: "/mmc_logo.jpg",
+  },
 };
 
 export default function RootLayout({
